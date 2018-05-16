@@ -1,5 +1,7 @@
 package Main;
 
+import Model.Model;
+import View.View;
 import View.Window;
 import Controller.Controller;
 import Main.Main_thread;
@@ -13,6 +15,8 @@ import java.awt.event.WindowEvent;
  */
 public class Main extends Frame {
     private Window window;
+    private Model model;
+    private View view;
     private Controller controller;
     private Main_thread main_thread;
     private Thread t;
@@ -21,14 +25,22 @@ public class Main extends Frame {
     private int size_y = 1000;
 
     public Main() throws HeadlessException {
+
         window = new Window(size_x,size_y);
         add(window);
 
         controller = new Controller();
+
         this.setSize(size_x, size_y);
 
+        //start the drawing thread
         main_thread = new Main_thread();
         t = new Thread(main_thread);
+
+        model = Model.getInstance();
+        view = View.getInstance();
+
+
 
         this.addWindowListener( new WindowAdapter()
         {
@@ -48,6 +60,11 @@ public class Main extends Frame {
         main.setVisible(true);
         main.setResizable(false);
 
+        //view needs to be initialised to set the right size
+        main.initialise_view();
+        //start the scenario after setting the main visible and initialising the view
+        main.start_scenario();
+
         main.start_thread();
 
 
@@ -56,5 +73,15 @@ public class Main extends Frame {
     public void start_thread()
     {
         t.start();
+    }
+
+    public void start_scenario()
+    {
+        model.set_scenario_1();
+    }
+
+    public void initialise_view()
+    {
+        view.initialise();
     }
 }

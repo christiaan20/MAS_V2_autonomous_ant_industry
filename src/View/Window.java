@@ -5,9 +5,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 
 import Model.Model;
-import Model.Resource;
 import Model.Resource_type;
-import View.View;
 
 /**
  * Created by christiaan on 10/05/18.
@@ -29,8 +27,8 @@ public class Window extends Panel implements ActionListener
         //the size of the view is dependent on the size of the panels on the top and bottom
         int view_y_size = size_y - top_panel.getHeight() - bottom_panel.getHeight();
 
-        View.getInstance().setSize(size_x,view_y_size);
-        View.getInstance().set_y_offset(top_panel.getHeight());
+        //View.getInstance().set_size(size_x,view_y_size);
+        //View.getInstance().set_y_offset(top_panel.getHeight());
     }
 
     public void BuildWindow()
