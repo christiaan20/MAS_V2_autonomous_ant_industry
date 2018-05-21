@@ -1,10 +1,9 @@
 package Main;
 
-import Model.Model;
+import Model_pk.Model;
 import View.View;
 import View.Window;
 import Controller.Controller;
-import Main.Main_thread;
 
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -24,17 +23,21 @@ public class Main extends Frame {
     private int size_x = 1000;
     private int size_y = 1000;
 
-    public Main() throws HeadlessException {
+    public Main() throws HeadlessException
+    {
 
-        window = new Window(size_x,size_y);
+        main_thread = new Main_thread();
+
+        window = new Window(size_x,size_y, main_thread);
         add(window);
+
+        main_thread.set_window(window);
 
         controller = new Controller();
 
         this.setSize(size_x, size_y);
 
         //start the drawing thread
-        main_thread = new Main_thread();
         t = new Thread(main_thread);
 
         model = Model.getInstance();

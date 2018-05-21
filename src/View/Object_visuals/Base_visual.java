@@ -1,7 +1,6 @@
 package View.Object_visuals;
 
-import Model.Object;
-import View.View;
+import Model_pk.Object;
 
 import java.awt.*;
 
@@ -15,7 +14,7 @@ public class Base_visual extends Object_visual{
     }
 
     @Override
-    public void draw(Graphics g)
+    public void draw_visual(Graphics g)
     {
         //Objects only have a height after rendering so this is the only way
 
@@ -29,11 +28,20 @@ public class Base_visual extends Object_visual{
         g.fillRect(view_x  , view_y, view_size, view_size);
         */
 
+
         int center_size = (int) (size*0.2);
 
-        g.setColor(Color.black);
+        Color brown = new Color(148,61,7);
+        Color outer_color = brown;
+
+        outer_color = check_draw_selected(outer_color);
+
+        g.setColor(outer_color);
         g.fillRect(x  , y, size, size);
         g.setColor(Color.lightGray);
         g.fillRect(x + size/2 - center_size/2 , y + size/2 - center_size/2 , center_size, center_size);
-}
+    }
+
+
+
 }

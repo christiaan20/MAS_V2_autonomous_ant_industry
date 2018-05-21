@@ -2,13 +2,20 @@ package View;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 
+import Model_pk.Object;
+import Model_pk.Pheromone;
+import Model_pk.Resource;
+import View.Object_visuals.Colors;
 import View.Object_visuals.Object_visual;
 /**
  * Created by christiaan on 10/05/18.
  */
 public class View extends Canvas {
     private static View view;
+
+    private Colors colors;
 
     private double scale_from_model = 1; //the scale that the view objects have relative to the sizes in the model
     private int size_x;
@@ -17,15 +24,16 @@ public class View extends Canvas {
     private int size_x_field;
     private int size_y_field;
 
-
     private int mouse_x;
     private int mouse_y;
-
-    private int y_offset; //offset from top to compensate for the top_panel
+    private Object_visual hovering_over_visual;
+    private Object_visual selected_visual;
 
     private Image buffer;
 
     private Color background_color = new Color(194, 60, 42); //red color for the mars ground
+    private int text_size = 15;
+
 
     private ArrayList<Object_visual> object_visuals = new ArrayList<Object_visual>();
 
@@ -33,7 +41,7 @@ public class View extends Canvas {
      * Create private constructor for a singleton
      */
     private View() {
-
+        colors = Colors.getInstance();
 
     }
 
@@ -79,7 +87,7 @@ public class View extends Canvas {
     }
 
     public void draw_background(Graphics g) {
-        g.setColor(background_color);
+        g.setColor(colors.getBackground());
 
         g.fillRect(0, 0, size_x, size_y);
 
@@ -98,22 +106,24 @@ public class View extends Canvas {
         }
     }
 
-    public void set_y_offset(int y_offset) {
-        this.y_offset = y_offset;
-    }
 
-    public void drawAngledLine(Graphics g, int x, int y, double angle, int length) {
-        int tr_y = transform_y(y);
+    public void draw_angled_line(Graphics g, int x, int y, double angle, int length) {
+        //int tr_y = transform_y(y);
+
+        //System.out.println("angle " + String.valueOf(angle));
+
 
         int x_dist = (int) (Math.cos(angle) * (double) length);
         int y_dist = (int) (Math.sin(angle) * (double) length);
 
-        g.drawLine(x, tr_y, x + x_dist, tr_y - (y + y_dist));
+        //System.out.println("x dist " +  String.valueOf(x_dist));
+        //System.out.println("y_dist " +  String.valueOf(y_dist));
+
+        g.drawLine(x, y, x + x_dist, (y - y_dist));
     }
 
     public void draw_mouse_coordinates(Graphics g)
     {
-        int text_size = 15;
         g.setColor(Color.green);
         String point_view = "V:(" + String.valueOf(mouse_x) + ',' + String.valueOf(mouse_y) + ')';
         g.drawString(point_view, mouse_x, mouse_y - text_size*1);
@@ -133,6 +143,89 @@ public class View extends Canvas {
         }
 
         return buffer;
+    }
+
+    public void check_hovering_over(int x, int y)
+    {
+
+
+        Object_visual hovering = get_visual_if_within(x,y);
+
+        if(hovering_over_visual != null)
+        {
+            if( hovering_over_visual == hovering)
+            {
+                return;
+            }
+            else if(hovering != null)
+            {
+                hovering_over_visual.setHover_over(false);
+                hovering_over_visual = hovering;
+                hovering_over_visual.setHover_over(true);
+            }
+            else
+            {
+                hovering_over_visual.setHover_over(false);
+                hovering_over_visual = null;
+            }
+        }
+        else
+        {
+            if(hovering != null)
+            {
+                hovering_over_visual = hovering;
+                hovering_over_visual.setHover_over(true);
+            }
+        }
+
+    }
+
+    public void select_hovering_over()
+    {
+        if(selected_visual != null)
+        {
+            if(selected_visual == hovering_over_visual )
+            {
+                return;
+            }
+            else if( hovering_over_visual != null)
+            {
+                selected_visual.setSelected(false);
+                selected_visual =  hovering_over_visual;
+                selected_visual.setSelected(true);
+            }
+            else
+            {
+                selected_visual.setSelected(false);
+                selected_visual = null;
+            }
+        }
+        else
+        {
+            if(hovering_over_visual != null)
+            {
+                selected_visual = hovering_over_visual;
+                selected_visual.setSelected(true);
+            }
+        }
+
+    }
+
+
+    public Object_visual get_visual_if_within(int x, int y)
+    {
+        //called by the controller in a different thread so to ensure threadsafety
+        Object_visual[] ObjectenArr = new Object_visual[object_visuals.size()];
+        ObjectenArr = object_visuals.toArray(ObjectenArr);
+
+        for(Object_visual obj: ObjectenArr )
+        {
+            if (obj.check_within(x,y))
+            {
+                return obj;
+            }
+        }
+        return null;
     }
 
 
@@ -211,4 +304,43 @@ public class View extends Canvas {
     public void setMouse_y(int mouse_y) {
         this.mouse_y = mouse_y;// - getY();
     }
+
+    public int getText_size() {
+        return text_size;
+    }
+
+    public void setText_size(int text_size) {
+        this.text_size = text_size;
+    }
+
+    public Object_visual getHovering_over_visual() {
+        return hovering_over_visual;
+    }
+
+    public void setHovering_over_visual(Object_visual hovering_over_visual) {
+        this.hovering_over_visual = hovering_over_visual;
+    }
+
+    public Object_visual getSelected_visual() {
+        return selected_visual;
+    }
+
+    public void setSelected_visual(Object_visual selected_visual) {
+        this.selected_visual = selected_visual;
+    }
+
+    public void delete_visual(Object_visual visual)
+    {
+        Iterator<Object_visual> iter2 = object_visuals.iterator();
+        while (iter2.hasNext()) {
+            Object_visual obj = iter2.next();
+            if(obj.equals(visual))
+            {
+                iter2.remove();
+            }
+
+
+        }
+    }
+
 }
