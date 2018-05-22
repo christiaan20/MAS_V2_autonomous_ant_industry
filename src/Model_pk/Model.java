@@ -56,17 +56,16 @@ public class Model{
     {
         behaviour = new Behaviour_Basic();
 
-        size_x_field    = 500;
-        size_y_field    = 500;
+        size_x_field    = 900;
+        size_y_field    = 900;
 
         View.getInstance().set_field_size(size_x_field, size_y_field);
-        int base_x      = 200;
-        int base_y      = 200;
+        int base_x      = 450;
+        int base_y      = 450;
         int object_size = 50;
         int worker_size = 20;
 
-        int work_force_size = 2;
-
+        int work_force_size = 10;
 
         int base_time       = 50;
         int resource_time   = 50;
@@ -83,22 +82,20 @@ public class Model{
         //create the resources
         enterable_objects.add(new Resource_pool(300,400,object_size,resource_time, Resource_Type.Stone,resource_pool_capacity));
         enterable_objects.add(new Resource_pool(75,325,object_size,resource_time, Resource_Type.Coal, resource_pool_capacity));
+        enterable_objects.add(new Resource_pool(800,325,object_size,resource_time, Resource_Type.Coal, resource_pool_capacity));
+        enterable_objects.add(new Resource_pool(800,500,object_size,resource_time, Resource_Type.Copper, resource_pool_capacity));
+       enterable_objects.add(new Resource_pool(600,250,object_size,resource_time, Resource_Type.Uranium, resource_pool_capacity));
 
         //create the workers
         for(int i = 0 ; i < work_force_size;i++)
         {
-            add_worker(base_x, base_y, worker_size, max_worker_load);
+            workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble(), max_worker_load, behaviour.getTask_explorer(),base));
         }
 
-
+        workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble(), max_worker_load, behaviour.getTask_explorer(),Resource_Type.Coal,base));
+        //workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble(), max_worker_load, behaviour.getTask_explorer(),Resource_Type.Stone,base));
     }
 
-    public void add_worker(int x, int y, int size, int max_load)
-    {
-        Abstr_Behaviour behavior = new Behaviour_Basic(); //change this to change the workers behaviour
-        workers.add(new Worker(x, y,size, random.nextDouble(), max_load, behavior.getTask_explorer()));
-
-    }
 
     public void tick_workers()
     {
@@ -173,13 +170,18 @@ public class Model{
     public boolean  detected_object(Worker worker, CustomStruct struct)
     {
         Object obj= struct.getObject();
-        int dist = distBetween(worker.getX(),worker.getY(),obj.getX(),obj.getY());
-
-        if(dist<= worker.getTask().getPhero_detect_dist())
+        if(worker.getTask().is_obj_relevant_to_task(worker,obj))
         {
-            struct.setDistance(dist);
-            return true;
+            int dist = distBetween(worker.getX(),worker.getY(),obj.getX(),obj.getY());
+
+            if(dist<= worker.getTask().getPhero_detect_dist())
+            {
+
+                    struct.setDistance(dist);
+                    return true;
+            }
         }
+
         return false;
     }
 
@@ -191,8 +193,7 @@ public class Model{
             CustomStruct struct = new CustomStruct(o);
             if(detected_object(worker, struct))
             {
-                int dist = struct.getDistance();
-                worker.addDetectedPheromone(struct);
+                worker.add_detected_pheromone(struct);
             }
 
         }
@@ -201,7 +202,7 @@ public class Model{
             CustomStruct struct = new CustomStruct(o);
             if(detected_object(worker, struct)) //fills the struct with a the distance from the worker
             {
-                worker.addDetectedPheromone(struct);
+                worker.add_detected_pheromone(struct);
             }
 
         }
@@ -215,7 +216,7 @@ public class Model{
         return (int) Math.abs( Math.sqrt(Math.pow(Xdist,2)+ Math.pow(Ydist,2)));
     }
 
-    public void drop_pheromone(int x, int y,int size , Abstr_Task task, Resource_Type type, int strength, int degrade_time)
+    public void drop_pheromone(Worker worker,int x, int y,int size , Abstr_Task task, Resource_Type type, int strength, int degrade_time, int max_size)
     {
         int left_border = (int) Math.floor(x/tile_size)* tile_size;
         int right_border  = left_border +tile_size;
@@ -229,16 +230,18 @@ public class Model{
             {
                 if(phero.getTask() == task.getTask())
                 {
-                    if(phero.getTask() == Task_Enum.explorer)
+                    if(phero.isTask(Task_Enum.explorer))
                     {
                         phero.increase_strength(strength);
+                        phero.addOwner(worker);
                         return;
                     }
                     else
                     {
-                        if(phero.getType() == type)
+                        if(phero.isType(type))
                         {
                             phero.increase_strength(strength);
+                            phero.addOwner(worker);
                             return;
                         }
                     }
@@ -246,8 +249,9 @@ public class Model{
                 ;
             }
         }
-
-        pheromones.add(new Pheromone((left_border + tile_size/2),(bottom_border + tile_size/2),size,task.getTask(),type,strength,degrade_time));
+        Pheromone new_phero = (new Pheromone(worker,(left_border + tile_size/2),(bottom_border + tile_size/2),size,task.getTask(),type,strength,degrade_time,max_size));
+        worker.add_visited_pheromone(new_phero);
+        pheromones.add(new_phero);
 
     }
 

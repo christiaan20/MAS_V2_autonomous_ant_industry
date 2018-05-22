@@ -2,7 +2,6 @@ package View;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,15 +20,19 @@ public class Window extends Panel implements ActionListener
     private Panel top_panel;
     private Panel bottom_panel;
 
+    //general information labels
+    private String  tickcount_text;
+    private Label   tickcount_label;
+    private Map<Resource_Type,Label> resource_count_labels = new HashMap<>();
+
     //buttons regarding to simulation speed
     private Button pause_button;
     private Button slowdown_button;
     private Button speedup_button;
-    private String ticke_per_second_text;
+    private String ticks_per_second_text;
     private Label  ticks_per_second_label;
 
-   // private ArrayList<Label> resource_count_labels = new ArrayList<>();
-    private Map<Resource_Type,Label> resource_count_labels = new HashMap<>();
+  ;
 
     public Window(int size_x, int size_y, Main_thread main_thread)
     {
@@ -57,6 +60,10 @@ public class Window extends Panel implements ActionListener
     {
         this.setLayout(new BorderLayout());
 
+        //create top panel labels
+        tickcount_text = "Ticks passed: ";
+        tickcount_label = new Label (tickcount_text + String.valueOf(10000000));
+
         //create the buttons
         pause_button = new Button("Pauze");
         pause_button.setBackground(Color.lightGray);
@@ -71,14 +78,19 @@ public class Window extends Panel implements ActionListener
         speedup_button.addActionListener(this);
 
         //create labels
-        ticke_per_second_text = "Ticks/sec: ";
-        ticks_per_second_label = new Label (ticke_per_second_text + String.valueOf(0));
+        ticks_per_second_text = "Ticks/sec: ";
+        ticks_per_second_label = new Label (ticks_per_second_text + String.valueOf(0));
         //ticks_per_second_label.setSize((int)(ticks_per_second_label.getWidth()*1.25),ticks_per_second_label.getHeight());
 
         //create the panels and add to the elements to them
         top_panel = new Panel();
         top_panel.setLayout(new FlowLayout());
         top_panel.setBackground(Color.gray);
+
+        top_panel.add(tickcount_label);
+
+        add_resource_count_labels();
+
 
         bottom_panel = new Panel();
         bottom_panel.setLayout(new FlowLayout());
@@ -89,7 +101,6 @@ public class Window extends Panel implements ActionListener
         bottom_panel.add(speedup_button);
         bottom_panel.add(ticks_per_second_label);
 
-        add_resource_count_labels();
 
         this.add(top_panel,BorderLayout.NORTH);
         this.add(bottom_panel,BorderLayout.SOUTH);
@@ -156,7 +167,7 @@ public class Window extends Panel implements ActionListener
 
     public void update_tick_per_sec_label()
     {
-        ticks_per_second_label.setText( ticke_per_second_text + String.valueOf(main_thread.get_ticks_per_sec()));
+        ticks_per_second_label.setText( ticks_per_second_text + String.valueOf(main_thread.get_ticks_per_sec()));
     }
 
 
@@ -179,5 +190,11 @@ public class Window extends Panel implements ActionListener
 
         }
 
+    }
+
+    public void update_tick_counter(int ticks)
+    {
+        tickcount_label.setText( tickcount_text + ": " + String.valueOf(ticks)  );
+        tickcount_label.setSize(150,tickcount_label.getHeight());
     }
 }

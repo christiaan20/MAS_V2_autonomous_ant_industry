@@ -20,6 +20,9 @@ public abstract class Object {
 
     protected boolean expired;
 
+    public Object() {
+    }
+
     public Object(int x, int y, int size) {
         this.ID = ID_count;
         this.x = x;

@@ -14,6 +14,7 @@ public class Main_thread implements Runnable {
 
     private boolean running = true; // whether the mainthread is running or not
     private int refresh_time = 25;     // refresh_time of ticks and refreshes in ms
+    private int tickcount = 0;
 
 
     public Main_thread()
@@ -36,11 +37,13 @@ public class Main_thread implements Runnable {
         {
             if(running)
             {
+                tickcount++;
                 model.tick_workers();
                 model.tick_pheromone();
 
                 model.delete_expired_objects();
                 window.update_resource_counters();
+                window.update_tick_counter(tickcount);
             }
 
                 view.paint();

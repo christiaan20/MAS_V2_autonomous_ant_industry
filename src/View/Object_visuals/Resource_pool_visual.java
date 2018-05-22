@@ -34,6 +34,14 @@ public class Resource_pool_visual extends Object_visual
         {
             draw_type_coal(g);
         }
+        if(type == Resource_Type.Copper )
+        {
+            draw_type_Copper(g);
+        }
+        if(type == Resource_Type.Uranium )
+        {
+            draw_type_uranium(g);
+        }
 
         if(selected)
         {
@@ -45,7 +53,7 @@ public class Resource_pool_visual extends Object_visual
 
     public void draw_type_stone(Graphics g)
     {
-        Color color = Color.GRAY;
+        Color color = Colors.getInstance().getStone();
 
         color = check_draw_selected(color);
 
@@ -58,13 +66,26 @@ public class Resource_pool_visual extends Object_visual
     }
 
     public void draw_type_coal(Graphics g)
-    {
-        Color color = Color.darkGray;
+{
+    Color color = Colors.getInstance().get_resource_pool_color(Resource_Type.Coal);
 
-        if(selected)
-        {
-            color = Color.red;
-        }
+    color = check_draw_selected(color);
+
+    g.setColor(color);
+
+    g.setColor(color);
+    int w = size/2;
+    g.fillOval(x  , y, w, w);
+    g.fillOval(x + w  , y, w, w);
+    g.fillOval(x,y+ w , w, w);
+    g.fillOval(x + size/4,y + size/4  , ((size*3)/4),((size*3)/4));
+}
+
+    public void draw_type_Copper(Graphics g)
+    {
+        Color color = Colors.getInstance().get_resource_pool_color(Resource_Type.Copper);
+
+        color = check_draw_selected(color);
 
         g.setColor(color);
 
@@ -75,6 +96,22 @@ public class Resource_pool_visual extends Object_visual
         g.fillOval(x,y+ w , w, w);
         g.fillOval(x + size/4,y + size/4  , ((size*3)/4),((size*3)/4));
     }
+
+    public void draw_type_uranium(Graphics g)
+    {
+        Color color = Colors.getInstance().get_resource_pool_color(Resource_Type.Uranium);
+
+        color = check_draw_selected(color);
+
+        g.setColor(color);
+
+        g.setColor(color);
+
+        g.fillOval(x  , y, size, size);
+
+    }
+
+ //   public void draw_collection_rock()
 
     public void draw_debug_info(Graphics g, Resource_pool res)
     {

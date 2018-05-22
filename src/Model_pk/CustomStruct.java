@@ -18,6 +18,16 @@ public class CustomStruct
         this.object = obj;
     }
 
+    public boolean is_farther_than(CustomStruct struct)
+    {
+        return this.getDistance() >= struct.getDistance();
+    }
+
+    public boolean is_closer_than(CustomStruct struct)
+    {
+        return this.getDistance() < struct.getDistance();
+    }
+
     public int getDistance() {
         return distance;
     }
@@ -33,4 +43,6 @@ public class CustomStruct
     public void setObject(Object object) {
         this.object = object;
     }
+
+
 }

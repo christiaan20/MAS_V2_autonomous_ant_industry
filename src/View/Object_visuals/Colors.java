@@ -15,6 +15,7 @@ public class Colors
 
     Color background = new Color(194, 60, 42); //red color for the mars ground;
     Color worker = Color.BLACK;
+    Color selected = Color.green;
 
 
     Color copper = new Color(182, 115, 51); ;
@@ -39,6 +40,31 @@ public class Colors
             colors = new Colors();
         }
         return colors;
+    }
+
+    public Color get_resource_pool_color(Resource_Type type)
+    {
+        Color out = null;
+        switch(type)
+        {
+            case Stone:
+                out = stone;
+                break;
+            case Copper:
+                out = copper;
+                break;
+            case Coal:
+                out = coal;
+                break;
+            case Iron:
+                out= iron;
+                break;
+            case Uranium:
+                out = uranium;
+        }
+
+
+        return out;
     }
 
     public Color getPheroColor(Task_Enum task, Resource_Type type)
@@ -111,5 +137,13 @@ public class Colors
 
     public void setExplorer(Color explorer) {
         this.explorer = explorer;
+    }
+
+    public Color getSelected() {
+        return selected;
+    }
+
+    public void setSelected(Color selected) {
+        this.selected = selected;
     }
 }

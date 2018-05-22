@@ -60,7 +60,7 @@ public abstract class Object_visual {
     {
         if(selected)
         {
-            return Color.red;
+            return Colors.getInstance().getSelected();
         }
         return current;
 

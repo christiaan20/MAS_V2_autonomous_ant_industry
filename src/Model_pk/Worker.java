@@ -2,12 +2,11 @@ package Model_pk;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Objects;
 
 import Model_pk.Behaviour.*;
-import Model_pk.Enterables.Enterable_object;
+import Model_pk.Enterables.Base;
+import Model_pk.Enterables.Resource_pool;
 import View.Object_visuals.Worker_visual;
-import View.View;
 
 /**
  * Created by christiaan on 10/05/18.
@@ -16,39 +15,59 @@ public class Worker extends Object {
 
     private Model model;
 
-    private double  currDirection;
+    private double  currDirection;      //The current direction the worker is moving
+    private Worker_State_Enum state;    //the worker is in
 
-    private ArrayList<Resource> load = new ArrayList<>();
-    private int                 max_load;
-    private int                 time;   //the amount of ticks that the worker is within a object without receiving an resource
+    private ArrayList<Resource> load = new ArrayList<>();   //the resources it is carrying
+    private int                 max_load;                   //the maximum amount of resources the worker can carry
+    private int                 time;                       //the amount of ticks that the worker is within a object without receiving an resource
 
-    private Pheromone          currPhermone;
-    private ArrayList<CustomStruct> DetectedObjects = new ArrayList<>();
-    private ArrayList<Objects> VisitedObjects = new ArrayList<>();
+    private Object curr_target_object;      //the current object the worker is moving towards
+
+
+
+    private ArrayList<CustomStruct> detected_objects = new ArrayList<>();   //The list of objects it can see now
+    private ArrayList<Object> visited_objects = new ArrayList<>();          //The list of objects it has already passed
 
     //private Abstr_Behaviour abstrBehaviour;
-    private Abstr_Task      task;
-    private Resource_Type resource_type; //only relevant when the task = miner
+    private Abstr_Task      task;           //The Task it is currently doing
+    private Resource_Type resource_type;    //The resource it will mine, transport for or look for
 
-    public Worker( int x, int y, int size, double currDirection, int max_load, Abstr_Task task)
-    {// Abstr_Behaviour abstrBehaviour) {
+    public Worker(int x, int y, int size, double currDirection, int max_load, Abstr_Task task, Base base)
+    {
         super( x, y, size);
         this.currDirection = currDirection;
         this.max_load = max_load;
         this.task = task;
-        //this.task.setWorker(this);
-        //this.abstrBehaviour = abstrBehaviour;
-        //this.abstrBehaviour.setWorker(this);
-        this.resource_type = Resource_Type.Stone;
+        this.task.setLast_entered_object(base);
+        this.resource_type = null;
+        this.setState(Worker_State_Enum.inside);
 
         this.setVisual(new Worker_visual( x, y, size,this));
 
         this.model = Model.getInstance();
 
         task.test_tan_function();
+    }
 
+    public Worker( int x, int y, int size, double currDirection, int max_load, Abstr_Task task, Resource_Type type, Base base)
+    {
+//        super( x, y, size);
+//        this.currDirection = currDirection;
+//        this.max_load = max_load;
+//        this.task = task;
+//
+//
+//        this.setVisual(new Worker_visual( x, y, size,this));
+//
+//        this.model = Model.getInstance();
+//
+//        task.test_tan_function();
+        this(x,y,size,currDirection,max_load,task,base);
+        this.resource_type = type;
 
     }
+
 
     @Override
     public void tick()
@@ -67,9 +86,7 @@ public class Worker extends Object {
     public void setTarget(int x, int y)
     {
         task.setTarget(x,y);
-        task.setDist_walked(0);
-        task.move_worker(this,x,y);
-}
+    }
 
 
     public double getCurrDirection() {
@@ -88,12 +105,12 @@ public class Worker extends Object {
         this.max_load = max_load;
     }
 
-    public Pheromone getCurrPhermone() {
-        return currPhermone;
+    public Object getCurr_target_object() {
+        return curr_target_object;
     }
 
-    public void setCurrPhermone(Pheromone currPhermone) {
-        this.currPhermone = currPhermone;
+    public void setCurr_target_object(Object curr_target_object) {
+        this.curr_target_object = curr_target_object;
     }
 
     public Abstr_Task getTask() {
@@ -114,16 +131,14 @@ public class Worker extends Object {
 
     public boolean is_full()
     {
-        if(max_load <= get_total_amount_of_load())
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-
+        return(max_load <= get_total_amount_of_load());
     }
+
+    public boolean is_empty()
+    {
+        return (0 == get_total_amount_of_load());
+    }
+
 
     public boolean add_load(Resource resource)
     {
@@ -178,13 +193,6 @@ public class Worker extends Object {
 
     public void clear_load()
     {
-        /*Iterator<Resource> iter = load.iterator();
-        while (iter.hasNext())
-        {
-            iter.remove();
-
-        }*/
-
         load.clear();
     }
 
@@ -209,8 +217,131 @@ public class Worker extends Object {
         this.load = load;
     }
 
-    public void addDetectedPheromone(CustomStruct struct)
+    public void add_visited_pheromone(Object obj)
     {
+        remove_obj_from_detected_pheromones(obj);
+        visited_objects.add(obj);
+    }
 
+    public void remove_obj_from_visited_pheromones(Object obj)
+    {
+        Iterator<Object> iter = visited_objects.iterator();
+        while (iter.hasNext()) {
+            Object object = iter.next();
+            if(object.equals(obj) )
+                iter.remove();
+
+        }
+    }
+
+    public void add_detected_pheromone(CustomStruct struct) {
+        if (!isVisited(struct.getObject()))
+            detected_objects.add(struct);
+    }
+
+    public void remove_obj_from_detected_pheromones(Object obj)
+    {
+        Iterator<CustomStruct> iter = detected_objects.iterator();
+        while (iter.hasNext()) {
+            CustomStruct struct = iter.next();
+            if(struct.getObject().equals(obj) )
+                iter.remove();
+
+        }
+    }
+
+    public Pheromone closest_phero()
+    {
+        CustomStruct closest_phero = new CustomStruct(null,10000000);
+
+
+        for(CustomStruct struct: detected_objects)
+        {
+            Object obj = struct.getObject();
+            if(obj instanceof Pheromone)
+            {
+                Pheromone phero = (Pheromone) obj;
+
+                    if(closest_phero.is_farther_than(struct))
+                    {
+                        closest_phero = struct;
+                    }
+            }
+        }
+
+        return (Pheromone) closest_phero.getObject();
+    }
+
+    public Pheromone closest_phero_of_type(Task_Enum task,Resource_Type type)
+    {
+        CustomStruct closest_phero = new CustomStruct(null,10000000);
+
+
+        for(CustomStruct struct: detected_objects)
+        {
+            Object obj = struct.getObject();
+            if(obj instanceof Pheromone)
+            {
+                Pheromone phero = (Pheromone) obj;
+
+                if(phero.getType() == type && phero.getTask() == task)
+                {
+                    if(closest_phero.is_farther_than(struct))
+                    {
+                        closest_phero = struct;
+                    }
+                }
+            }
+        }
+
+        return (Pheromone) closest_phero.getObject();
+    }
+
+    public Pheromone closest_owned_phero_of_type(Worker owner,Task_Enum task,Resource_Type type)
+    {
+        CustomStruct closest_phero = new CustomStruct(null,10000000);
+
+        for(CustomStruct struct: detected_objects)
+        {
+            Object obj = struct.getObject();
+            if(obj instanceof Pheromone)
+            {
+                Pheromone phero = (Pheromone) obj;
+
+                if((phero.isType(type) || type == null)&& phero.isTask(task) && phero.isOwner(owner))
+                {
+                    if(closest_phero.is_farther_than(struct))
+                    {
+                        closest_phero = struct;
+                    }
+                }
+            }
+        }
+
+        return (Pheromone) closest_phero.getObject();
+    }
+
+
+    public boolean isVisited(Object obj)
+    {
+        return visited_objects.contains(obj);
+    }
+
+    public void clear_visited_objects()
+    {
+        visited_objects.clear();
+    }
+
+    public void clear_detected_objects()
+    {
+        detected_objects.clear();
+    }
+
+    public Worker_State_Enum getState() {
+        return state;
+    }
+
+    public void setState(Worker_State_Enum state) {
+        this.state = state;
     }
 }

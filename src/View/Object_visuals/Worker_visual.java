@@ -3,6 +3,7 @@ package View.Object_visuals;
 import Model_pk.Behaviour.Task_Enum;
 import Model_pk.Object;
 import Model_pk.Worker;
+import Model_pk.Worker_State_Enum;
 import View.View;
 
 import java.awt.*;
@@ -45,8 +46,11 @@ public class Worker_visual extends Object_visual
 
 
         draw_load(g, worker, 0);
-        draw_target_coord(g,worker,1);
-        draw_task(g,worker,2);
+        //draw_target_coord(g,worker,1);
+        draw_task(g,worker,1);
+        draw_state(g,worker,2);
+
+        draw_target(g,worker);
 
     }
 
@@ -67,14 +71,26 @@ public class Worker_visual extends Object_visual
     {
         Task_Enum task = worker.getTask().getTask();
 
-        if(task == Task_Enum.miner)
-        {
+        //if(task == Task_Enum.miner)
+        //{
             g.drawString(task + " " + String.valueOf(worker.getResource_type()),x,y-text_size*height);
-        }
-        g.drawString(String.valueOf(task),x,y-text_size*height);
+        //}
+        //g.drawString(String.valueOf(task),x,y-text_size*height);
+    }
 
+    public void draw_state(Graphics g, Worker worker, int height )
+    {
+        Worker_State_Enum state = worker.getState();
+        g.drawString(String.valueOf(state),x,y-text_size*height);
+    }
 
+    public void draw_target(Graphics g, Worker worker)
+    {
+        int oval_size = 10;
+        int x_target = view.x_model_to_view(worker.getTask().getTarget_x());
+        int y_target = view.y_model_to_view(worker.getTask().getTarget_y());
 
+        g.drawOval(x_target-oval_size/2,y_target-oval_size/2, oval_size, oval_size);
     }
 
 
