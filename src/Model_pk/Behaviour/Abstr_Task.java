@@ -1,5 +1,6 @@
 package Model_pk.Behaviour;
 
+import Model_pk.Enterables.Base;
 import Model_pk.Enterables.Enterable_object;
 import Model_pk.Model;
 import Model_pk.Worker;
@@ -43,13 +44,13 @@ public abstract class Abstr_Task
     private int max_phero_size = 15;    //the limit on the size of the pheromone
     private int start_phero_strength = 10;
     private int max_phero_strength = 50;
-    private int degrade_time = 100;      //how many ticks it takes to degrade the pheromone by 1
+    private int degrade_time = 150;      //how many ticks it takes to degrade the pheromone by 1
 
     // parameters fot the dropping of pheromones
     private int phero_drop_dist         = step_distance;   //the distance needed to walk before dropping a pheromone
     private int dist_walked_since_drop  = 0;                    //the distance walked since last dropping of pheromone
     private boolean drop_enabled        = true;
-    private int phero_detect_dist       = (int)(step_distance*1.25);
+    private int phero_detect_dist       = (int)(step_distance*1.5);
 
     //parameters for the return mechanism of the workers
     private int ticks_before_return     = (int) (degrade_time*start_phero_strength*0.5); // the number of ticks before the worker has to return if it wants to find it's way home
@@ -67,6 +68,7 @@ public abstract class Abstr_Task
     public abstract void select_target(Worker worker);
     public abstract void move(Worker worker);
     public abstract boolean on_reached(Worker worker, Object obj);
+    public abstract boolean at_base(Worker worker, Base base);
 
   /*  public void setWorker(Worker worker) {
         this.worker = worker;
@@ -80,11 +82,11 @@ public abstract class Abstr_Task
         Object reached = model.check_if_reached_an_object(worker.getX(), worker.getY());
 
         //if the reached object is the one he entered last, the return mechanism counter is reset
-        if(isLast_entered_object((Enterable_object) reached))
+      /*  if(isLast_entered_object((Enterable_object) reached))
         {
             setDist_walked_since_drop(getDist_walked_since_drop() + 10); //speeds up the progress to the next drop of pheromone
             setTicks_since_enter(0);
-        }
+        }*/
 
         if(will_enter_reached(worker, reached))   //returns true if the worker goes into the object
         {
@@ -93,7 +95,7 @@ public abstract class Abstr_Task
             {
                 drop_pheromone(worker);
                 worker.setState(Worker_State_Enum.inside);
-                setLast_entered_object((Enterable_object) reached);
+                //setLast_entered_object((Enterable_object) reached);
             }
 
         }
@@ -102,23 +104,24 @@ public abstract class Abstr_Task
             //executed when the worker is on the move
             if(worker.getState() == Worker_State_Enum.inside)   //if the worker was previously inside an object
             {
+                worker.clear_visited_objects();
                 drop_pheromone(worker);
                 setRefresh_target(true);
-                worker.clear_visited_objects();
                 worker.setCurr_target_object(null);
             }
 
             //check of a phermone has to be dropped
-            check_dropping_pheromone(worker);
+           // check_dropping_pheromone(worker);
 
             if (is_at_target(worker))   // if the worker is at/beyond the current target or just set to refresh the target
             {
+                drop_pheromone(worker);
                 worker.clear_detected_objects();
                 model.find_objects(worker);
 
                 //add the current targetted object to the visited objects
                 Object curr_target = worker.getCurr_target_object();
-                if(curr_target != null)
+                if(curr_target != null )
                 {
                     worker.add_visited_pheromone(curr_target );
                 }
@@ -163,7 +166,10 @@ public abstract class Abstr_Task
         }
         else
         {
-            return on_reached(worker,reached);
+            if(reached instanceof Base)
+                return at_base(worker,(Base) reached);
+            else
+                return on_reached(worker,reached);
         }
     }
 
@@ -227,13 +233,13 @@ public abstract class Abstr_Task
 
         //each step of step_distance long the ant turns -90° to 90° after big_turn_threshold the ant can turn upto 360°
 
-        double corner = (random.nextDouble()-0.5)*(Math.PI); //make a bend of min -90° and 90°
+        double corner = (random.nextDouble()-0.5)*(Math.PI*0.5); //make a bend of min -90° and 90°
         double totCorner = worker.getCurrDirection() + corner; //add bend to currecnt direction of the workers
 
         //generate a target based on the step_distance
         if(big_turn_count >= big_turn_threshold)
         {
-            totCorner = (random.nextDouble())*(Math.PI*2); //make a bend of 0° to 360°
+            totCorner = (random.nextDouble())*(Math.PI); //make a bend of 0° to 360°
             big_turn_count = 0;
         }
         big_turn_count = big_turn_count +1;
@@ -241,19 +247,19 @@ public abstract class Abstr_Task
         int new_x = worker.getX() +  (int) (Math.cos(totCorner)* step_distance);
         int new_y = worker.getY() + (int) (Math.sin(totCorner)* step_distance);
 
-        //if the target coordinates are outside of the borders of the map the ant is turned back by decreasing totCorner with 180° (but in radials)
-        if(checkOutsideOfBorders(new_x,new_y,sizeX,sizeY))
-        {
-            totCorner = totCorner - Math.PI;
-            new_x  = worker.getX() +  (int) (Math.cos(totCorner)* step_distance);
-            new_y = worker.getY() + (int) (Math.sin(totCorner)* step_distance);
-        }
-
-        setTarget(new_x,new_y);
-
-
+        worker.setCurr_target_object(null);
+        setTarget(worker,new_x,new_y);
 
     }
+
+    public void walk_straight_for(Worker worker, int steps)
+    {
+        int new_x = worker.getX() +  (int) (Math.cos(worker.getCurrDirection())* step_distance*steps);
+        int new_y = worker.getY() + (int) (Math.sin(worker.getCurrDirection())* step_distance*steps);
+
+        setTarget(worker, new_x,new_y);
+    }
+
     public int move_worker(Worker worker)
     {
         int x = worker.getX();
@@ -268,7 +274,7 @@ public abstract class Abstr_Task
 
         int distWalked = 0 ;
 
-        double corner = getaTanCorner(Xdist, Ydist);
+        double corner = worker.get_corner_relative_to(target_x,target_y);
         worker.setCurrDirection(corner);
 
         if (dist > worker_speed)
@@ -327,14 +333,20 @@ public abstract class Abstr_Task
 
     public void drop_pheromone(Worker worker)
     {
-        model.drop_pheromone(worker,worker.getX(), worker.getY(),start_phero_size ,worker.getTask(),worker.getResource_type() , start_phero_strength,degrade_time,max_phero_size);
+        if(drop_enabled)
+        {
+            model.drop_pheromone(worker,worker.getX(), worker.getY(),start_phero_size ,worker.getTask(),worker.getResource_type() , start_phero_strength,degrade_time,max_phero_size);
+        }
+
         dist_walked_since_drop = 0;
     }
 
 
     public boolean is_at_target(Worker worker)
     {
-        return ( dist_walked >= step_distance || ((target_x == worker.getX() && target_y == worker.getY())) || isRefresh_target());
+        return (dist_walked >= step_distance ||
+                ((target_x == worker.getX() && target_y == worker.getY())) ||
+                isRefresh_target() ) ;
 
     }
 
@@ -346,9 +358,7 @@ public abstract class Abstr_Task
 
     public void go_to_phero(Worker worker, Object obj)
     {
-        setDrop_enabled(true);
-        worker.setCurr_target_object(obj);
-        worker.setTarget(obj.getX(),obj.getY());
+        setTarget(worker,obj.getX(),obj.getY());
     }
 
     public int get_x_dist(int curr_x, int x_target)
@@ -400,10 +410,28 @@ public abstract class Abstr_Task
         return target_y;
     }
 
-    public void setTarget(int x_target,int y_target)
+    public void setTarget(Worker worker, int target_x, int target_y)
     {
-        this.target_x = x_target;
-        this.target_y = y_target;
+        int sizeX = model.get_size_x_field();
+        int sizeY = model.get_size_y_field();
+
+        int new_x = target_x;
+        int new_y = target_y;
+
+        double corner = worker.get_corner_relative_to(target_x, target_y);
+        worker.setCurrDirection(corner);
+
+
+        if(checkOutsideOfBorders(target_x, target_y,sizeX,sizeY))
+        {
+            corner = corner - Math.PI;
+            new_x  = worker.getX() +  (int) (Math.cos(corner)* step_distance);
+            new_y = worker.getY() + (int) (Math.sin(corner)* step_distance);
+        }
+
+
+        this.target_x = new_x;
+        this.target_y = new_y;
         setDist_walked(0);
 
     }

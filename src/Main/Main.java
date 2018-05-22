@@ -20,8 +20,8 @@ public class Main extends Frame {
     private Main_thread main_thread;
     private Thread t;
 
-    private int size_x = 1000;
-    private int size_y = 1000;
+    private int size_x = 900;
+    private int size_y = 900;
 
     public Main() throws HeadlessException
     {

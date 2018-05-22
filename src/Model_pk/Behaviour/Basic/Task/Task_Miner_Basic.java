@@ -12,6 +12,7 @@ import Model_pk.Object;
  */
 public class Task_Miner_Basic extends Abstr_Task
 {
+    private boolean lost_phero = false; //becomes true if the miner cannot find a phero
     public Task_Miner_Basic()
     {
         super.task = Task_Enum.miner;
@@ -43,35 +44,61 @@ public class Task_Miner_Basic extends Abstr_Task
         Object obj =  worker.closest_owned_phero_of_type(worker,getTask(),worker.getResource_type());
         if(obj != null)
         {
+            setDrop_enabled(true);
+            set_lost_phero_false();
             go_to_phero(worker,obj);
+            worker.setCurr_target_object(obj);
             worker.setState(Worker_State_Enum.to_phero);
             return;
         }
         obj = worker.closest_owned_phero_of_type(worker, Task_Enum.explorer,null);
         if(obj != null)
         {
+            setDrop_enabled(true);
+            set_lost_phero_false();
             go_to_phero(worker,obj);
+            worker.setCurr_target_object(obj);
             worker.setState(Worker_State_Enum.to_phero);
             return;
         }
         obj = worker.closest_phero_of_type(getTask(),worker.getResource_type());
         if(obj != null)
         {
+            setDrop_enabled(true);
+            set_lost_phero_false();
             go_to_phero(worker,obj);
+            worker.setCurr_target_object(obj);
             worker.setState(Worker_State_Enum.to_phero);
             return;
         }
         obj = worker.closest_phero_of_type(Task_Enum.explorer,null);
         if(obj != null)
         {
+            setDrop_enabled(true);
+            set_lost_phero_false();
             go_to_phero(worker,obj);
+            worker.setCurr_target_object(obj);
             worker.setState(Worker_State_Enum.to_phero);
             return;
         }
 
+
         worker.setCurr_target_object(null);
-        wanderWithin(worker);
-        worker.setState(Worker_State_Enum.Wandering);
+        //wanderWithin(worker);
+        //worker.setState(Worker_State_Enum.Wandering);
+
+        if(lost_phero)
+        {
+            setDrop_enabled(false);
+            wanderWithin(worker);
+            worker.setState(Worker_State_Enum.Wandering);
+        }
+        else
+        {
+            set_lost_phero_true();
+            walk_straight_for(worker,1);
+        }
+
 
     }
 
@@ -98,15 +125,31 @@ public class Task_Miner_Basic extends Abstr_Task
             }
 
         }
-        else if(obj instanceof Base)
-        {
-            Base base = (Base) obj;
-            if(worker.get_total_amount_of_load() > 0)
-            {
-                return base.enter(worker);
-            }
-        }
+
 
         return false;
     }
+
+    @Override
+    public boolean at_base(Worker worker, Base base) {
+
+        if(worker.get_total_amount_of_load() > 0)
+        {
+            return base.enter(worker);
+        }
+        return false;
+    }
+
+    private void set_lost_phero_true()
+    {
+        lost_phero = true;
+
+    }
+
+    private void set_lost_phero_false()
+    {
+        lost_phero = false;
+        setDrop_enabled(true);
+    }
+
 }

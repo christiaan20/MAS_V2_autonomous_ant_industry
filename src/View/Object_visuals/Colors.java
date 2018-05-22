@@ -19,7 +19,7 @@ public class Colors
 
 
     Color copper = new Color(182, 115, 51); ;
-    Color iron = new Color(224,223,219);
+    Color iron = new Color(68, 79, 103);
     Color stone  = Color.GRAY;
     Color explorer =  Color.blue;
     Color coal = Color.darkGray;
@@ -145,5 +145,29 @@ public class Colors
 
     public void setSelected(Color selected) {
         this.selected = selected;
+    }
+
+    public Color getIron() {
+        return iron;
+    }
+
+    public void setIron(Color iron) {
+        this.iron = iron;
+    }
+
+    public Color getCoal() {
+        return coal;
+    }
+
+    public void setCoal(Color coal) {
+        this.coal = coal;
+    }
+
+    public Color getUranium() {
+        return uranium;
+    }
+
+    public void setUranium(Color uranium) {
+        this.uranium = uranium;
     }
 }

@@ -2,6 +2,7 @@ package Model_pk.Behaviour.Basic.Task;
 
 import Model_pk.Behaviour.Abstr_Task;
 import Model_pk.Behaviour.Task_Enum;
+import Model_pk.Enterables.Base;
 import Model_pk.Enterables.Resource_pool;
 import Model_pk.Object;
 import Model_pk.Pheromone;
@@ -12,6 +13,8 @@ import Model_pk.Worker_State_Enum;
  * Created by christiaan on 16/05/18.
  */
 public class Task_Explorer_Basic extends Abstr_Task{
+    public int wander_limit = 15;
+    public int wander_limit_count = 0;
 
     public Task_Explorer_Basic()
     {
@@ -31,8 +34,17 @@ public class Task_Explorer_Basic extends Abstr_Task{
     @Override
     public void select_target(Worker worker)
     {
-        wanderWithin(worker);
-        worker.setState(Worker_State_Enum.Wandering);
+        if(reached_wander_limit())
+        {
+            return_to_base(worker);
+        }
+        else
+        {
+            worker.setState(Worker_State_Enum.Wandering);
+            wanderWithin(worker);
+
+        }
+
     }
 
 
@@ -66,6 +78,40 @@ public class Task_Explorer_Basic extends Abstr_Task{
         }
 
         return false;
+    }
+
+    @Override
+    public boolean at_base(Worker worker, Base base)
+    {
+        return false;
+    }
+
+    public boolean reached_wander_limit()
+    {
+        wander_limit_count++;
+        return(wander_limit_count >= wander_limit);
+
+
+    }
+
+    public void return_to_base(Worker worker)
+    {
+        Pheromone phero =  (Pheromone) worker.pop_last_visited_phero();
+        worker.setCurr_target_object(null);
+
+        if(phero == null)
+        {
+            setDrop_enabled(true);
+            wander_limit_count =0;
+            worker.setState(Worker_State_Enum.Wandering);
+        }
+        else
+        {
+            setDrop_enabled(false);
+
+            go_to_phero(worker,phero);
+            worker.setState(Worker_State_Enum.returning);
+        }
     }
 
 }

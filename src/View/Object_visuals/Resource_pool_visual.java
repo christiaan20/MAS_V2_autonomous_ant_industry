@@ -42,6 +42,10 @@ public class Resource_pool_visual extends Object_visual
         {
             draw_type_uranium(g);
         }
+        if(type == Resource_Type.Iron )
+        {
+            draw_type_iron(g);
+        }
 
         if(selected)
         {
@@ -54,6 +58,20 @@ public class Resource_pool_visual extends Object_visual
     public void draw_type_stone(Graphics g)
     {
         Color color = Colors.getInstance().getStone();
+
+        color = check_draw_selected(color);
+
+        g.setColor(color);
+        int w = size/2;
+        g.fillOval(x  , y, w, w);
+        g.fillOval(x + w  , y, w, w);
+        g.fillOval(x,y+ w , w, w);
+        g.fillOval(x + size/4,y + size/4  , ((size*3)/4),((size*3)/4));
+    }
+
+    public void draw_type_iron(Graphics g)
+    {
+        Color color = Colors.getInstance().getIron();
 
         color = check_draw_selected(color);
 

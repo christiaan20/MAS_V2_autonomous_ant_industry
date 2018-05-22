@@ -32,6 +32,9 @@ public class Window extends Panel implements ActionListener
     private String ticks_per_second_text;
     private Label  ticks_per_second_label;
 
+    //buttons regarding the drawing of aspects
+    private Button draw_pheromones_button;
+
   ;
 
     public Window(int size_x, int size_y, Main_thread main_thread)
@@ -77,6 +80,10 @@ public class Window extends Panel implements ActionListener
         speedup_button.setBackground(Color.lightGray);
         speedup_button.addActionListener(this);
 
+        draw_pheromones_button = new Button("Draw Pheromones");
+        draw_pheromones_button.setBackground(Color.lightGray);
+        draw_pheromones_button.addActionListener(this);
+
         //create labels
         ticks_per_second_text = "Ticks/sec: ";
         ticks_per_second_label = new Label (ticks_per_second_text + String.valueOf(0));
@@ -96,6 +103,7 @@ public class Window extends Panel implements ActionListener
         bottom_panel.setLayout(new FlowLayout());
         bottom_panel.setBackground(Color.gray);
 
+        bottom_panel.add(draw_pheromones_button);
         bottom_panel.add(pause_button);
         bottom_panel.add(slowdown_button);
         bottom_panel.add(speedup_button);
@@ -126,6 +134,7 @@ public class Window extends Panel implements ActionListener
         check_pause_button(e);
         check_slowdown_button(e);
         check_speedup_button(e);
+        check_draw_pheromones_button(e);
     }
 
     public void check_pause_button(ActionEvent e)
@@ -141,6 +150,25 @@ public class Window extends Panel implements ActionListener
             {
                 main_thread.setRunning(true);
                 pause_button.setBackground(Color.lightGray);
+            }
+
+        }
+    }
+
+    public void check_draw_pheromones_button(ActionEvent e)
+    {
+        if( e.getSource() == draw_pheromones_button )
+        {
+            View view = View.getInstance();
+            if(view.isDraw_pheromones() == true)
+            {
+                view.setDraw_pheromones(false);
+                draw_pheromones_button .setBackground(Color.RED);
+            }
+            else
+            {
+                view.setDraw_pheromones(true);
+                draw_pheromones_button .setBackground(Color.lightGray);
             }
 
         }

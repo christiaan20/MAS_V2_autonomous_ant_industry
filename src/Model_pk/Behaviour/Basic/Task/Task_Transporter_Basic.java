@@ -2,6 +2,7 @@ package Model_pk.Behaviour.Basic.Task;
 
 import Model_pk.Behaviour.Abstr_Task;
 import Model_pk.Behaviour.Task_Enum;
+import Model_pk.Enterables.Base;
 import Model_pk.Object;
 import Model_pk.Worker;
 import Model_pk.Worker_State_Enum;
@@ -37,6 +38,11 @@ public class Task_Transporter_Basic extends Abstr_Task
     @Override
     public boolean on_reached(Worker worker, Object obj)
     {
+        return false;
+    }
+
+    @Override
+    public boolean at_base(Worker worker, Base base) {
         return false;
     }
 }

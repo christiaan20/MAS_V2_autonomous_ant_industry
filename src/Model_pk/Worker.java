@@ -1,5 +1,6 @@
 package Model_pk;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -85,7 +86,18 @@ public class Worker extends Object {
 
     public void setTarget(int x, int y)
     {
-        task.setTarget(x,y);
+        task.setTarget(this,x,y);
+    }
+
+    public double get_corner_relative_to(int target_x,int target_y)
+    {
+        int Xdist = task.get_x_dist(this.x,target_x);
+        int Ydist = task.get_y_dist(this.y, target_y);
+
+        if(x == target_x || y == target_y )
+            return model.getRandom().nextDouble();
+        else
+            return task.getaTanCorner(Xdist, Ydist);
     }
 
 
@@ -94,6 +106,7 @@ public class Worker extends Object {
     }
 
     public void setCurrDirection(double currDirection) {
+
         this.currDirection = currDirection;
     }
 
@@ -250,6 +263,7 @@ public class Worker extends Object {
         }
     }
 
+
     public Pheromone closest_phero()
     {
         CustomStruct closest_phero = new CustomStruct(null,10000000);
@@ -343,5 +357,33 @@ public class Worker extends Object {
 
     public void setState(Worker_State_Enum state) {
         this.state = state;
+    }
+
+    public Object pop_last_visited_phero()
+    {
+        if(visited_objects.size() >  0)
+        {
+            Object obj = visited_objects.get(visited_objects.size()-1);
+            remove_obj_from_visited_pheromones(obj);
+            return obj;
+        }
+        return null;
+
+    }
+
+    public ArrayList<CustomStruct> getDetected_objects() {
+        return detected_objects;
+    }
+
+    public void setDetected_objects(ArrayList<CustomStruct> detected_objects) {
+        this.detected_objects = detected_objects;
+    }
+
+    public ArrayList<Object> getVisited_objects() {
+        return visited_objects;
+    }
+
+    public void setVisited_objects(ArrayList<Object> visited_objects) {
+        this.visited_objects = visited_objects;
     }
 }

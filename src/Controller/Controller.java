@@ -50,7 +50,7 @@ public class Controller implements MouseListener, MouseMotionListener
             if(obj instanceof Worker)
             {
                 Worker worker = (Worker) obj;
-                worker.setTarget( model_x,model_y);
+                worker.getTask().setTarget( worker, model_x,model_y);
             }
 
         }
