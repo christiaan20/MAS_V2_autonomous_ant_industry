@@ -82,7 +82,7 @@ public class Model{
         //create the resources
         enterable_objects.add(new Resource_pool(300,400,object_size,resource_time, Resource_Type.Stone,resource_pool_capacity));
         enterable_objects.add(new Resource_pool(75,325,object_size,resource_time, Resource_Type.Coal, resource_pool_capacity));
-        enterable_objects.add(new Resource_pool(700,325,object_size,resource_time, Resource_Type.Coal, resource_pool_capacity));
+        enterable_objects.add(new Resource_pool(700,325,object_size,resource_time, Resource_Type.Copper, resource_pool_capacity));
         enterable_objects.add(new Resource_pool(700,500,object_size,resource_time, Resource_Type.Iron, resource_pool_capacity));
        enterable_objects.add(new Resource_pool(600,250,object_size,resource_time, Resource_Type.Uranium, resource_pool_capacity));
 

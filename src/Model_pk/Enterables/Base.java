@@ -86,4 +86,8 @@ public class Base extends Enterable_object {
     public HashMap<Resource_Type, Integer> get_obtained_resources_resources() {
         return this.obtained_resources;
     }
+
+    public void set_obtained_resources(HashMap<Resource_Type, Integer> obtained_resources) {
+        this.obtained_resources = obtained_resources;
+    }
 }

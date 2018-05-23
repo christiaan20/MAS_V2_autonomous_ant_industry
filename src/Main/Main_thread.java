@@ -1,8 +1,11 @@
 package Main;
 
+import Model_pk.Tester;
 import View.View;
 import Model_pk.Model;
 import View.Window;
+
+import java.io.IOException;
 
 /**
  * Created by christiaan on 10/05/18.
@@ -13,15 +16,17 @@ public class Main_thread implements Runnable {
     private Window window;
 
     private boolean running = true; // whether the mainthread is running or not
-    private int refresh_time = 25;     // refresh_time of ticks and refreshes in ms
+    private int refresh_time = 10;     // refresh_time of ticks and refreshes in ms
     private int tickcount = 0;
+    private Tester test_setting;
 
 
-    public Main_thread()
-    {
+    public Main_thread() throws IOException {
         view = View.getInstance();
         model = Model.getInstance();
         this.window = window;
+        this.test_setting = new Tester();
+
     }
 
     public void set_window(Window window)
@@ -44,6 +49,14 @@ public class Main_thread implements Runnable {
                 model.delete_expired_objects();
                 window.update_resource_counters();
                 window.update_tick_counter(tickcount);
+
+
+                try {
+                    this.test_setting.is_goal_reached(tickcount);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
             }
 
                 view.paint();
@@ -59,6 +72,10 @@ public class Main_thread implements Runnable {
         }
 
 
+    }
+
+    public int getTickcount() {
+        return tickcount;
     }
 
     public boolean isRunning() {
@@ -100,4 +117,5 @@ public class Main_thread implements Runnable {
     {
         return (double)(1000/refresh_time);
     }
+
 }
