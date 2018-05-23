@@ -56,8 +56,8 @@ public class Model{
     {
         behaviour = new Behaviour_Basic();
 
-        size_x_field    = 900;
-        size_y_field    = 900;
+        size_x_field    = 700;
+        size_y_field    = 700;
 
         View.getInstance().set_field_size(size_x_field, size_y_field);
         int base_x      = 450;
@@ -82,8 +82,8 @@ public class Model{
         //create the resources
         enterable_objects.add(new Resource_pool(300,400,object_size,resource_time, Resource_Type.Stone,resource_pool_capacity));
         enterable_objects.add(new Resource_pool(75,325,object_size,resource_time, Resource_Type.Coal, resource_pool_capacity));
-        enterable_objects.add(new Resource_pool(800,325,object_size,resource_time, Resource_Type.Coal, resource_pool_capacity));
-        enterable_objects.add(new Resource_pool(800,500,object_size,resource_time, Resource_Type.Copper, resource_pool_capacity));
+        enterable_objects.add(new Resource_pool(200,625,object_size,resource_time, Resource_Type.Coal, resource_pool_capacity));
+        enterable_objects.add(new Resource_pool(600,500,object_size,resource_time, Resource_Type.Copper, resource_pool_capacity));
        enterable_objects.add(new Resource_pool(600,250,object_size,resource_time, Resource_Type.Uranium, resource_pool_capacity));
 
         //create the workers
