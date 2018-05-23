@@ -34,6 +34,8 @@ public class View extends Canvas {
     private Color background_color = new Color(194, 60, 42); //red color for the mars ground
     private int text_size = 15;
 
+    private boolean draw_pheromones = true;
+
 
     private ArrayList<Object_visual> object_visuals = new ArrayList<Object_visual>();
 
@@ -343,4 +345,11 @@ public class View extends Canvas {
         }
     }
 
+    public boolean isDraw_pheromones() {
+        return draw_pheromones;
+    }
+
+    public void setDraw_pheromones(boolean draw_pheromones) {
+        this.draw_pheromones = draw_pheromones;
+    }
 }

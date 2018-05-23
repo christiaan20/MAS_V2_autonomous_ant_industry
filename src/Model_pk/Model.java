@@ -56,8 +56,8 @@ public class Model{
     {
         behaviour = new Behaviour_Basic();
 
-        size_x_field    = 700;
-        size_y_field    = 700;
+        size_x_field    = 800;
+        size_y_field    = 800;
 
         View.getInstance().set_field_size(size_x_field, size_y_field);
         int base_x      = 450;
@@ -65,7 +65,7 @@ public class Model{
         int object_size = 50;
         int worker_size = 20;
 
-        int work_force_size = 10;
+        int work_force_size = 15;
 
         int base_time       = 50;
         int resource_time   = 50;
@@ -82,17 +82,17 @@ public class Model{
         //create the resources
         enterable_objects.add(new Resource_pool(300,400,object_size,resource_time, Resource_Type.Stone,resource_pool_capacity));
         enterable_objects.add(new Resource_pool(75,325,object_size,resource_time, Resource_Type.Coal, resource_pool_capacity));
-        enterable_objects.add(new Resource_pool(200,625,object_size,resource_time, Resource_Type.Coal, resource_pool_capacity));
-        enterable_objects.add(new Resource_pool(600,500,object_size,resource_time, Resource_Type.Copper, resource_pool_capacity));
+        enterable_objects.add(new Resource_pool(700,325,object_size,resource_time, Resource_Type.Coal, resource_pool_capacity));
+        enterable_objects.add(new Resource_pool(700,500,object_size,resource_time, Resource_Type.Iron, resource_pool_capacity));
        enterable_objects.add(new Resource_pool(600,250,object_size,resource_time, Resource_Type.Uranium, resource_pool_capacity));
 
         //create the workers
         for(int i = 0 ; i < work_force_size;i++)
         {
-            workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble(), max_worker_load, behaviour.getTask_explorer(),base));
+            workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble()*Math.PI*2, max_worker_load, behaviour.getTask_explorer(),base));
         }
 
-        workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble(), max_worker_load, behaviour.getTask_explorer(),Resource_Type.Coal,base));
+        //workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble(), max_worker_load, behaviour.getTask_explorer(),Resource_Type.Coal,base));
         //workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble(), max_worker_load, behaviour.getTask_explorer(),Resource_Type.Stone,base));
     }
 
@@ -138,7 +138,7 @@ public class Model{
     {
         for(Worker worker: workers)
         {
-            worker.setTarget(x,y);
+            worker.getTask().setTarget(worker,x,y);
         }
     }
 
@@ -234,6 +234,7 @@ public class Model{
                     {
                         phero.increase_strength(strength);
                         phero.addOwner(worker);
+                        worker.add_visited_pheromone(phero);
                         return;
                     }
                     else
@@ -242,6 +243,7 @@ public class Model{
                         {
                             phero.increase_strength(strength);
                             phero.addOwner(worker);
+                            worker.add_visited_pheromone(phero);
                             return;
                         }
                     }
@@ -312,5 +314,13 @@ public class Model{
 
     public Base getBase() {
         return base;
+    }
+
+    public Random getRandom() {
+        return random;
+    }
+
+    public void setRandom(Random random) {
+        this.random = random;
     }
 }

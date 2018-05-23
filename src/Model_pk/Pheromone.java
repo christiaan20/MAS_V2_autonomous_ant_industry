@@ -48,7 +48,11 @@ public class Pheromone extends Object
     public void tick()
     {
         increase_expire_counter();
-        if(degrade_counter >= degrade_time)
+        int threshold = ((int)(degrade_time/(strength/10.0)));
+        if(threshold > degrade_time )
+            threshold = degrade_time;
+
+        if(degrade_counter >= threshold)
         {
             decrease_strength(1);
             setDegrade_counter(0);

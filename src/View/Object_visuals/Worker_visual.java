@@ -7,6 +7,7 @@ import Model_pk.Worker_State_Enum;
 import View.View;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Created by christiaan on 16/05/18.
@@ -51,6 +52,7 @@ public class Worker_visual extends Object_visual
         draw_state(g,worker,2);
 
         draw_target(g,worker);
+        draw_visited(g,worker);
 
     }
 
@@ -91,6 +93,20 @@ public class Worker_visual extends Object_visual
         int y_target = view.y_model_to_view(worker.getTask().getTarget_y());
 
         g.drawOval(x_target-oval_size/2,y_target-oval_size/2, oval_size, oval_size);
+    }
+
+    public void draw_visited(Graphics g, Worker worker)
+    {
+        ArrayList<Object> visit = worker.getVisited_objects();
+        for(int i = 0 ; i < visit.size(); i++ )
+        {
+            Object obj = visit.get(i);
+            String target_x = String.valueOf(obj.getX());
+            String target_y = String.valueOf(obj.getY());
+            g.drawString(String.valueOf(i)+ " (" + target_x + "," + target_y + ")",worker.getX()-100,y-text_size*i);
+
+        }
+
     }
 
 
