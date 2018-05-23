@@ -77,7 +77,7 @@ public class Tester {
     }
 
     private void wrtie_results_to_file()throws IOException {
-        
+
         write_to_log_file("Amount of ticks to reach goals");
 
         for( int ticks: tick_counts_goals){
@@ -184,5 +184,17 @@ public class Tester {
     {
         model.getBase().set_obtained_resources(new_resources);
     }
+
+
+    public HashMap<Resource_Type, Integer> get_current_goal(){
+
+        if( all_goals_reached())
+            return null;
+
+        return goals.get(0);
+
+    }
+
+
 
 }

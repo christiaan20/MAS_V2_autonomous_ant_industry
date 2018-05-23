@@ -18,14 +18,13 @@ public class Main_thread implements Runnable {
     private boolean running = true; // whether the mainthread is running or not
     private int refresh_time = 10;     // refresh_time of ticks and refreshes in ms
     private int tickcount = 0;
-    private Tester test_setting;
 
 
-    public Main_thread() throws IOException {
+
+    public Main_thread(){
         view = View.getInstance();
         model = Model.getInstance();
         this.window = window;
-        this.test_setting = new Tester();
 
     }
 
@@ -43,19 +42,11 @@ public class Main_thread implements Runnable {
             if(running)
             {
                 tickcount++;
-                model.tick_workers();
-                model.tick_pheromone();
 
-                model.delete_expired_objects();
+                model.tick(tickcount);
+
                 window.update_resource_counters();
                 window.update_tick_counter(tickcount);
-
-
-                try {
-                    this.test_setting.is_goal_reached(tickcount);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
 
             }
 

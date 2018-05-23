@@ -1,5 +1,6 @@
 package Model_pk;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
@@ -34,6 +35,8 @@ public class Model{
     private ArrayList<Enterable_object> enterable_objects = new ArrayList<>();
     private ArrayList<Pheromone> pheromones = new ArrayList<>();
 
+    private Tester test_setting;
+
     private boolean pause;
 
 
@@ -52,7 +55,7 @@ public class Model{
         return model;
     }
 
-    public void set_scenario_1()
+    public void set_scenario_1()  throws IOException
     {
         behaviour = new Behaviour_Basic();
 
@@ -94,6 +97,26 @@ public class Model{
 
         //workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble(), max_worker_load, behaviour.getTask_explorer(),Resource_Type.Coal,base));
         //workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble(), max_worker_load, behaviour.getTask_explorer(),Resource_Type.Stone,base));
+
+        this.test_setting = new Tester();
+
+    }
+
+
+    public void tick(int tick_count){
+
+        tick_workers();
+        tick_pheromone();
+        delete_expired_objects();
+
+        try {
+
+            test_setting.is_goal_reached(tick_count);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -322,5 +345,9 @@ public class Model{
 
     public void setRandom(Random random) {
         this.random = random;
+    }
+
+    public Tester getTest_setting() {
+        return test_setting;
     }
 }

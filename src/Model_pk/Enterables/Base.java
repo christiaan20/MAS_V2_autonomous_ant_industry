@@ -1,10 +1,8 @@
 package Model_pk.Enterables;
 
 
-import Model_pk.Resource;
-import Model_pk.Resource_Type;
-import Model_pk.Worker;
-import Model_pk.Order;
+import Model_pk.*;
+import Model_pk.Behaviour.Abstr_Task;
 import View.Object_visuals.Base_visual;
 import View.View;
 
@@ -17,7 +15,7 @@ import java.util.HashMap;
 public class Base extends Enterable_object {
     private Order order;
     private HashMap<Resource_Type, Integer> obtained_resources;
-
+    private Task_Manager task_manager;
 
 
     public Base(int x, int y, int size, int time, Order order) {
@@ -27,6 +25,8 @@ public class Base extends Enterable_object {
 
         this.obtained_resources = new HashMap<>();
         init_obtained_resources();
+
+        this.task_manager = new Task_Manager(this);
 
     }
 
@@ -55,12 +55,31 @@ public class Base extends Enterable_object {
     public boolean action(Worker worker)
     {
         drop_resources(worker);
+        task_manager.update_task_of(worker);
         return true;
 
     }
 
     @Override
     public void exit(Worker worker) {
+
+    }
+
+
+    public HashMap<Resource_Type, Integer> resource_to_obtain(){
+
+        Tester tester = Model.getInstance().getTest_setting();
+        HashMap<Resource_Type, Integer>  goal = tester.get_current_goal();
+        HashMap<Resource_Type, Integer> resources_to_obtain = new HashMap<>();
+        int new_amount;
+
+        for(Resource_Type type: Resource_Type.values())
+        {
+            new_amount =  goal.get(type) - obtained_resources.get(type);
+            resources_to_obtain.put(type, new_amount);
+        }
+
+        return resources_to_obtain;
 
     }
 

@@ -24,7 +24,7 @@ public class Main extends Frame {
     private int size_x = 900;
     private int size_y = 900;
 
-    public Main() throws HeadlessException, IOException {
+    public Main() throws HeadlessException {
 
         main_thread = new Main_thread();
 
@@ -77,8 +77,7 @@ public class Main extends Frame {
         t.start();
     }
 
-    public void start_scenario()
-    {
+    public void start_scenario() throws IOException {
         model.set_scenario_1();
     }
 
