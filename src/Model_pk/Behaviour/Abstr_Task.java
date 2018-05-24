@@ -40,7 +40,7 @@ public abstract class Abstr_Task
 
     // parameters attaining to the use of the pheromones
     // the size of pheromone is scaled with its strenght
-    private int start_phero_size = 4;   //the size at dropping the phero
+    private int start_phero_size = 5;   //the size at dropping the phero
     private int max_phero_size = 15;    //the limit on the size of the pheromone
     private int start_phero_strength = 10;
     private int max_phero_strength = 50;

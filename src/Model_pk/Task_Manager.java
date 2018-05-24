@@ -24,11 +24,11 @@ public class Task_Manager {
 
     public void update_task_of( Worker worker){
 
-        if(Task_Enum.miner == worker.getTask().getTask()){
+        //if(Task_Enum.miner == worker.getTask().getTask()){
             Resource_Type new_type = get_new_resource_type();
             worker.setResource_type(new_type);
 
-        }
+        //}
 
         //Resource_Type type = worker.getResource_type();
         //Abstr_Task task = worker.getTask();

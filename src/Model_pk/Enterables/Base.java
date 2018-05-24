@@ -17,6 +17,7 @@ public class Base extends Enterable_object {
     private Order order;
     private HashMap<Resource_Type, Integer> obtained_resources;
     private Task_Manager task_manager;
+    private double chance_of_general_explorer = 0.75;
 
 
     public Base(int x, int y, int size, int time, Order order) {
@@ -55,13 +56,16 @@ public class Base extends Enterable_object {
     @Override
     public boolean action(Worker worker)
     {
-        drop_resources(worker);
-        task_manager.update_task_of(worker);
 
-        Abstr_Task worker_task = worker.getTask();
+        Model model = Model.getInstance();
 
-        if(worker_task.getTask() == Task_Enum.miner)
-        {
+            drop_resources(worker);
+            task_manager.update_task_of(worker);
+            worker.setTask(model.getBehaviour().getTask_miner());
+
+            Abstr_Task worker_task = worker.getTask();
+            //if(worker_task.getTask() == Task_Enum.miner)
+            //{
             int original_detect_dist = worker_task.getPhero_detect_dist();
             //hack to increase the detection range of the worker
             worker_task.setPhero_detect_dist((int)(size*2.5));
@@ -72,11 +76,17 @@ public class Base extends Enterable_object {
 
             if(worker.getCurr_target_object() == null)
             {
-                Model model = Model.getInstance();
+                double random = Model.getInstance().getRandom().nextDouble();
                 worker.setTask(model.getBehaviour().getTask_explorer());
+                if(random > chance_of_general_explorer)
+                {
+                    worker.setResource_type(null);
+                }
             }
 
-        }
+
+
+       // }
 
         return true;
 

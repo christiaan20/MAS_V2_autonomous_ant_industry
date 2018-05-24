@@ -15,6 +15,8 @@ import Model_pk.Worker_State_Enum;
 public class Task_Explorer_Basic extends Abstr_Task{
     public int wander_limit = 15;
     public int wander_limit_count = 0;
+    public boolean returning = false;
+    public boolean enter_base = false;
 
     public Task_Explorer_Basic()
     {
@@ -34,7 +36,8 @@ public class Task_Explorer_Basic extends Abstr_Task{
     @Override
     public void select_target(Worker worker)
     {
-        if(reached_wander_limit())
+        reached_wander_limit();
+        if(returning ==true)
         {
             return_to_base(worker);
         }
@@ -84,8 +87,18 @@ public class Task_Explorer_Basic extends Abstr_Task{
     @Override
     public boolean at_base(Worker worker, Base base)
     {
-        double random = model.getRandom().nextDouble();
-        worker.setCurrDirection(random*Math.PI*2);
+        if(enter_base == true)
+        {
+            double random = model.getRandom().nextDouble();
+            worker.setCurrDirection(random*Math.PI*2);
+            if(base.enter(worker) == false)
+            {
+                enter_base = false;
+                return false;
+            }
+            return true;
+
+        }
         return false;
     }
 
@@ -94,10 +107,14 @@ public class Task_Explorer_Basic extends Abstr_Task{
         return false;
     }
 
-    public boolean reached_wander_limit()
+    public void reached_wander_limit()
     {
         wander_limit_count++;
-        return(wander_limit_count >= wander_limit);
+        if(wander_limit_count >= wander_limit && returning == false)
+        {
+            returning = true;
+            enter_base = true;
+        }
 
 
     }
@@ -110,6 +127,7 @@ public class Task_Explorer_Basic extends Abstr_Task{
         if(phero == null)
         {
             setDrop_enabled(true);
+            returning = false;
             wander_limit_count =0;
             worker.setState(Worker_State_Enum.Wandering);
         }
