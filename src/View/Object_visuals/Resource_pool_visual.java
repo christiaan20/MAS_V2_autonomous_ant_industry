@@ -2,10 +2,7 @@ package View.Object_visuals;
 
 import Model_pk.Enterables.Resource_pool;
 import Model_pk.Object;
-import Model_pk.Resource;
 import Model_pk.Resource_Type;
-import Model_pk.Worker;
-import com.sun.corba.se.impl.orbutil.graph.Graph;
 
 import java.awt.*;
 
@@ -23,7 +20,7 @@ public class Resource_pool_visual extends Object_visual
     }
 
     @Override
-    public void draw_visual(Graphics g)
+    public void draw_visual(Graphics g, int offset_x, int offset_y)
     {
         Resource_pool res = (Resource_pool) model_object;
         if( type == Resource_Type.Stone)

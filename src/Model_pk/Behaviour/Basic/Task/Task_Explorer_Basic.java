@@ -70,6 +70,7 @@ public class Task_Explorer_Basic extends Abstr_Task{
                     {
                         worker.setResource_type(pool.getType());
                         worker.setTask(model.getBehaviour().getTask_miner());
+                        worker.getTask().setFound_resource(true);
 
                         return true;
                     }

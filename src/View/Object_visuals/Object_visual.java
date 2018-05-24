@@ -29,13 +29,12 @@ public abstract class Object_visual {
         text_size = view.getText_size();
     }
 
-    public abstract void draw_visual(Graphics g);
+    public abstract void draw_visual(Graphics g, int offset_x, int offset_y);
 
-    public void draw(Graphics g)
+    public void draw(Graphics g, int offset_x, int offset_y)
     {
-        draw_visual(g);
-        check_draw_hover(g);
-
+        draw_visual(g, offset_x,offset_y);
+        check_draw_hover(g,offset_x ,offset_y );
 
     }
 
@@ -47,12 +46,13 @@ public abstract class Object_visual {
         this.y = view.y_model_to_view(y)-(size/2);
     }
 
-    public void check_draw_hover(Graphics g)
+    public void check_draw_hover(Graphics g, int offset_x, int offset_y)
     {
         if(hover_over)
         {
+
             g.setColor(Color.black);
-            g.drawRect(x - 2, y - 2, size + 4, size + 4);
+            g.drawRect(x- 2, y - 2, size + 4, size + 4);
         }
     }
 
@@ -66,12 +66,14 @@ public abstract class Object_visual {
 
     }
 
-    public boolean check_within(int x, int y)
+    public boolean check_within(int x, int y, int offset_x, int offset_y)
     {
-        int top_border = this.y + size;
+
+
+        int top_border =this.y + size;
         int bottom_border = this.y;
         int left_border = this.x;
-        int right_border = this.x + size;
+        int right_border = this.x+ size;
 
         if(     (top_border >= y) &&  (bottom_border <= y) &&
                 (right_border >= x) &&  (left_border <= x))
@@ -79,6 +81,12 @@ public abstract class Object_visual {
             return true;
         }
         return false;
+    }
+
+    public void set_offset(int offset_x, int offset_y)
+    {
+        setX(x - offset_x);
+        setY(y - offset_y);
     }
 
     public int getX() {

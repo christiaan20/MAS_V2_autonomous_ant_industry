@@ -48,7 +48,7 @@ public class Worker extends Object {
 
         this.model = Model.getInstance();
 
-        task.test_tan_function();
+       // task.test_tan_function();
     }
 
     public Worker( int x, int y, int size, double currDirection, int max_load, Abstr_Task task, Resource_Type type, Base base)

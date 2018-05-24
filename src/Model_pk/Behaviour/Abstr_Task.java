@@ -44,6 +44,7 @@ public abstract class Abstr_Task
     private int max_phero_size = 15;    //the limit on the size of the pheromone
     private int start_phero_strength = 10;
     private int max_phero_strength = 50;
+    private int phero_strength_load_factor = 2; //the factor of infleunce of the load of the worker on the start strength of the pheromone
     private int degrade_time = 150;      //how many ticks it takes to degrade the pheromone by 1
 
     // parameters fot the dropping of pheromones
@@ -335,10 +336,17 @@ public abstract class Abstr_Task
     {
         if(drop_enabled)
         {
-            model.drop_pheromone(worker,worker.getX(), worker.getY(),start_phero_size ,worker.getTask(),worker.getResource_type() , start_phero_strength,degrade_time,max_phero_size);
+            int drop_strength  = get_drop_strength(worker.get_total_amount_of_load());
+            model.drop_pheromone(worker,worker.getX(), worker.getY(),start_phero_size ,worker.getTask().getTask(),worker.getResource_type() , drop_strength,degrade_time,max_phero_size);
         }
 
         dist_walked_since_drop = 0;
+    }
+
+    private int get_drop_strength(int load)
+    {
+        double factor = (1+(load/(double)phero_strength_load_factor));
+        return (int) (start_phero_strength*factor);
     }
 
 
@@ -606,5 +614,12 @@ public abstract class Abstr_Task
 
     public void setDist_walked_since_drop(int dist_walked_since_drop) {
         this.dist_walked_since_drop = dist_walked_since_drop;
+    }
+
+    public boolean isFound_resource() {
+        return false;
+    }
+
+    public void setFound_resource(boolean found_resource) {
     }
 }

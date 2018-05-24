@@ -12,7 +12,9 @@ import Model_pk.Object;
  */
 public class Task_Miner_Basic extends Abstr_Task
 {
-    private boolean lost_phero = false; //becomes true if the miner cannot find a phero
+    private boolean lost_phero = false;     //becomes true if the miner cannot find a phero
+    private boolean found_resource = false; //is true if the miner was previously an explorer and a resource_pool was found
+
     public Task_Miner_Basic()
     {
         super.task = Task_Enum.miner;
@@ -40,8 +42,22 @@ public class Task_Miner_Basic extends Abstr_Task
     @Override
     public void select_target(Worker worker)
     {
+        Object obj = null;
+        if(found_resource) //only when the resource_pool has been found recently will the miner follow his own explorer path
+        {
+            obj = worker.closest_owned_phero_of_type(worker, Task_Enum.explorer,null);
+            if(obj != null)
+            {
+                setDrop_enabled(true);
+                set_lost_phero_false();
+                go_to_phero(worker,obj);
+                worker.setCurr_target_object(obj);
+                worker.setState(Worker_State_Enum.to_phero);
+                return;
+            }
+        }
 
-        Object obj =  worker.closest_owned_phero_of_type(worker,getTask(),worker.getResource_type());
+        obj =  worker.closest_owned_phero_of_type(worker,getTask(),worker.getResource_type());
         if(obj != null)
         {
             setDrop_enabled(true);
@@ -51,16 +67,8 @@ public class Task_Miner_Basic extends Abstr_Task
             worker.setState(Worker_State_Enum.to_phero);
             return;
         }
-        obj = worker.closest_owned_phero_of_type(worker, Task_Enum.explorer,null);
-        if(obj != null)
-        {
-            setDrop_enabled(true);
-            set_lost_phero_false();
-            go_to_phero(worker,obj);
-            worker.setCurr_target_object(obj);
-            worker.setState(Worker_State_Enum.to_phero);
-            return;
-        }
+
+
         obj = worker.closest_phero_of_type(getTask(),worker.getResource_type());
         if(obj != null)
         {
@@ -71,6 +79,7 @@ public class Task_Miner_Basic extends Abstr_Task
             worker.setState(Worker_State_Enum.to_phero);
             return;
         }
+       /*
         obj = worker.closest_phero_of_type(Task_Enum.explorer,null);
         if(obj != null)
         {
@@ -81,6 +90,7 @@ public class Task_Miner_Basic extends Abstr_Task
             worker.setState(Worker_State_Enum.to_phero);
             return;
         }
+        */
 
 
         worker.setCurr_target_object(null);
@@ -125,14 +135,13 @@ public class Task_Miner_Basic extends Abstr_Task
             }
 
         }
-
-
         return false;
     }
 
     @Override
-    public boolean at_base(Worker worker, Base base) {
-
+    public boolean at_base(Worker worker, Base base)
+    {
+        found_resource = false;
         if(worker.get_total_amount_of_load() > 0)
         {
             return base.enter(worker);
@@ -152,4 +161,11 @@ public class Task_Miner_Basic extends Abstr_Task
         setDrop_enabled(true);
     }
 
+    public boolean isFound_resource() {
+        return found_resource;
+    }
+
+    public void setFound_resource(boolean found_resource) {
+        this.found_resource = found_resource;
+    }
 }

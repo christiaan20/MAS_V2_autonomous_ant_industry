@@ -4,9 +4,6 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import Model_pk.Object;
-import Model_pk.Pheromone;
-import Model_pk.Resource;
 import View.Object_visuals.Colors;
 import View.Object_visuals.Object_visual;
 /**
@@ -20,6 +17,9 @@ public class View extends Canvas {
     private double scale_from_model = 1; //the scale that the view objects have relative to the sizes in the model
     private int size_x;
     private int size_y;
+    private int offset_x;
+    private int offset_y;
+    private int offset_delta = 50;
 
     private int size_x_field;
     private int size_y_field;
@@ -104,7 +104,7 @@ public class View extends Canvas {
     {
         for (Object_visual obj :object_visuals)
         {
-            obj.draw(g);
+            obj.draw(g,offset_x ,offset_y );
         }
     }
 
@@ -222,7 +222,7 @@ public class View extends Canvas {
 
         for(Object_visual obj: ObjectenArr )
         {
-            if (obj.check_within(x,y))
+            if (obj.check_within(x,y, offset_x,offset_y ))
             {
                 return obj;
             }
@@ -233,12 +233,12 @@ public class View extends Canvas {
 
     public  int x_model_to_view(int x)
     {
-        return (int)(x*scale_from_model);
+        return (int)(x*scale_from_model-offset_x);
     }
 
     public int y_model_to_view(int y)
     {
-        return (int) (size_y - (y*scale_from_model));
+        return (int) (size_y - (y*scale_from_model-offset_y));
     }
 
     public int size_model_to_view(int size)
@@ -250,12 +250,12 @@ public class View extends Canvas {
     public  int x_view_to_model(int x)
     {
 
-        return (int) (x/scale_from_model);
+        return (int) ((x+offset_x)/scale_from_model);
     }
 
     public  int y_view_to_model(int y)
     {
-        return (int) ((size_y - y)/scale_from_model);
+        return (int) ((size_y - (y + offset_y))/scale_from_model);
     }
 
     public void set_size(int size_x, int size_y) {
@@ -352,4 +352,51 @@ public class View extends Canvas {
     public void setDraw_pheromones(boolean draw_pheromones) {
         this.draw_pheromones = draw_pheromones;
     }
+
+    public int getOffset_x() {
+        return offset_x;
+    }
+
+    public void setOffset_x(int offset_x) {
+        this.offset_x = offset_x;
+        set_offset_to_objects( this.offset_x, this.offset_y);
+    }
+
+    public int getOffset_y() {
+        return offset_y;
+
+    }
+
+    public void setOffset_y(int offset_y) {
+        this.offset_y = offset_y;
+        set_offset_to_objects(this.offset_x, this.offset_y);
+    }
+
+    public void increase_offset_x()
+    {
+        setOffset_x(offset_x + offset_delta);
+    }
+    public void increase_offset_y()
+    {
+        setOffset_y(offset_y + offset_delta);
+    }
+
+    public void decrease_offset_x()
+    {
+        setOffset_x(offset_x - offset_delta);
+    }
+    public void decrease_offset_y()
+    {
+        setOffset_y(offset_y - offset_delta);
+
+    }
+
+    public void set_offset_to_objects(int offset_x, int offset_y)
+    {
+        for(Object_visual obj: object_visuals)
+        {
+            obj.set_offset(offset_x,offset_y);
+        }
+    }
+
 }

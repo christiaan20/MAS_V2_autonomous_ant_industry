@@ -2,9 +2,9 @@ package View.Object_visuals;
 
 import Model_pk.Behaviour.Task_Enum;
 import Model_pk.Object;
+import Model_pk.Resource_Type;
 import Model_pk.Worker;
 import Model_pk.Worker_State_Enum;
-import View.View;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class Worker_visual extends Object_visual
     }
 
     @Override
-    public void draw_visual(Graphics g)
+    public void draw_visual(Graphics g, int offset_x, int offset_y)
     {
         Worker worker = (Worker) model_object;
 
@@ -72,10 +72,11 @@ public class Worker_visual extends Object_visual
     public void draw_task(Graphics g, Worker worker, int height )
     {
         Task_Enum task = worker.getTask().getTask();
+        Resource_Type type = worker.getResource_type();
 
         //if(task == Task_Enum.miner)
         //{
-            g.drawString(task + " " + String.valueOf(worker.getResource_type()),x,y-text_size*height);
+            g.drawString(task + " " + type,x,y-text_size*height);
         //}
         //g.drawString(String.valueOf(task),x,y-text_size*height);
     }

@@ -6,9 +6,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import Main.Main_thread;
+import Model_pk.Behaviour.Task_Enum;
 import Model_pk.Model;
 import Model_pk.Resource;
 import Model_pk.Resource_Type;
+import Controller.Controller;
+import javafx.concurrent.Task;
 
 /**
  * Created by christiaan on 10/05/18.
@@ -16,9 +19,12 @@ import Model_pk.Resource_Type;
 public class Window extends Panel implements ActionListener
 {
     private Main_thread main_thread;
+    private Controller control;
 
     private Panel top_panel;
-    private Panel bottom_panel;
+    private Panel bottom_panel_1;
+    private Panel bottom_panel_2;
+    private Panel bottom_grid_panel;
 
     //general information labels
     private String  tickcount_text;
@@ -35,6 +41,11 @@ public class Window extends Panel implements ActionListener
     //buttons regarding the drawing of aspects
     private Button draw_pheromones_button;
 
+    //buttons regarding the creation of aspects
+    private Button create_pheromones_button;
+    private Map<Task_Enum,Button> task_buttons = new HashMap<>();
+    private Map<Resource_Type,Button> resource_type_buttons = new HashMap<>();
+
   ;
 
     public Window(int size_x, int size_y, Main_thread main_thread)
@@ -44,7 +55,7 @@ public class Window extends Panel implements ActionListener
 
 
         //the size of the view is dependent on the size of the panels on the top and bottom
-        int view_y_size = size_y - top_panel.getHeight() - bottom_panel.getHeight();
+        //int view_y_size = size_y - top_panel.getHeight() - bottom_panel.getHeight();
 
         //View.getInstance().set_size(size_x,view_y_size);
         //View.getInstance().set_y_offset(top_panel.getHeight());
@@ -84,6 +95,11 @@ public class Window extends Panel implements ActionListener
         draw_pheromones_button.setBackground(Color.lightGray);
         draw_pheromones_button.addActionListener(this);
 
+        create_pheromones_button = new Button("create Pheromones");
+        create_pheromones_button.setBackground(Color.lightGray);
+        create_pheromones_button.addActionListener(this);
+
+
         //create labels
         ticks_per_second_text = "Ticks/sec: ";
         ticks_per_second_label = new Label (ticks_per_second_text + String.valueOf(0));
@@ -96,36 +112,77 @@ public class Window extends Panel implements ActionListener
 
         top_panel.add(tickcount_label);
 
-        add_resource_count_labels();
+        add_resource_count_labels(top_panel);
 
+        bottom_grid_panel = new Panel();
+        bottom_grid_panel.setLayout(new GridLayout(2,1));
 
-        bottom_panel = new Panel();
-        bottom_panel.setLayout(new FlowLayout());
-        bottom_panel.setBackground(Color.gray);
+        bottom_panel_1 = new Panel();
+        bottom_panel_1.setLayout(new FlowLayout());
+        bottom_panel_1.setBackground(Color.gray);
 
-        bottom_panel.add(draw_pheromones_button);
-        bottom_panel.add(pause_button);
-        bottom_panel.add(slowdown_button);
-        bottom_panel.add(speedup_button);
-        bottom_panel.add(ticks_per_second_label);
+        bottom_panel_2 = new Panel();
+        bottom_panel_2.setLayout(new FlowLayout());
+        bottom_panel_2.setBackground(Color.gray);
+
+        //bottom_panel_1
+        bottom_panel_1.add(draw_pheromones_button);
+        bottom_panel_1.add(pause_button);
+        bottom_panel_1.add(slowdown_button);
+        bottom_panel_1.add(speedup_button);
+        bottom_panel_1.add(ticks_per_second_label);
+
+        //bottom_panel_2
+        bottom_panel_2.add(create_pheromones_button);
+        add_resource_type_buttons(bottom_panel_2);
+        add_task_buttons(bottom_panel_2);
 
 
         this.add(top_panel,BorderLayout.NORTH);
-        this.add(bottom_panel,BorderLayout.SOUTH);
+        bottom_grid_panel.add(bottom_panel_1);
+        bottom_grid_panel.add(bottom_panel_2);
+        this.add(bottom_grid_panel,BorderLayout.SOUTH);
         this.add(View.getInstance());
 
     }
 
-    public void add_resource_count_labels()
+    public void add_resource_count_labels(Panel panel)
     {
         for(Resource_Type type: Resource_Type.values())
         {
-            System.out.print(type.toString());
+           // System.out.print(type.toString());
             Label new_resource_count_label = new Label(type.toString() + ": 0" );
             resource_count_labels.put(type,new_resource_count_label);
-            top_panel.add(new_resource_count_label);
+            panel.add(new_resource_count_label);
         }
     }
+
+    public void add_resource_type_buttons(Panel panel)
+    {
+        for(Resource_Type type: Resource_Type.values())
+        {
+            //System.out.print(type.toString());
+            Button new_resource_type_button = new Button(type.toString() );
+            new_resource_type_button.addActionListener(this);
+            resource_type_buttons.put(type,new_resource_type_button);
+
+            panel.add(new_resource_type_button);
+        }
+    }
+
+    public void add_task_buttons(Panel panel)
+    {
+        for(Task_Enum task: Task_Enum.values())
+        {
+           // System.out.print(task.toString());
+            Button new_task_button = new Button(task.toString() );
+            new_task_button.addActionListener(this);
+            task_buttons.put(task,new_task_button);
+            panel.add(new_task_button);
+        }
+    }
+
+
 
 
     @Override
@@ -135,6 +192,9 @@ public class Window extends Panel implements ActionListener
         check_slowdown_button(e);
         check_speedup_button(e);
         check_draw_pheromones_button(e);
+        check_create_pheromones_button(e);
+        check_resource_type_button(e);
+        check_task_button(e);
     }
 
     public void check_pause_button(ActionEvent e)
@@ -169,6 +229,65 @@ public class Window extends Panel implements ActionListener
             {
                 view.setDraw_pheromones(true);
                 draw_pheromones_button .setBackground(Color.lightGray);
+            }
+
+        }
+    }
+
+    public void check_task_button(ActionEvent e)
+    {
+        for(Task_Enum task: Task_Enum.values())
+        {
+            Button task_button  = task_buttons.get(task);
+            task_button.setBackground(Color.lightGray);
+            if( e.getSource() == task_button )
+            {
+               control.setCreate_task(task);
+
+            }
+        }
+        Task_Enum task = control.getCreate_task();
+        if(task != null)
+        {
+            task_buttons.get(task).setBackground(Color.RED);
+        }
+
+    }
+
+    public void check_resource_type_button(ActionEvent e)
+    {
+
+        for(Resource_Type res: Resource_Type.values())
+        {
+            Button resource_type_button  = resource_type_buttons.get(res);
+            resource_type_button.setBackground(Color.lightGray);
+            if( e.getSource() == resource_type_button )
+            {
+                control.setCreate_type(res);
+            }
+        }
+        Resource_Type type = control.getCreate_type();
+        if(type != null)
+        {
+            resource_type_buttons.get(type).setBackground(Color.RED);
+        }
+
+    }
+
+    public void check_create_pheromones_button(ActionEvent e)
+    {
+        if( e.getSource() == create_pheromones_button )
+        {
+            View view = View.getInstance();
+            if(control.isCreate_phero() == false)
+            {
+                control.setCreate_phero(true);
+                create_pheromones_button.setBackground(Color.RED);
+            }
+            else
+            {
+                control.setCreate_phero(false);
+                create_pheromones_button.setBackground(Color.lightGray);
             }
 
         }
@@ -224,5 +343,13 @@ public class Window extends Panel implements ActionListener
     {
         tickcount_label.setText( tickcount_text + ": " + String.valueOf(ticks)  );
         tickcount_label.setSize(150,tickcount_label.getHeight());
+    }
+
+    public Controller getControl() {
+        return control;
+    }
+
+    public void setControl(Controller control) {
+        this.control = control;
     }
 }

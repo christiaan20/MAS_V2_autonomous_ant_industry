@@ -14,7 +14,7 @@ public class Base_visual extends Object_visual{
     }
 
     @Override
-    public void draw_visual(Graphics g)
+    public void draw_visual(Graphics g, int offset_x, int offset_y)
     {
         //Objects only have a height after rendering so this is the only way
 
@@ -36,10 +36,11 @@ public class Base_visual extends Object_visual{
 
         outer_color = check_draw_selected(outer_color);
 
+
         g.setColor(outer_color);
         g.fillRect(x  , y, size, size);
         g.setColor(Color.lightGray);
-        g.fillRect(x + size/2 - center_size/2 , y + size/2 - center_size/2 , center_size, center_size);
+        g.fillRect(x+ size/2 - center_size/2 , y+ size/2 - center_size/2 , center_size, center_size);
     }
 
 

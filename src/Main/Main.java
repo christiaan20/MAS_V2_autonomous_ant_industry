@@ -34,6 +34,7 @@ public class Main extends Frame {
         main_thread.set_window(window);
 
         controller = new Controller();
+        window.setControl(controller);
 
         this.setSize(size_x, size_y);
 

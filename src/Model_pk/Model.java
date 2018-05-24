@@ -65,7 +65,7 @@ public class Model{
         int object_size = 50;
         int worker_size = 20;
 
-        int work_force_size = 15;
+        int work_force_size = 1;
 
         int base_time       = 50;
         int resource_time   = 50;
@@ -95,6 +95,7 @@ public class Model{
         //workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble(), max_worker_load, behaviour.getTask_explorer(),Resource_Type.Coal,base));
         //workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble(), max_worker_load, behaviour.getTask_explorer(),Resource_Type.Stone,base));
     }
+
 
 
     public void tick_workers()
@@ -216,7 +217,7 @@ public class Model{
         return (int) Math.abs( Math.sqrt(Math.pow(Xdist,2)+ Math.pow(Ydist,2)));
     }
 
-    public void drop_pheromone(Worker worker,int x, int y,int size , Abstr_Task task, Resource_Type type, int strength, int degrade_time, int max_size)
+    public void drop_pheromone(Worker worker,int x, int y,int size , Task_Enum task, Resource_Type type, int strength, int degrade_time, int max_size)
     {
         int left_border = (int) Math.floor(x/tile_size)* tile_size;
         int right_border  = left_border +tile_size;
@@ -228,7 +229,7 @@ public class Model{
         {
             if(phero.check_object_within(left_border,right_border,bottom_border,top_border))
             {
-                if(phero.getTask() == task.getTask())
+                if(phero.getTask() == task)
                 {
                     if(phero.isTask(Task_Enum.explorer))
                     {
@@ -251,11 +252,50 @@ public class Model{
                 ;
             }
         }
-        Pheromone new_phero = (new Pheromone(worker,(left_border + tile_size/2),(bottom_border + tile_size/2),size,task.getTask(),type,strength,degrade_time,max_size));
+        Pheromone new_phero = (new Pheromone(worker,(left_border + tile_size/2),(bottom_border + tile_size/2),size,task,type,strength,degrade_time,max_size));
         worker.add_visited_pheromone(new_phero);
         pheromones.add(new_phero);
 
     }
+
+    public void drop_seperate_pheromone(Worker worker,int x, int y,int size , Task_Enum task, Resource_Type type, int strength, int degrade_time, int max_size)
+    {
+        int left_border = (int) Math.floor(x/tile_size)* tile_size;
+        int right_border  = left_border +tile_size;
+        int bottom_border = (int) Math.floor(y/tile_size)* tile_size;
+        int top_border = bottom_border+ tile_size;
+
+
+        for(Pheromone phero: pheromones)
+        {
+            if(phero.check_object_within(left_border,right_border,bottom_border,top_border))
+            {
+                if(phero.getTask() == task)
+                {
+                    if(phero.isTask(Task_Enum.explorer))
+                    {
+                        phero.increase_strength(strength);
+                        phero.addOwner(worker);
+                        return;
+                    }
+                    else
+                    {
+                        if(phero.isType(type))
+                        {
+                            phero.increase_strength(strength);
+                            phero.addOwner(worker);
+                            return;
+                        }
+                    }
+                }
+                ;
+            }
+        }
+        Pheromone new_phero = (new Pheromone(worker,(left_border + tile_size/2),(bottom_border + tile_size/2),size,task,type,strength,degrade_time,max_size));
+        pheromones.add(new_phero);
+
+    }
+
 
     public void delete_expired_objects()
     {
