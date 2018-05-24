@@ -84,6 +84,13 @@ public class Task_Explorer_Basic extends Abstr_Task{
     @Override
     public boolean at_base(Worker worker, Base base)
     {
+        double random = model.getRandom().nextDouble();
+        worker.setCurrDirection(random*Math.PI*2);
+        return false;
+    }
+
+    @Override
+    public boolean out_of_base(Worker worker, Object base) {
         return false;
     }
 

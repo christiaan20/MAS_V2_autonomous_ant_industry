@@ -149,6 +149,14 @@ public class Task_Miner_Basic extends Abstr_Task
         return false;
     }
 
+    @Override
+    public boolean out_of_base(Worker worker, Object base)
+    {
+
+        return false;
+    }
+
+
     private void set_lost_phero_true()
     {
         lost_phero = true;

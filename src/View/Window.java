@@ -21,7 +21,9 @@ public class Window extends Panel implements ActionListener
     private Main_thread main_thread;
     private Controller control;
 
-    private Panel top_panel;
+    private Panel top_panel_1;
+    private Panel top_panel_2;
+    private Panel top_grid_panel;
     private Panel bottom_panel_1;
     private Panel bottom_panel_2;
     private Panel bottom_grid_panel;
@@ -29,7 +31,10 @@ public class Window extends Panel implements ActionListener
     //general information labels
     private String  tickcount_text;
     private Label   tickcount_label;
+    private Label   resource_count_label;
     private Map<Resource_Type,Label> resource_count_labels = new HashMap<>();
+    private Label   resource_prob_label;
+    private Map<Resource_Type,Label> resource_prob_labels  = new HashMap<>();
 
     //buttons regarding to simulation speed
     private Button pause_button;
@@ -78,6 +83,9 @@ public class Window extends Panel implements ActionListener
         tickcount_text = "Ticks passed: ";
         tickcount_label = new Label (tickcount_text + String.valueOf(10000000));
 
+        resource_count_label = new Label("resource count: ");
+        resource_prob_label = new Label("probabilities: ");
+
         //create the buttons
         pause_button = new Button("Pauze");
         pause_button.setBackground(Color.lightGray);
@@ -106,13 +114,22 @@ public class Window extends Panel implements ActionListener
         //ticks_per_second_label.setSize((int)(ticks_per_second_label.getWidth()*1.25),ticks_per_second_label.getHeight());
 
         //create the panels and add to the elements to them
-        top_panel = new Panel();
-        top_panel.setLayout(new FlowLayout());
-        top_panel.setBackground(Color.gray);
+        top_grid_panel = new Panel();
+        top_grid_panel.setLayout(new GridLayout(2,1));
 
-        top_panel.add(tickcount_label);
+        top_panel_1 = new Panel();
+        top_panel_1.setLayout(new FlowLayout());
+        top_panel_1.setBackground(Color.gray);
+        top_panel_2 = new Panel();
+        top_panel_2.setLayout(new FlowLayout());
+        top_panel_2.setBackground(Color.gray);
 
-        add_resource_count_labels(top_panel);
+        top_panel_1.add(tickcount_label);
+        top_panel_1.add(resource_count_label);
+        add_resource_count_labels(top_panel_1);
+
+        top_panel_2.add(resource_prob_label);
+        add_resource_prob_labels(top_panel_2);
 
         bottom_grid_panel = new Panel();
         bottom_grid_panel.setLayout(new GridLayout(2,1));
@@ -138,7 +155,9 @@ public class Window extends Panel implements ActionListener
         add_task_buttons(bottom_panel_2);
 
 
-        this.add(top_panel,BorderLayout.NORTH);
+        top_grid_panel.add(top_panel_1);
+        top_grid_panel.add(top_panel_2);
+        this.add(top_grid_panel,BorderLayout.NORTH);
         bottom_grid_panel.add(bottom_panel_1);
         bottom_grid_panel.add(bottom_panel_2);
         this.add(bottom_grid_panel,BorderLayout.SOUTH);
@@ -153,6 +172,17 @@ public class Window extends Panel implements ActionListener
            // System.out.print(type.toString());
             Label new_resource_count_label = new Label(type.toString() + ": 0" );
             resource_count_labels.put(type,new_resource_count_label);
+            panel.add(new_resource_count_label);
+        }
+    }
+
+    public void add_resource_prob_labels(Panel panel)
+    {
+        for(Resource_Type type: Resource_Type.values())
+        {
+            // System.out.print(type.toString());
+            Label new_resource_count_label = new Label(type.toString() + ": 0" );
+            resource_prob_labels.put(type,new_resource_count_label);
             panel.add(new_resource_count_label);
         }
     }
@@ -329,6 +359,25 @@ public class Window extends Panel implements ActionListener
             int value = resources.get(type);
 
             resource_count_labels.get(type).setText( type.toString() + ": " + String.valueOf(value)  );
+
+        }
+
+    }
+
+    public void update_resource_probs()
+    {
+        Model model = Model.getInstance();
+        int last_value = 0;
+
+        HashMap<Resource_Type, Integer> resources = model.getBase().getTask_manager().get_resource_acumm_percentage_rates();
+        for(Resource_Type type: Resource_Type.values())
+        {
+            int value = resources.get(type);
+            int display_value = value - last_value;
+            last_value = value;
+
+
+            resource_prob_labels.get(type).setText( type.toString() + ": " + String.valueOf(display_value)  );
 
         }
 

@@ -68,7 +68,7 @@ public class Model{
         int object_size = 50;
         int worker_size = 20;
 
-        int work_force_size = 1;
+        int work_force_size = 10;
 
         int base_time       = 50;
         int resource_time   = 50;

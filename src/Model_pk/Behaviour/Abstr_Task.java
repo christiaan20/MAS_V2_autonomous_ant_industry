@@ -70,6 +70,7 @@ public abstract class Abstr_Task
     public abstract void move(Worker worker);
     public abstract boolean on_reached(Worker worker, Object obj);
     public abstract boolean at_base(Worker worker, Base base);
+    public abstract boolean out_of_base(Worker worker, Object base);
 
   /*  public void setWorker(Worker worker) {
         this.worker = worker;
@@ -83,12 +84,6 @@ public abstract class Abstr_Task
         Object reached = model.check_if_reached_an_object(worker.getX(), worker.getY());
 
         //if the reached object is the one he entered last, the return mechanism counter is reset
-      /*  if(isLast_entered_object((Enterable_object) reached))
-        {
-            setDist_walked_since_drop(getDist_walked_since_drop() + 10); //speeds up the progress to the next drop of pheromone
-            setTicks_since_enter(0);
-        }*/
-
         if(will_enter_reached(worker, reached))   //returns true if the worker goes into the object
         {
             //executed when the worker enters an object
@@ -96,7 +91,6 @@ public abstract class Abstr_Task
             {
                 drop_pheromone(worker);
                 worker.setState(Worker_State_Enum.inside);
-                //setLast_entered_object((Enterable_object) reached);
             }
 
         }
@@ -622,4 +616,6 @@ public abstract class Abstr_Task
 
     public void setFound_resource(boolean found_resource) {
     }
+
+
 }

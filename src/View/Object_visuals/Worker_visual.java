@@ -27,7 +27,8 @@ public class Worker_visual extends Object_visual
         Worker worker = (Worker) model_object;
 
         Color color  = Colors.getInstance().getWorker();
-
+        Color color_hat  = Colors.getInstance().getPheroColor(worker.getTask().getTask(),worker.getResource_type());
+        Color color_hat_edge  = Colors.getInstance().getPheroColor(Task_Enum.miner,worker.getResource_type());
         color = check_draw_selected(color);
 
         g.setColor(color);
@@ -35,6 +36,15 @@ public class Worker_visual extends Object_visual
         // visual
         g.fillOval(x  , y, size, size);
         view.draw_angled_line(g,x + size/2,y + size/2,worker.getCurrDirection(),size);
+
+        g.setColor(color_hat_edge);
+        int hat_edge = 5;
+        g.fillOval(x + hat_edge, y+ hat_edge, size- hat_edge*2, size- hat_edge*2);
+        g.setColor(color_hat);
+
+        g.drawOval(x , y, size, size);
+
+        g.setColor(color);
 
         if(selected)
         {
@@ -46,14 +56,39 @@ public class Worker_visual extends Object_visual
     {
 
 
+        draw_detection_range(g, worker );
         draw_load(g, worker, 0);
         //draw_target_coord(g,worker,1);
         draw_task(g,worker,1);
         draw_state(g,worker,2);
+        draw_ID(g,worker,3);
 
         draw_target(g,worker);
         draw_visited(g,worker);
 
+    }
+
+    private void draw_detection_range(Graphics g, Worker worker)
+    {
+        //regular detection distance
+        int dist = worker.getTask().getPhero_detect_dist();
+        int display_x = view.x_model_to_view(worker.getX())-dist;
+        int display_y = view.y_model_to_view(worker.getY())-dist;
+
+        g.drawOval(display_x,display_y,dist*2,dist*2);
+
+        //base detection distance
+        dist = (int) (50*2.5);
+        display_x = view.x_model_to_view(worker.getX())-dist;
+        display_y = view.y_model_to_view(worker.getY())-dist;
+
+        g.drawOval(display_x,display_y,dist*2,dist*2);
+    }
+
+    public void draw_ID(Graphics g, Worker worker, int height )
+    {
+        String ID = String.valueOf(worker.getID());
+        g.drawString("ID: " +ID ,x,y-text_size*height);
     }
 
     public void draw_load(Graphics g, Worker worker, int height )
@@ -76,7 +111,7 @@ public class Worker_visual extends Object_visual
 
         //if(task == Task_Enum.miner)
         //{
-            g.drawString(task + " " + type,x,y-text_size*height);
+        g.drawString(task + " " + type,x,y-text_size*height);
         //}
         //g.drawString(String.valueOf(task),x,y-text_size*height);
     }

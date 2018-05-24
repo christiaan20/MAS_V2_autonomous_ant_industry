@@ -55,7 +55,7 @@ public class Task_Manager {
 
     }
 
-    private HashMap<Resource_Type, Integer> get_resource_acumm_percentage_rates(){
+    public HashMap<Resource_Type, Integer> get_resource_acumm_percentage_rates(){
 
         HashMap<Resource_Type, Integer> resources_to_obtain = base.resource_to_obtain();
         HashMap<Resource_Type, Integer> resource_rates = new HashMap<>();

@@ -3,6 +3,7 @@ package Model_pk.Enterables;
 
 import Model_pk.*;
 import Model_pk.Behaviour.Abstr_Task;
+import Model_pk.Behaviour.Task_Enum;
 import View.Object_visuals.Base_visual;
 import View.View;
 
@@ -56,6 +57,27 @@ public class Base extends Enterable_object {
     {
         drop_resources(worker);
         task_manager.update_task_of(worker);
+
+        Abstr_Task worker_task = worker.getTask();
+
+        if(worker_task.getTask() == Task_Enum.miner)
+        {
+            int original_detect_dist = worker_task.getPhero_detect_dist();
+            //hack to increase the detection range of the worker
+            worker_task.setPhero_detect_dist((int)(size*2.5));
+            worker.clear_detected_objects();
+            Model.getInstance().find_objects(worker);
+            worker_task.select_target(worker);
+            worker_task.setPhero_detect_dist(original_detect_dist);
+
+            if(worker.getCurr_target_object() == null)
+            {
+                Model model = Model.getInstance();
+                worker.setTask(model.getBehaviour().getTask_explorer());
+            }
+
+        }
+
         return true;
 
     }
@@ -108,5 +130,13 @@ public class Base extends Enterable_object {
 
     public void set_obtained_resources(HashMap<Resource_Type, Integer> obtained_resources) {
         this.obtained_resources = obtained_resources;
+    }
+
+    public Task_Manager getTask_manager() {
+        return task_manager;
+    }
+
+    public void setTask_manager(Task_Manager task_manager) {
+        this.task_manager = task_manager;
     }
 }

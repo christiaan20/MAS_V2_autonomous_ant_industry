@@ -17,13 +17,13 @@ public class Colors
     Color worker = Color.BLACK;
     Color selected = Color.green;
 
-
+    Color explorer =  Color.blue;
     Color copper = new Color(182, 115, 51); ;
     Color iron = new Color(68, 79, 103);
     Color stone  = Color.GRAY;
-    Color explorer =  Color.blue;
-    Color coal = Color.darkGray;
+    Color coal = new Color(30, 40, 50);;
     Color uranium = Color.green;
+    Color bug = new Color(255, 0, 0);
 
 
 
@@ -76,22 +76,31 @@ public class Colors
         }
         else
         {
-            switch(type)
+
+            if(type == null)
             {
-                case Stone:
-                    out = stone;
-                    break;
-                case Copper:
-                    out = copper;
-                    break;
-                case Coal:
-                    out = coal;
-                    break;
-                case Iron:
-                    out= iron;
-                    break;
-                case Uranium:
-                    out = uranium;
+                out = explorer;
+            }
+            else
+            {
+                switch(type)
+                {
+                    case Stone:
+                        out = stone;
+                        break;
+                    case Copper:
+                        out = copper;
+                        break;
+                    case Coal:
+                        out = coal;
+                        break;
+                    case Iron:
+                        out= iron;
+                        break;
+                    case Uranium:
+                        out = uranium;
+                }
+
             }
 
         }

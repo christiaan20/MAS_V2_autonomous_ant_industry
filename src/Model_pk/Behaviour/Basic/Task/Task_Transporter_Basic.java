@@ -45,4 +45,9 @@ public class Task_Transporter_Basic extends Abstr_Task
     public boolean at_base(Worker worker, Base base) {
         return false;
     }
+
+    @Override
+    public boolean out_of_base(Worker worker, Object base) {
+        return false;
+    }
 }
