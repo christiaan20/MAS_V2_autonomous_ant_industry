@@ -8,6 +8,7 @@ import Controller.Controller;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 
 /**
  * Created by christiaan on 10/05/18.
@@ -23,8 +24,7 @@ public class Main extends Frame {
     private int size_x = 900;
     private int size_y = 900;
 
-    public Main() throws HeadlessException
-    {
+    public Main() throws HeadlessException {
 
         main_thread = new Main_thread();
 
@@ -57,8 +57,7 @@ public class Main extends Frame {
 
     }
 
-    public static void main(String a[])
-    {
+    public static void main(String a[]) throws IOException {
         Main main = new Main();
         main.setTitle("Autonomous Ant colonisation");
         main.setVisible(true);
@@ -79,8 +78,7 @@ public class Main extends Frame {
         t.start();
     }
 
-    public void start_scenario()
-    {
+    public void start_scenario() throws IOException {
         model.set_scenario_1();
     }
 

@@ -322,18 +322,13 @@ public class Window extends Panel implements ActionListener
     {
         Model model = Model.getInstance();
 
+        HashMap<Resource_Type, Integer> resources = model.getBase().get_obtained_resources_resources();
 
         for(Resource_Type type: Resource_Type.values())
         {
-            int count_type = 0;
-            for(Resource res: model.getBase().getGathered_resources())
-            {
-                if(res.getType() == type)
-                {
-                    count_type =+ res.getAmount();
-                }
-            }
-            resource_count_labels.get(type).setText( type.toString() + ": " + String.valueOf(count_type)  );
+            int value = resources.get(type);
+
+            resource_count_labels.get(type).setText( type.toString() + ": " + String.valueOf(value)  );
 
         }
 
