@@ -48,6 +48,7 @@ public class Main_thread implements Runnable {
                 window.update_resource_counters();
                 window.update_tick_counter(tickcount);
                 window.update_resource_probs();
+                window.update_resource_goals();
 
             }
 

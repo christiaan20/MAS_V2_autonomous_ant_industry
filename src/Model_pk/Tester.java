@@ -41,7 +41,7 @@ public class Tester {
 
         for(Resource_Type type: Resource_Type.values())
         {
-            first_goal.put(type, 10);
+            first_goal.put(type, 30);
         }
 
         goals.add(first_goal);

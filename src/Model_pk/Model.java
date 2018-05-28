@@ -73,7 +73,7 @@ public class Model{
         int base_time       = 50;
         int resource_time   = 50;
 
-        int resource_pool_capacity  = 60;
+        int resource_pool_capacity  = 200;
         int max_worker_load         = 5;
 
         tile_size = object_size/5;

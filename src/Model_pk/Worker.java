@@ -7,6 +7,7 @@ import java.util.Iterator;
 import Model_pk.Behaviour.*;
 import Model_pk.Enterables.Base;
 import Model_pk.Enterables.Resource_pool;
+import View.Object_visuals.Object_visual;
 import View.Object_visuals.Worker_visual;
 
 /**
@@ -82,6 +83,12 @@ public class Worker extends Object {
         this.y = y;
         visual.update_parameter(x,y,size);
 
+    }
+
+    @Override
+    public void setVisual(Object_visual visual) {
+        this.visual = visual;
+        view.add_worker_visual(visual);
     }
 
     public void setTarget(int x, int y)

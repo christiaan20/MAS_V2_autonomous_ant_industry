@@ -38,6 +38,7 @@ public class View extends Canvas {
 
 
     private ArrayList<Object_visual> object_visuals = new ArrayList<Object_visual>();
+    private ArrayList<Object_visual> object_worker_visuals = new ArrayList<Object_visual>();
 
     /**
      * Create private constructor for a singleton
@@ -83,6 +84,7 @@ public class View extends Canvas {
         //methods that draw the required graphics
         draw_background(g);
         draw_object_visuals(g);
+        draw_worker_visuals(g);
         draw_mouse_coordinates(g);
 
         getGraphics().drawImage(buffer, 0, 0, this);
@@ -107,6 +109,14 @@ public class View extends Canvas {
             obj.draw(g,offset_x ,offset_y );
         }
     }
+    public void draw_worker_visuals(Graphics g)
+    {
+        for (Object_visual obj :object_worker_visuals)
+        {
+            obj.draw(g,offset_x ,offset_y );
+        }
+    }
+
 
 
     public void draw_angled_line(Graphics g, int x, int y, double angle, int length) {
@@ -220,6 +230,9 @@ public class View extends Canvas {
         Object_visual[] ObjectenArr = new Object_visual[object_visuals.size()];
         ObjectenArr = object_visuals.toArray(ObjectenArr);
 
+        Object_visual[] ObjectenWorkerArr = new Object_visual[object_worker_visuals.size()];
+        ObjectenWorkerArr = object_worker_visuals.toArray(ObjectenWorkerArr);
+
         for(Object_visual obj: ObjectenArr )
         {
             if (obj.check_within(x,y, offset_x,offset_y ))
@@ -227,6 +240,15 @@ public class View extends Canvas {
                 return obj;
             }
         }
+        for(Object_visual obj: ObjectenWorkerArr )
+        {
+            if (obj.check_within(x,y, offset_x,offset_y ))
+            {
+                return obj;
+            }
+        }
+
+
         return null;
     }
 
@@ -286,6 +308,9 @@ public class View extends Canvas {
         object_visuals.add(visual);
     }
 
+    public void add_worker_visual(Object_visual visual) {
+        object_worker_visuals.add(visual);
+    }
     public int getViewHeight()
     {
         return getHeight();

@@ -18,7 +18,7 @@ public class Task_Manager {
 
     public Task_Manager(Base base) {
         this.base = base;
-        base_rate = 50;
+        base_rate = 10;
         rand = new Random();
     }
 
