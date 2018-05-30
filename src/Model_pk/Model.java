@@ -1,6 +1,7 @@
 package Model_pk;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
@@ -71,11 +72,11 @@ public class Model{
         task_manager = new Task_Manager_Simple();
 
         size_x_field    = 800;
-        size_y_field    = 800;
+        size_y_field    = 600;
 
         View.getInstance().set_field_size(size_x_field, size_y_field);
         int base_x      = 450;
-        int base_y      = 450;
+        int base_y      = 150;
         int object_size = 50;
         int worker_size = 20;
 
@@ -130,11 +131,12 @@ public class Model{
             enterable_objects.add(base);
 
             //create the resources
-            enterable_objects.add(new Resource_pool(300,400,object_size,resource_time, Resource_Type_Enum.Stone,resource_pool_capacity));
-            enterable_objects.add(new Resource_pool(75,325,object_size,resource_time, Resource_Type_Enum.Coal, resource_pool_capacity));
-            enterable_objects.add(new Resource_pool(700,325,object_size,resource_time, Resource_Type_Enum.Copper, resource_pool_capacity));
-            enterable_objects.add(new Resource_pool(700,500,object_size,resource_time, Resource_Type_Enum.Iron, resource_pool_capacity));
-            enterable_objects.add(new Resource_pool(600,250,object_size,resource_time, Resource_Type_Enum.Uranium, resource_pool_capacity));
+            enterable_objects.add(new Resource_pool(300,400,object_size,resource_time, Resource_Type.Stone,resource_pool_capacity));
+            enterable_objects.add(new Resource_pool(75,325,object_size,resource_time, Resource_Type.Coal, resource_pool_capacity));
+            enterable_objects.add(new Resource_pool(550,325,object_size,resource_time, Resource_Type.Copper, resource_pool_capacity));
+            enterable_objects.add(new Resource_pool(250,100,object_size,resource_time, Resource_Type.Iron, resource_pool_capacity));
+            enterable_objects.add(new Resource_pool(600,250,object_size,resource_time, Resource_Type.Uranium, resource_pool_capacity));
+
 
 
 

@@ -22,7 +22,7 @@ public class Main extends Frame {
     private Thread t;
 
     private int size_x = 900;
-    private int size_y = 900;
+    private int size_y = 700;
 
     public Main() throws HeadlessException {
 
