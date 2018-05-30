@@ -3,9 +3,10 @@ package Model_pk.Enterables;
 
 import Model_pk.*;
 import Model_pk.Behaviour.Abstr_Task;
-import Model_pk.Behaviour.Task_Enum;
+import Model_pk.Task_managers.Abstr_Task_manager;
+import Model_pk.Task_managers.Task_Manager_Simple;
+import Model_pk.Task_managers.Task_manager_extended;
 import View.Object_visuals.Base_visual;
-import View.View;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,21 +15,20 @@ import java.util.HashMap;
  * Created by christiaan on 10/05/18.
  */
 public class Base extends Enterable_object {
-    private Order order;
     private HashMap<Resource_Type, Integer> obtained_resources;
-    private Task_Manager task_manager;
+    //private Task_Manager_Simple task_managerSimple;
+    private Abstr_Task_manager task_manager;
     private double chance_of_general_explorer = 0.75;
 
 
-    public Base(int x, int y, int size, int time, Order order) {
+    public Base(int x, int y, int size, int time) {
         super( x, y, size, time);
-        this.order = order;
         this.setVisual(new Base_visual( x, y, size,this));
 
         this.obtained_resources = new HashMap<>();
         init_obtained_resources();
 
-        this.task_manager = new Task_Manager(this);
+        this.task_manager = new Task_manager_extended(this);
 
     }
 
@@ -45,13 +45,6 @@ public class Base extends Enterable_object {
 
     }
 
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
-    }
 
     @Override
     public boolean action(Worker worker)
@@ -61,6 +54,7 @@ public class Base extends Enterable_object {
 
             drop_resources(worker);
             task_manager.update_task_of(worker);
+
             worker.setTask(model.getBehaviour().getTask_miner());
 
             Abstr_Task worker_task = worker.getTask();
@@ -102,6 +96,8 @@ public class Base extends Enterable_object {
 
         Tester tester = Model.getInstance().getTest_setting();
         HashMap<Resource_Type, Integer>  goal = tester.get_current_goal();
+        if (goal == null)
+            return null;
         HashMap<Resource_Type, Integer> resources_to_obtain = new HashMap<>();
         int new_amount;
 
@@ -142,11 +138,11 @@ public class Base extends Enterable_object {
         this.obtained_resources = obtained_resources;
     }
 
-    public Task_Manager getTask_manager() {
+    public Abstr_Task_manager getTask_managerSimple() {
         return task_manager;
     }
 
-    public void setTask_manager(Task_Manager task_manager) {
+    public void setTask_managerSimple(Abstr_Task_manager task_manager) {
         this.task_manager = task_manager;
     }
 }

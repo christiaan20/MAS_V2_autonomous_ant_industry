@@ -127,9 +127,13 @@ public class Task_Miner_Basic extends Abstr_Task
         {
             if(!worker.is_full())
             {
+
                 Resource_pool pool = (Resource_pool) obj;
                 if(pool.getType() == worker.getResource_type())
                 {
+                    if (pool.enter(worker)){
+                        worker.setTravel_time(model.getTickcount());
+                    }
                     return (pool.enter(worker)) ;
                 }
             }

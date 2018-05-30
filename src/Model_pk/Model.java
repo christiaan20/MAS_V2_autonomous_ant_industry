@@ -39,6 +39,8 @@ public class Model{
 
     private boolean pause;
 
+    private int tickcount;
+
 
     /**
      * Create private constructor for a singleton
@@ -57,6 +59,7 @@ public class Model{
 
     public void set_scenario_1()  throws IOException
     {
+        tickcount = 0;
         behaviour = new Behaviour_Basic();
 
         size_x_field    = 800;
@@ -79,7 +82,7 @@ public class Model{
         tile_size = object_size/5;
 
         // create the base
-        base = new Base(base_x,base_y,object_size,base_time, new Order());
+        base = new Base(base_x,base_y,object_size,base_time);
         enterable_objects.add(base);
 
         //create the resources
@@ -105,6 +108,7 @@ public class Model{
 
     public void tick(int tick_count){
 
+        tickcount = tick_count;
         tick_workers();
         tick_pheromone();
         delete_expired_objects();
@@ -113,10 +117,15 @@ public class Model{
 
             test_setting.is_goal_reached(tick_count);
 
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+    }
+
+    public boolean goals_are_reached(){
+        return test_setting.all_goals_reached();
     }
 
 
@@ -389,5 +398,9 @@ public class Model{
 
     public Tester getTest_setting() {
         return test_setting;
+    }
+
+    public int getTickcount() {
+        return tickcount;
     }
 }

@@ -37,16 +37,22 @@ public class Tester {
 
     public void init_goal(){
 
-        HashMap<Resource_Type, Integer> first_goal = new HashMap<>();
+        HashMap<Resource_Type, Integer> first_goal = fill_all_resources_with(10);
+
+        goals.add(first_goal);
+        goals.add(first_goal);
+
+    }
+
+    public HashMap<Resource_Type, Integer> fill_all_resources_with(int amount){
+
+        HashMap<Resource_Type, Integer> goal = new HashMap<>();
 
         for(Resource_Type type: Resource_Type.values())
         {
-            first_goal.put(type, 30);
+            goal.put(type, amount);
         }
-
-        goals.add(first_goal);
-        goals.add(first_goal);
-
+        return goal;
     }
 
     private void init_log_file()throws IOException {
@@ -189,7 +195,7 @@ public class Tester {
     public HashMap<Resource_Type, Integer> get_current_goal(){
 
         if( all_goals_reached())
-            return null;
+            return fill_all_resources_with(0);
 
         return goals.get(0);
 
