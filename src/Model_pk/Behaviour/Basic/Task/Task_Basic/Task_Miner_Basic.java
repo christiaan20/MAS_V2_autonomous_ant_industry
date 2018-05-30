@@ -48,11 +48,7 @@ public class Task_Miner_Basic extends Abstr_Task
             obj = worker.closest_owned_phero_of_type(worker, Task_Enum.explorer,null);
             if(obj != null)
             {
-                setDrop_enabled(true);
-                set_lost_phero_false();
-                go_to_phero(worker,obj);
-                worker.setCurr_target_object(obj);
-                worker.setState(Worker_State_Enum.to_phero);
+                select_obj_as_new_target(worker, obj);
                 return;
             }
         }
@@ -60,11 +56,7 @@ public class Task_Miner_Basic extends Abstr_Task
         obj =  worker.closest_owned_phero_of_type(worker,getTask(),worker.getResource_type());
         if(obj != null)
         {
-            setDrop_enabled(true);
-            set_lost_phero_false();
-            go_to_phero(worker,obj);
-            worker.setCurr_target_object(obj);
-            worker.setState(Worker_State_Enum.to_phero);
+            select_obj_as_new_target(worker, obj);
             return;
         }
 
@@ -72,11 +64,7 @@ public class Task_Miner_Basic extends Abstr_Task
         obj = worker.closest_phero_of_type(getTask(),worker.getResource_type());
         if(obj != null)
         {
-            setDrop_enabled(true);
-            set_lost_phero_false();
-            go_to_phero(worker,obj);
-            worker.setCurr_target_object(obj);
-            worker.setState(Worker_State_Enum.to_phero);
+            select_obj_as_new_target(worker, obj);
             return;
         }
        /*
@@ -110,6 +98,14 @@ public class Task_Miner_Basic extends Abstr_Task
         }
 
 
+    }
+
+    private void select_obj_as_new_target(Worker worker, Object obj) {
+        setDrop_enabled(true);
+        set_lost_phero_false();
+        go_to_phero(worker,obj);
+        worker.setCurr_target_object(obj);
+        worker.setState(Worker_State_Enum.to_phero);
     }
 
     @Override

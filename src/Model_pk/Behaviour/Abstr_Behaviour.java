@@ -46,7 +46,13 @@ public abstract class Abstr_Behaviour
     protected int ticks_since_enter       = 0;    // the counter for
     protected Enterable_object last_entered_object = null;
 
+    //parameters for the behavior advanced
     protected  double ignore_chance;
+
+    //parameters for the behavior basic
+    protected boolean incalculate_strength; // whether the workers decide on following the strongest pheromone or only distance
+    protected double  strength_influence;   // how much infleunce the strength has when taken into account
+
 
 
 
@@ -158,5 +164,13 @@ public abstract class Abstr_Behaviour
 
     public double getIgnore_chance() {
         return ignore_chance;
+    }
+
+    public boolean isIncalculate_strength() {
+        return incalculate_strength;
+    }
+
+    public double getStrength_influence() {
+        return strength_influence;
     }
 }

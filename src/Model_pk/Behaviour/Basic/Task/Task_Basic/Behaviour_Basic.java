@@ -57,7 +57,9 @@ public class Behaviour_Basic extends Abstr_Behaviour
         ticks_since_enter       = 0;    // the counter for
         Enterable_object last_entered_object = null;
 
-
+        //feature settings
+        this.incalculate_strength = true; // whether the workers decide on following the strongest pheromone or only distance
+        this.strength_influence = 0.5;   // how much infleunce the strength has when taken into account
 
     }
 

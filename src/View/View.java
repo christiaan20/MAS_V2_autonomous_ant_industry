@@ -256,16 +256,22 @@ public class View extends Canvas {
 
         for(Object_visual obj: ObjectenArr )
         {
-            if (obj.check_within(x,y, offset_x,offset_y ))
+            if(obj != null)
             {
-                return obj;
+                if (obj.check_within(x,y, offset_x,offset_y ))
+                {
+                    return obj;
+                }
             }
+
         }
         for(Object_visual obj: ObjectenWorkerArr )
         {
-            if (obj.check_within(x,y, offset_x,offset_y ))
+            if(obj != null)
             {
-                return obj;
+                if (obj.check_within(x, y, offset_x, offset_y)) {
+                    return obj;
+                }
             }
         }
 

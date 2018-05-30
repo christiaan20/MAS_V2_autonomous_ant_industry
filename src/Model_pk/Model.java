@@ -91,7 +91,7 @@ public class Model{
 
         if(test)
         {
-            base = new Base(base_x,base_y,object_size,base_time, new Order());
+            base = new Base(base_x,base_y,object_size,base_time);
             enterable_objects.add(base);
 
             work_force_size = 1;
@@ -108,7 +108,7 @@ public class Model{
         }
         else if(test_direction)
         {
-            base = new Base(base_x+200,base_y+200,object_size,base_time, new Order());
+            base = new Base(base_x+200,base_y+200,object_size,base_time);
             enterable_objects.add(base);
 
 
@@ -119,7 +119,7 @@ public class Model{
         }
         else
         {
-            base = new Base(base_x,base_y,object_size,base_time, new Order());
+            base = new Base(base_x,base_y,object_size,base_time);
             enterable_objects.add(base);
 
             //create the resources
