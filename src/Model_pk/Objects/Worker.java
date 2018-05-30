@@ -2,6 +2,7 @@ package Model_pk.Objects;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 import Model_pk.*;
 import Model_pk.Behaviour.*;
@@ -17,6 +18,8 @@ import View.Object_visuals.Worker_visual;
 public class Worker extends Abstr_Object {
 
     private Model model;
+
+    private boolean broken;
 
     private double  currDirection;      //The current direction the worker is moving
     private Worker_State_Enum state;    //the worker is in
@@ -37,10 +40,14 @@ public class Worker extends Abstr_Object {
     private Resource_Type_Enum resource_type;    //The resource it will mine, transport for or look for
 
     private int travel_time;
+    private Random random_gen;
+    private double break_chance;
 
     public Worker(int x, int y, int size, double currDirection, int max_load, Abstr_Task task, Base base)
     {
         super( x, y, size);
+        this.break_chance = 0.00;
+        this.random_gen = new Random();
         this.currDirection = currDirection;
         this.max_load = max_load;
         this.task = task;
@@ -54,6 +61,7 @@ public class Worker extends Abstr_Object {
         this.model = Model.getInstance();
 
         this.travel_time = 0;
+        this.broken = false;
 
        // task.test_tan_function();
     }
@@ -81,6 +89,15 @@ public class Worker extends Abstr_Object {
     public void tick()
     {
         task.tick(this);
+
+    }
+
+    public void chance_to_break(){
+
+        if ( random_gen.nextDouble() < break_chance)
+            setBroken(true);
+
+        break_chance *= 2;
     }
 
     public void move(int x, int y)
@@ -522,5 +539,21 @@ public class Worker extends Abstr_Object {
 
     public void setTravel_time(int travel_time) {
         this.travel_time = travel_time;
+    }
+
+    public boolean isBroken() {
+        return broken;
+    }
+
+    public void setBroken(boolean broken) {
+        this.broken = broken;
+    }
+
+    public double getBreak_chance() {
+        return break_chance;
+    }
+
+    public void setBreak_chance(double break_chance) {
+        this.break_chance = break_chance;
     }
 }

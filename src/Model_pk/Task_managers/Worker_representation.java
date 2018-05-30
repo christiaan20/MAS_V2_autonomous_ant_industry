@@ -12,12 +12,14 @@ public class Worker_representation {
     private Abstr_Task task;                //The Task it is currently doing
     private Resource_Type_Enum type;    //The resource it will mine, transport for or look for
     private int travel_time;
+    private int last_seen;
 
     public Worker_representation(long ID, Abstr_Task task, Resource_Type_Enum type, int travel_time) {
         this.ID = ID;
         this.task = task;
         this.type = type;
         this.travel_time = travel_time;
+        this.last_seen = last_seen;
     }
 
     public long getID() {
@@ -58,4 +60,11 @@ public class Worker_representation {
 
     }
 
+    public int getLast_seen() {
+        return last_seen;
+    }
+
+    public void setLast_seen(int last_seen) {
+        this.last_seen = last_seen;
+    }
 }

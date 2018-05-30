@@ -95,6 +95,8 @@ public class Base extends Abstr_Enterable_object {
 //                }
             }
 
+        worker.setBreak_chance(0.01);
+
 
 
        // }

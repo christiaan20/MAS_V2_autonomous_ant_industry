@@ -48,7 +48,14 @@ public class Model{
 
     private boolean pause;
 
+    private int base_x;
+    private int base_y;
+    private int worker_size;
+    private int max_worker_load;
+
     private int tickcount;
+
+    private ArrayList<Worker> workers_to_add;
 
 
     /**
@@ -68,6 +75,7 @@ public class Model{
 
     public void set_scenario_1()  throws IOException
     {
+        workers_to_add = new ArrayList<>();
         tickcount = 0;
         behaviour = new Behaviour_Basic();
         task_manager = new Task_manager_extended();
@@ -76,10 +84,10 @@ public class Model{
         size_y_field    = 600;
 
         View.getInstance().set_field_size(size_x_field, size_y_field);
-        int base_x      = 450;
-        int base_y      = 150;
+        this.base_x      = 450;
+        this.base_y      = 150;
         int object_size = 50;
-        int worker_size = 20;
+        this.worker_size = 20;
 
         int work_force_size = 15;
 
@@ -162,6 +170,13 @@ public class Model{
 
     }
 
+    public void add_worker(int amount){
+        for( int i = 0; i < amount; i++ )
+            workers_to_add.add(new Worker(base_x, base_y, worker_size, random.nextDouble()*Math.PI*2, max_worker_load, behaviour.getTask_explorer(),base));
+
+        }
+
+
 
     public void tick(int tick_count){
 
@@ -170,7 +185,11 @@ public class Model{
         tick_pheromone();
         delete_expired_objects();
 
-        test_setting.is_goal_reached(tick_count);
+        workers.addAll(workers_to_add);
+        workers_to_add = new ArrayList<>();
+
+
+            test_setting.is_goal_reached(tick_count);
 
     }
 
@@ -198,7 +217,11 @@ public class Model{
     {
         for(Worker w: workers)
         {
-            w.tick();
+            if ( !w.isBroken() && getTickcount() % 250 == 0)
+                w.chance_to_break();
+
+            if( !w.isBroken())
+                w.tick();
         }
     }
 
