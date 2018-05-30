@@ -1,5 +1,6 @@
 package View.Object_visuals;
 
+import Model_pk.Enterables.Base;
 import Model_pk.Object;
 
 import java.awt.*;
@@ -41,6 +42,21 @@ public class Base_visual extends Object_visual{
         g.fillRect(x  , y, size, size);
         g.setColor(Color.lightGray);
         g.fillRect(x+ size/2 - center_size/2 , y+ size/2 - center_size/2 , center_size, center_size);
+
+        if(selected)
+        {
+            draw_detect_range(g);
+        }
+    }
+
+    public void draw_detect_range(Graphics g)
+    {
+        Base  base = ((Base) getModel_object());
+        int dist = base.getDetect_dist();
+        int display_x = view.x_model_to_view(base.getX())-dist;
+        int display_y = view.y_model_to_view(base.getY())-dist;
+
+        g.drawOval(display_x,display_y,dist*2,dist*2);
     }
 
 

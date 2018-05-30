@@ -1,11 +1,10 @@
 package Model_pk.Behaviour;
 
+import Model_pk.*;
 import Model_pk.Enterables.Base;
 import Model_pk.Enterables.Enterable_object;
-import Model_pk.Model;
-import Model_pk.Worker;
 import Model_pk.Object;
-import Model_pk.Worker_State_Enum;
+import View.Object_visuals.Worker_visual;
 
 import java.util.Random;
 import java.text.DecimalFormat;
@@ -21,48 +20,90 @@ public abstract class Abstr_Task
 
     //protected Worker worker;
 
-
-
     //parameter attaining to the movement of workers
     protected int target_x; //absolute x coordinate where the workers is going to
     protected int target_y; //absolute y coordinate where the workers is going to
     protected boolean refresh_target = false; //whether a new target needs to be chosen
 
     // parameters for the movement of the worker
-    private int worker_speed = 3;                   //the size of the step of a worker at each tick
-    private int step_distance = worker_speed *20;   //the distance that is walked during wandering before a new target is chosen
-    protected int dist_walked = step_distance;        //the amount of distance walked since the last target choice
+    private int worker_speed;                   //the size of the step of a worker at each tick
+    protected int step_distance;   //the distance that is walked during wandering before a new target is chosen
+    protected int dist_walked;        //the amount of distance walked since the last target choice
 
     //parameters for the wander move of the worker
     private Random random = new Random(); // Random object to generate directions of travel
-    private int big_turn_threshold = 10; //the amount of steps taken before a mayor turn is possible
-    private int big_turn_count = 0;
+    private int big_turn_threshold; //the amount of steps taken before a mayor turn is possible
+    private int big_turn_count;
 
     // parameters attaining to the use of the pheromones
     // the size of pheromone is scaled with its strenght
-    private int start_phero_size = 5;   //the size at dropping the phero
-    private int max_phero_size = 15;    //the limit on the size of the pheromone
-    private int start_phero_strength = 10;
-    private int max_phero_strength = 50;
-    private int phero_strength_load_factor = 2; //the factor of infleunce of the load of the worker on the start strength of the pheromone
-    private int degrade_time = 150;      //how many ticks it takes to degrade the pheromone by 1
+    private int start_phero_size;   //the size at dropping the phero
+    private int max_phero_size;    //the limit on the size of the pheromone
+    private int start_phero_strength;
+    private int max_phero_strength;
+    private int phero_strength_load_factor; //the factor of infleunce of the load of the worker on the start strength of the pheromone
+    private int degrade_time;      //how many ticks it takes to degrade the pheromone by 1
 
     // parameters fot the dropping of pheromones
-    private int phero_drop_dist         = step_distance;   //the distance needed to walk before dropping a pheromone
-    private int dist_walked_since_drop  = 0;                    //the distance walked since last dropping of pheromone
-    private boolean drop_enabled        = true;
-    private int phero_detect_dist       = (int)(step_distance*1.5);
+    private int phero_drop_dist;   //the distance needed to walk before dropping a pheromone
+    private int dist_walked_since_drop;                    //the distance walked since last dropping of pheromone
+    private boolean drop_enabled;
+
+
+    //private int phero_detect_dist       = (int)(step_distance*1.5); // for the basic case
+    private int phero_detect_dist;  // for the advanced case
 
     //parameters for the return mechanism of the workers
-    private int ticks_before_return     = (int) (degrade_time*start_phero_strength*0.5); // the number of ticks before the worker has to return if it wants to find it's way home
-    private int ticks_since_enter       = 0;    // the counter for
-    private Enterable_object last_entered_object = null;
+    private int ticks_before_return ; // the number of ticks before the worker has to return if it wants to find it's way home
+    private int ticks_since_enter     ;    // the counter for
+    private Enterable_object last_entered_object ;
+
+    //parameter for  the vector based path finding
+    private double vector_ignore_chance;    //the chance that a vector during vector calculation is ignored
+    private double factor;                  //the factor
 
 
 
     public Abstr_Task()
     {
         this.model = Model.getInstance();
+        Abstr_Behaviour behaviour = model.getBehaviour();
+
+        // parameters for the movement of the worker
+        worker_speed = behaviour.getWorker_speed();                   //the size of the step of a worker at each tick
+        step_distance = behaviour.getStep_distance();   //the distance that is walked during wandering before a new target is chosen
+        dist_walked = behaviour.getDist_walked();        //the amount of distance walked since the last target choice
+
+        //parameters for the wander move of the worker
+        big_turn_threshold = behaviour.getBig_turn_threshold(); //the amount of steps taken before a mayor turn is possible
+        big_turn_count = behaviour.getBig_turn_count();
+
+        // parameters attaining to the use of the pheromones
+        // the size of pheromone is scaled with its strenght
+        start_phero_size = behaviour.getStart_phero_size();   //the size at dropping the phero
+        max_phero_size = behaviour.getMax_phero_size();    //the limit on the size of the pheromone
+        start_phero_strength = behaviour.getStart_phero_strength();
+        max_phero_strength = behaviour.getMax_phero_strength();
+        phero_strength_load_factor = behaviour.getPhero_strength_load_factor(); //the factor of infleunce of the load of the worker on the start strength of the pheromone
+        degrade_time = behaviour.getDegrade_time();      //how many ticks it takes to degrade the pheromone by 1
+
+        // parameters fot the dropping of pheromones
+        phero_drop_dist         = behaviour.getPhero_drop_dist();   //the distance needed to walk before dropping a pheromone
+        dist_walked_since_drop  = behaviour.getDist_walked_since_drop();                    //the distance walked since last dropping of pheromone
+        drop_enabled        = behaviour.isDrop_enabled();
+
+
+        phero_detect_dist       = behaviour.getPhero_detect_dist(); // for the basic case
+
+
+        //parameters for the return mechanism of the workers
+        ticks_before_return     = behaviour.getTicks_before_return(); // the number of ticks before the worker has to return if it wants to find it's way home
+        ticks_since_enter       = behaviour.getTicks_since_enter();    // the counter for
+        Enterable_object last_entered_object = behaviour.getLast_entered_object();
+
+        vector_ignore_chance = behaviour.getIgnore_chance();
+
+
     }
 
     public abstract boolean is_obj_relevant_to_task(Worker worker, Object obj);
@@ -108,6 +149,11 @@ public abstract class Abstr_Task
             //check of a phermone has to be dropped
            // check_dropping_pheromone(worker);
 
+            if(is_at_target_halve(worker)) //only used for advanced tasks
+            {
+                drop_pheromone(worker);
+            }
+
             if (is_at_target(worker))   // if the worker is at/beyond the current target or just set to refresh the target
             {
                 drop_pheromone(worker);
@@ -121,6 +167,8 @@ public abstract class Abstr_Task
                     worker.add_visited_pheromone(curr_target );
                 }
 
+                setHalve(false); //only for the adv setting
+
                 //if(needs_to_return())
                  //   select_return_target(worker);
                 //else
@@ -130,6 +178,11 @@ public abstract class Abstr_Task
             move(worker);
         }
 
+    }
+
+    protected boolean is_at_target_halve(Worker worker)
+    {
+        return false;
     }
 
     private void select_return_target(Worker worker)
@@ -255,12 +308,59 @@ public abstract class Abstr_Task
         setTarget(worker, new_x,new_y);
     }
 
+    public boolean select_target_from_vectors(Worker worker)
+    {
+        int w_x = worker.getX();
+        int w_y = worker.getY();
+        double x_tot_vector = 0;
+        double y_tot_vector = 0;
+
+        if(worker.getDetected_objects().size() != 0 )
+        {
+            int count = 0;
+            for(CustomStruct str : worker.getDetected_objects())
+            {
+
+                if(random.nextDouble() > vector_ignore_chance || count < 3)
+                {
+                    double dist = (double) str.getDistance();
+                    if(dist != 0)
+                    {
+                        count++;
+                        double x_unit =  (str.getX_vector()/dist);
+                        double y_unit =  (str.getY_vector()/dist);
+                        int pheroStrength = ((Pheromone) str.getObject()).getStrength();
+
+                        int attract_strength = 1+ (int)(pheroStrength*1000/dist);
+
+                        x_tot_vector = x_tot_vector + x_unit*attract_strength;
+                        y_tot_vector = y_tot_vector + y_unit*attract_strength;
+                    }
+               }
+
+
+            }
+
+            double angle = worker.get_corner_relative_to((int)(w_x + x_tot_vector*100),(int) (w_y+y_tot_vector*100 ));
+            worker.setCurrDirection(angle);
+            walk_straight_for(worker,1);
+            ((Worker_visual) worker.getVisual()).update_vectors(worker);
+            //worker.add_detected_phermones_to_visited();
+            worker.add_detected_phermones_within_distance_to_visited(step_distance);
+            System.out.println("new angle = " + angle);
+
+            return true;
+        }
+        return false;
+
+    }
+
     public int move_worker(Worker worker)
     {
         int x = worker.getX();
         int y = worker.getY();
         int Xdist = get_x_dist(x,target_x);
-        int Ydist = get_y_dist(y, target_y);
+        int Ydist = get_y_dist(y,target_y);
 
         int dist = (int)Math.abs( Math.sqrt(Math.pow(Xdist,2)+ Math.pow(Ydist,2)));
 
@@ -346,6 +446,8 @@ public abstract class Abstr_Task
 
     public boolean is_at_target(Worker worker)
     {
+
+
         return (dist_walked >= step_distance ||
                 ((target_x == worker.getX() && target_y == worker.getY())) ||
                 isRefresh_target() ) ;
@@ -617,5 +719,20 @@ public abstract class Abstr_Task
     public void setFound_resource(boolean found_resource) {
     }
 
+
+    public boolean isHalve() {
+        return false;
+    }
+
+    public void setHalve(boolean halve) {
+
+    }
+
+    public boolean isReturn_from_resource() {
+        return false;
+    }
+
+    public void setReturn_from_resource(boolean return_from_resource) {
+    }
 
 }

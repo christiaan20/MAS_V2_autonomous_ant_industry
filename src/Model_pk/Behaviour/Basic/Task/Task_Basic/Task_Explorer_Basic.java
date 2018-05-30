@@ -1,4 +1,4 @@
-package Model_pk.Behaviour.Basic.Task;
+package Model_pk.Behaviour.Basic.Task.Task_Basic;
 
 import Model_pk.Behaviour.Abstr_Task;
 import Model_pk.Behaviour.Task_Enum;
@@ -13,10 +13,10 @@ import Model_pk.Worker_State_Enum;
  * Created by christiaan on 16/05/18.
  */
 public class Task_Explorer_Basic extends Abstr_Task{
-    public int wander_limit = 15;
-    public int wander_limit_count = 0;
-    public boolean returning = false;
-    public boolean enter_base = false;
+    protected int wander_limit = 15;
+    protected int wander_limit_count = 0;
+    protected boolean returning = false;
+    protected boolean enter_base = false;
 
     public Task_Explorer_Basic()
     {

@@ -14,6 +14,8 @@ public class View extends Canvas {
 
     private Colors colors;
 
+    private boolean GAME_OVER = false;
+
     private double scale_from_model = 1; //the scale that the view objects have relative to the sizes in the model
     private int size_x;
     private int size_y;
@@ -31,7 +33,6 @@ public class View extends Canvas {
 
     private Image buffer;
 
-    private Color background_color = new Color(194, 60, 42); //red color for the mars ground
     private int text_size = 15;
 
     private boolean draw_pheromones = true;
@@ -86,6 +87,11 @@ public class View extends Canvas {
         draw_object_visuals(g);
         draw_worker_visuals(g);
         draw_mouse_coordinates(g);
+        if(GAME_OVER)
+        {
+
+            draw_game_over(g);
+        }
 
         getGraphics().drawImage(buffer, 0, 0, this);
     }
@@ -104,17 +110,32 @@ public class View extends Canvas {
 
     public void draw_object_visuals(Graphics g)
     {
-        for (Object_visual obj :object_visuals)
+        Object_visual[] ObjectenArr = new Object_visual[object_visuals.size()];
+        ObjectenArr = object_visuals.toArray(ObjectenArr);
+
+        for (Object_visual obj :ObjectenArr)
         {
             obj.draw(g,offset_x ,offset_y );
         }
     }
     public void draw_worker_visuals(Graphics g)
     {
-        for (Object_visual obj :object_worker_visuals)
+        Object_visual[] ObjectenArr = new Object_visual[object_worker_visuals.size()];
+        ObjectenArr = object_worker_visuals.toArray(ObjectenArr);
+
+        for (Object_visual obj : ObjectenArr)
         {
             obj.draw(g,offset_x ,offset_y );
         }
+    }
+
+    public void draw_game_over(Graphics g)
+    {
+
+        g.setColor(Color.GRAY);
+        g.fillRect(size_x/2 -5, size_y/2-15-15,200,25);
+        g.setColor(Color.BLACK);
+        g.drawString("GOALS REACHED", size_x/2,size_y/2-15);
     }
 
 
@@ -250,6 +271,13 @@ public class View extends Canvas {
 
 
         return null;
+    }
+
+    public void restart()
+    {
+        object_visuals.clear();
+        object_worker_visuals.clear();
+
     }
 
 
@@ -422,6 +450,14 @@ public class View extends Canvas {
         {
             obj.set_offset(offset_x,offset_y);
         }
+    }
+
+    public boolean isGAME_OVER() {
+        return GAME_OVER;
+    }
+
+    public void setGAME_OVER(boolean GAME_OVER) {
+        this.GAME_OVER = GAME_OVER;
     }
 
 }

@@ -3,28 +3,32 @@ package Model_pk.Enterables;
 
 import Model_pk.*;
 import Model_pk.Behaviour.Abstr_Task;
+import Model_pk.Behaviour.Basic.Task.Task_Basic.Behaviour_Basic;
 import Model_pk.Behaviour.Task_Enum;
 import View.Object_visuals.Base_visual;
 import View.View;
 
+import java.lang.Object;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * Created by christiaan on 10/05/18.
  */
-public class Base extends Enterable_object {
+public class Base extends Enterable_object
+{
     private Order order;
     private HashMap<Resource_Type, Integer> obtained_resources;
     private Task_Manager task_manager;
     private double chance_of_general_explorer = 0.75;
+    private int detect_dist;
 
 
     public Base(int x, int y, int size, int time, Order order) {
         super( x, y, size, time);
         this.order = order;
         this.setVisual(new Base_visual( x, y, size,this));
-
+        this.detect_dist = size*2;
         this.obtained_resources = new HashMap<>();
         init_obtained_resources();
 
@@ -62,19 +66,34 @@ public class Base extends Enterable_object {
             drop_resources(worker);
             task_manager.update_task_of(worker);
             worker.setTask(model.getBehaviour().getTask_miner());
+            worker.getTask().setFound_resource(false);
+            worker.getTask().setReturn_from_resource(false);
 
             Abstr_Task worker_task = worker.getTask();
+
             //if(worker_task.getTask() == Task_Enum.miner)
             //{
-            int original_detect_dist = worker_task.getPhero_detect_dist();
-            //hack to increase the detection range of the worker
-            worker_task.setPhero_detect_dist((int)(size*2.5));
-            worker.clear_detected_objects();
-            Model.getInstance().find_objects(worker);
-            worker_task.select_target(worker);
-            worker_task.setPhero_detect_dist(original_detect_dist);
 
-            if(worker.getCurr_target_object() == null)
+            int original_detect_dist = 0;//for basic case
+        //hack to increase the detection range of the worker
+            if(model.getBehaviour() instanceof Behaviour_Basic)
+            {
+                original_detect_dist = worker_task.getPhero_detect_dist(); //for basic case
+                worker_task.setPhero_detect_dist((int)(size*2.5)); //for basic cas
+            }
+
+
+            worker.clear_visited_objects();
+            worker.clear_detected_objects();
+            //Model.getInstance().find_objects(worker);
+            worker.setDetected_objects(model.find_objects(getX(),getY(),detect_dist,worker.getResource_type(),worker_task.getTask()));
+            worker_task.select_target(worker);
+            worker.clear_visited_objects();
+
+            if(model.getBehaviour() instanceof Behaviour_Basic)
+                worker_task.setPhero_detect_dist(original_detect_dist); //for basic case
+
+            if(!worker.isFound_new_target())
             {
                 double random = Model.getInstance().getRandom().nextDouble();
                 worker.setTask(model.getBehaviour().getTask_explorer());
@@ -134,6 +153,7 @@ public class Base extends Enterable_object {
     }
 
 
+
     public HashMap<Resource_Type, Integer> get_obtained_resources_resources() {
         return this.obtained_resources;
     }
@@ -148,5 +168,13 @@ public class Base extends Enterable_object {
 
     public void setTask_manager(Task_Manager task_manager) {
         this.task_manager = task_manager;
+    }
+
+    public int getDetect_dist() {
+        return detect_dist;
+    }
+
+    public void setDetect_dist(int detect_dist) {
+        this.detect_dist = detect_dist;
     }
 }

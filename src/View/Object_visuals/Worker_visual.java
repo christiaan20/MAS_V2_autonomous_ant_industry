@@ -1,10 +1,8 @@
 package View.Object_visuals;
 
+import Model_pk.*;
 import Model_pk.Behaviour.Task_Enum;
 import Model_pk.Object;
-import Model_pk.Resource_Type;
-import Model_pk.Worker;
-import Model_pk.Worker_State_Enum;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -14,7 +12,7 @@ import java.util.ArrayList;
  */
 public class Worker_visual extends Object_visual
 {
-
+    ArrayList<CustomStruct> vectors = new ArrayList<>();
 
     public Worker_visual(int x, int y, int size, Object model_object) {
 
@@ -35,7 +33,7 @@ public class Worker_visual extends Object_visual
 
         // visual
         g.fillOval(x  , y, size, size);
-        view.draw_angled_line(g,x + size/2,y + size/2,worker.getCurrDirection(),size);
+        view.draw_angled_line(g,x + size/2,y + size/2,worker.getCurrDirection(),size*3);
 
         g.setColor(color_hat_edge);
         int hat_edge = 5;
@@ -46,6 +44,8 @@ public class Worker_visual extends Object_visual
 
         g.setColor(color);
 
+
+        draw_ID(g,worker,0);
         if(selected)
         {
             draw_debug_info(g,worker);
@@ -57,14 +57,15 @@ public class Worker_visual extends Object_visual
 
 
         draw_detection_range(g, worker );
-        draw_load(g, worker, 0);
+        draw_load(g, worker, 1);
         //draw_target_coord(g,worker,1);
-        draw_task(g,worker,1);
-        draw_state(g,worker,2);
-        draw_ID(g,worker,3);
+        draw_task(g,worker,2);
+        draw_state(g,worker,3);
+
 
         draw_target(g,worker);
         draw_visited(g,worker);
+        draw_vectors(g,worker);
 
     }
 
@@ -77,12 +78,12 @@ public class Worker_visual extends Object_visual
 
         g.drawOval(display_x,display_y,dist*2,dist*2);
 
-        //base detection distance
+       /* //base detection distance
         dist = (int) (50*2.5);
         display_x = view.x_model_to_view(worker.getX())-dist;
         display_y = view.y_model_to_view(worker.getY())-dist;
 
-        g.drawOval(display_x,display_y,dist*2,dist*2);
+        g.drawOval(display_x,display_y,dist*2,dist*2);*/
     }
 
     public void draw_ID(Graphics g, Worker worker, int height )
@@ -129,6 +130,36 @@ public class Worker_visual extends Object_visual
         int y_target = view.y_model_to_view(worker.getTask().getTarget_y());
 
         g.drawOval(x_target-oval_size/2,y_target-oval_size/2, oval_size, oval_size);
+    }
+
+    public void draw_vectors(Graphics g, Worker worker)
+    {
+        int w_x = view.x_model_to_view(worker.getX());
+        int w_y =  view.y_model_to_view(worker.getY());
+
+        for(CustomStruct str : vectors)
+        {
+            int x_vector = str.getX_vector();
+            int y_vector = str.getY_vector();
+
+            g.drawLine(w_x,w_y,x_vector,y_vector);
+        }
+    }
+
+    public void update_vectors( Worker worker)
+    {
+        int w_x = view.x_model_to_view(worker.getX());
+        int w_y =  view.y_model_to_view(worker.getY());
+
+        vectors.clear();
+
+        for(CustomStruct str : worker.getDetected_objects())
+        {
+            int x_vector = view.x_model_to_view(worker.getX() + str.getX_vector());
+            int y_vector = view.y_model_to_view(worker.getY() + str.getY_vector());
+
+            vectors.add(new CustomStruct(0,null,x_vector,y_vector));
+        }
     }
 
     public void draw_visited(Graphics g, Worker worker)

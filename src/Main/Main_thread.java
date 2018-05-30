@@ -15,8 +15,8 @@ public class Main_thread implements Runnable {
     private Model model;
     private Window window;
 
-    private boolean running = true; // whether the mainthread is running or not
-    private int refresh_time = 15;     // refresh_time of ticks and refreshes in ms
+    private boolean running = false; // whether the mainthread is running or not
+    private int refresh_time = 25;     // refresh_time of ticks and refreshes in ms
     private int tickcount = 0;
 
 

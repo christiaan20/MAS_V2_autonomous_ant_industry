@@ -39,6 +39,7 @@ public class Resource_pool extends Enterable_object {
     {
         if(capacity > 0)
         {
+            worker.getTask().setReturn_from_resource(true);
             return worker.add_load(give_unit_resource());
         }
         else

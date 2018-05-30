@@ -1,4 +1,4 @@
-package Model_pk.Behaviour.Basic.Task;
+package Model_pk.Behaviour.Basic.Task.Task_Basic;
 
 import Model_pk.*;
 import Model_pk.Behaviour.Abstr_Task;
@@ -12,8 +12,8 @@ import Model_pk.Object;
  */
 public class Task_Miner_Basic extends Abstr_Task
 {
-    private boolean lost_phero = false;     //becomes true if the miner cannot find a phero
-    private boolean found_resource = false; //is true if the miner was previously an explorer and a resource_pool was found
+    protected boolean lost_phero = false;     //becomes true if the miner cannot find a phero
+    protected boolean found_resource = false; //is true if the miner was previously an explorer and a resource_pool was found
 
     public Task_Miner_Basic()
     {
@@ -157,13 +157,21 @@ public class Task_Miner_Basic extends Abstr_Task
     }
 
 
-    private void set_lost_phero_true()
+    public boolean isLost_phero() {
+        return lost_phero;
+    }
+
+    public void setLost_phero(boolean lost_phero) {
+        this.lost_phero = lost_phero;
+    }
+
+    protected void set_lost_phero_true()
     {
         lost_phero = true;
 
     }
 
-    private void set_lost_phero_false()
+    protected void set_lost_phero_false()
     {
         lost_phero = false;
         setDrop_enabled(true);

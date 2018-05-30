@@ -57,6 +57,9 @@ public class Window extends Panel implements ActionListener
     private Map<Task_Enum,Button> task_buttons = new HashMap<>();
     private Map<Resource_Type,Button> resource_type_buttons = new HashMap<>();
 
+    //button to restart the simulation
+    private Button restart_button;
+
   ;
 
     public Window(int size_x, int size_y, Main_thread main_thread)
@@ -101,6 +104,8 @@ public class Window extends Panel implements ActionListener
         pause_button.setBackground(Color.lightGray);
         pause_button.addActionListener(this);
 
+
+
         slowdown_button = new Button("<<");
         slowdown_button.setBackground(Color.lightGray);
         slowdown_button.addActionListener(this);
@@ -116,6 +121,10 @@ public class Window extends Panel implements ActionListener
         create_pheromones_button = new Button("create Pheromones");
         create_pheromones_button.setBackground(Color.lightGray);
         create_pheromones_button.addActionListener(this);
+
+        restart_button = new Button("Restart");
+        restart_button.setBackground(Color.lightGray);
+        restart_button.addActionListener(this);
 
 
         //create labels
@@ -158,7 +167,9 @@ public class Window extends Panel implements ActionListener
         bottom_panel_2.setBackground(Color.gray);
 
         //bottom_panel_1
+
         bottom_panel_1.add(draw_pheromones_button);
+        bottom_panel_1.add(restart_button);
         bottom_panel_1.add(pause_button);
         bottom_panel_1.add(slowdown_button);
         bottom_panel_1.add(speedup_button);
@@ -313,6 +324,7 @@ public class Window extends Panel implements ActionListener
         check_create_pheromones_button(e);
         check_resource_type_button(e);
         check_task_button(e);
+        check_restart_button(e);
     }
 
     public void check_pause_button(ActionEvent e)
@@ -329,6 +341,16 @@ public class Window extends Panel implements ActionListener
                 main_thread.setRunning(true);
                 pause_button.setBackground(Color.lightGray);
             }
+
+        }
+    }
+
+    public void check_restart_button(ActionEvent e)
+    {
+        if( e.getSource() == restart_button )
+        {
+            View.getInstance().restart();
+            Model.getInstance().restart();
 
         }
     }

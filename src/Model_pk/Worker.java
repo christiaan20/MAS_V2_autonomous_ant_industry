@@ -25,7 +25,7 @@ public class Worker extends Object {
     private int                 time;                       //the amount of ticks that the worker is within a object without receiving an resource
 
     private Object curr_target_object;      //the current object the worker is moving towards
-
+    private boolean found_new_target;
 
 
     private ArrayList<CustomStruct> detected_objects = new ArrayList<>();   //The list of objects it can see now
@@ -44,6 +44,7 @@ public class Worker extends Object {
         this.task.setLast_entered_object(base);
         this.resource_type = null;
         this.setState(Worker_State_Enum.inside);
+        this.found_new_target = false;
 
         this.setVisual(new Worker_visual( x, y, size,this));
 
@@ -101,7 +102,8 @@ public class Worker extends Object {
         int Xdist = task.get_x_dist(this.x,target_x);
         int Ydist = task.get_y_dist(this.y, target_y);
 
-        if(x == target_x || y == target_y )
+        //if(x == target_x || y == target_y )
+        if(x == target_x && y == target_y )
             return model.getRandom().nextDouble();
         else
             return task.getaTanCorner(Xdist, Ydist);
@@ -130,7 +132,18 @@ public class Worker extends Object {
     }
 
     public void setCurr_target_object(Object curr_target_object) {
+
+        if(curr_target_object == null)
+        {
+            setFound_new_target(false);
+        }
+        else
+        {
+            setFound_new_target(true);
+        }
+
         this.curr_target_object = curr_target_object;
+
     }
 
     public Abstr_Task getTask() {
@@ -209,6 +222,32 @@ public class Worker extends Object {
             total = total + res.getAmount();
         }
         return total;
+    }
+
+    public void add_detected_phermones_to_visited()
+    {
+        for(CustomStruct str : detected_objects)
+        {
+            visited_objects.add(str.getObject());
+        }
+
+
+        clear_detected_objects();
+    }
+
+    public void add_detected_phermones_within_distance_to_visited(int distance)
+    {
+        for(CustomStruct str : detected_objects)
+        {
+            if(str.getDistance() < distance)
+            {
+                visited_objects.add(str.getObject());
+            }
+
+        }
+
+
+        clear_detected_objects();
     }
 
     public void clear_load()
@@ -392,5 +431,13 @@ public class Worker extends Object {
 
     public void setVisited_objects(ArrayList<Object> visited_objects) {
         this.visited_objects = visited_objects;
+    }
+
+    public boolean isFound_new_target() {
+        return found_new_target;
+    }
+
+    public void setFound_new_target(boolean found_new_target) {
+        this.found_new_target = found_new_target;
     }
 }

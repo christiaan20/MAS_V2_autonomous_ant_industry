@@ -28,6 +28,8 @@ public class Task_Manager {
             Resource_Type new_type = get_new_resource_type();
             worker.setResource_type(new_type);
 
+            //worker.setResource_type(Resource_Type.Coal); // for testing
+
         //}
 
         //Resource_Type type = worker.getResource_type();
