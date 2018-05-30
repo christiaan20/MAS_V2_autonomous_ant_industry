@@ -62,6 +62,9 @@ public class Window extends Panel implements ActionListener
     //button to restart the simulation
     private Button restart_button;
 
+    //button to break the currently selected worker
+    private Button break_worker_button;
+
   ;
 
     public Window(int size_x, int size_y, Main_thread main_thread)
@@ -105,8 +108,6 @@ public class Window extends Panel implements ActionListener
         pause_button = new Button("Pauze");
         pause_button.setBackground(Color.lightGray);
         pause_button.addActionListener(this);
-
-
 
         slowdown_button = new Button("<<");
         slowdown_button.setBackground(Color.lightGray);
@@ -200,8 +201,10 @@ public class Window extends Panel implements ActionListener
         for(Resource_Type_Enum type: Resource_Type_Enum.values())
         {
             // System.out.print(type.toString());
-            Label new_resource_count_label = new Label(type.toString() + ": 0" );
+            Label new_resource_count_label = new Label(type.toString() + ": 0000 " );
+            new_resource_count_label.setSize(125,50);
             resource_goal_labels.put(type,new_resource_count_label);
+
             panel.add(new_resource_count_label);
         }
     }
@@ -211,7 +214,8 @@ public class Window extends Panel implements ActionListener
         for(Resource_Type_Enum type: Resource_Type_Enum.values())
         {
            // System.out.print(type.toString());
-            Label new_resource_count_label = new Label(type.toString() + ": 0" );
+            Label new_resource_count_label = new Label(type.toString() + ": 0000 " );
+            new_resource_count_label.setSize(125,50);
             resource_count_labels.put(type,new_resource_count_label);
             panel.add(new_resource_count_label);
         }
@@ -222,7 +226,8 @@ public class Window extends Panel implements ActionListener
         for(Resource_Type_Enum type: Resource_Type_Enum.values())
         {
             // System.out.print(type.toString());
-            Label new_resource_count_label = new Label(type.toString() + ": 0" );
+            Label new_resource_count_label = new Label(type.toString() + ": 00 " );
+            //new_resource_count_label.setSize(100,50);
             resource_prob_labels.put(type,new_resource_count_label);
             panel.add(new_resource_count_label);
         }
@@ -268,7 +273,10 @@ public class Window extends Panel implements ActionListener
         {
             int value = goal.get(type);
 
-            resource_goal_labels.get(type).setText( type.toString() + ": " + String.valueOf(value)  );
+            Label selected = resource_goal_labels.get(type);
+
+            selected.setText( type.toString() + ": " + String.valueOf(value)  );
+           // selected.setSize(100,selected.getHeight());
 
         }
 
@@ -283,9 +291,10 @@ public class Window extends Panel implements ActionListener
         for(Resource_Type_Enum type: Resource_Type_Enum.values())
         {
             int value = resources.get(type);
+            Label selected = resource_count_labels.get(type);
 
-            resource_count_labels.get(type).setText( type.toString() + ": " + String.valueOf(value)  );
-
+            selected.setText( type.toString() + ": " + String.valueOf(value)  );
+           // selected.setSize(100,selected.getHeight());
         }
 
     }

@@ -94,7 +94,7 @@ public class Task_manager_extended extends  Abstr_Task_manager{
     }
 
 
-    private HashMap<Resource_Type_Enum, Integer> get_new_distribution_of_worker(){
+    public HashMap<Resource_Type_Enum, Integer> get_new_distribution_of_worker(){
 
         HashMap<Resource_Type_Enum, Avg_travel_time> avg_travel_time_to_resource = get_avg_travel_time_to_resource();
         HashMap<Resource_Type_Enum, Integer> resources_to_obtain = base.resource_to_obtain();
@@ -190,7 +190,7 @@ public class Task_manager_extended extends  Abstr_Task_manager{
         this.avg_travel_time_per_resource = avg_travel_time_per_resource;
     }
 
-    private  HashMap<Resource_Type_Enum, Integer> get_distribution_of_workers() {
+    public HashMap<Resource_Type_Enum, Integer> get_distribution_of_workers() {
 
         HashMap<Resource_Type_Enum, Integer> distribution_of_workers = new HashMap<>();
 
