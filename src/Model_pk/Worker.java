@@ -35,6 +35,8 @@ public class Worker extends Object {
     private Abstr_Task      task;           //The Task it is currently doing
     private Resource_Type resource_type;    //The resource it will mine, transport for or look for
 
+    private int travel_time;
+
     public Worker(int x, int y, int size, double currDirection, int max_load, Abstr_Task task, Base base)
     {
         super( x, y, size);
@@ -49,6 +51,8 @@ public class Worker extends Object {
         this.setVisual(new Worker_visual( x, y, size,this));
 
         this.model = Model.getInstance();
+
+        this.travel_time = 0;
 
        // task.test_tan_function();
     }
@@ -439,5 +443,16 @@ public class Worker extends Object {
 
     public void setFound_new_target(boolean found_new_target) {
         this.found_new_target = found_new_target;
+    }
+
+    public int getTravel_time() {
+        if (travel_time == 0)
+            return 0;
+        return 2*(model.getTickcount() - travel_time);
+    }
+
+
+    public void setTravel_time(int travel_time) {
+        this.travel_time = travel_time;
     }
 }

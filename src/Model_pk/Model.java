@@ -40,6 +40,8 @@ public class Model{
 
     private boolean pause;
 
+    private int tickcount;
+
 
     /**
      * Create private constructor for a singleton
@@ -58,7 +60,7 @@ public class Model{
 
     public void set_scenario_1()  throws IOException
     {
-        //behaviour = new Behaviour_Adv();
+        tickcount = 0;
         behaviour = new Behaviour_Basic();
 
         size_x_field    = 800;
@@ -70,11 +72,10 @@ public class Model{
         int object_size = 50;
         int worker_size = 20;
 
-        int work_force_size = 10;
+        int work_force_size = 15;
 
         int base_time       = 50;
-        //int resource_time   = 50;
-        int resource_time   = 10; //for testing purposes
+        int resource_time   = 50;
 
         int resource_pool_capacity  = 200;
         int max_worker_load         = 5;
@@ -147,6 +148,7 @@ public class Model{
 
     public void tick(int tick_count){
 
+        tickcount = tick_count;
         tick_workers();
         tick_pheromone();
         delete_expired_objects();
@@ -159,6 +161,10 @@ public class Model{
             e.printStackTrace();
         }
 
+    }
+
+    public boolean goals_are_reached(){
+        return test_setting.all_goals_reached();
     }
 
 
@@ -521,5 +527,9 @@ public class Model{
 
     public Tester getTest_setting() {
         return test_setting;
+    }
+
+    public int getTickcount() {
+        return tickcount;
     }
 }

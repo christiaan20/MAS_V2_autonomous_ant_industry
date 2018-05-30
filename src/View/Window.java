@@ -8,10 +8,8 @@ import java.util.Map;
 import Main.Main_thread;
 import Model_pk.Behaviour.Task_Enum;
 import Model_pk.Model;
-import Model_pk.Resource;
 import Model_pk.Resource_Type;
 import Controller.Controller;
-import javafx.concurrent.Task;
 
 /**
  * Created by christiaan on 10/05/18.
@@ -293,17 +291,19 @@ public class Window extends Panel implements ActionListener
         Model model = Model.getInstance();
         int last_value = 0;
 
-        HashMap<Resource_Type, Integer> resources = model.getBase().getTask_manager().get_resource_acumm_percentage_rates();
-        for(Resource_Type type: Resource_Type.values())
-        {
-            int value = resources.get(type);
-            int display_value = value - last_value;
-            last_value = value;
-
-
-            resource_prob_labels.get(type).setText( type.toString() + ": " + String.valueOf(display_value)  );
-
-        }
+//        HashMap<Resource_Type, Integer> resources = model.getBase().getTask_manager().get_resource_acumm_percentage_rates();
+//        if (resources == null)
+//            return;
+//        for(Resource_Type type: Resource_Type.values())
+//        {
+//            int value = resources.get(type);
+//            int display_value = value - last_value;
+//            last_value = value;
+//
+//
+//            resource_prob_labels.get(type).setText( type.toString() + ": " + String.valueOf(display_value)  );
+//
+//        }
 
     }
 

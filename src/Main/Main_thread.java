@@ -1,11 +1,13 @@
 package Main;
 
+import Model_pk.Resource_Type;
 import Model_pk.Tester;
 import View.View;
 import Model_pk.Model;
 import View.Window;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * Created by christiaan on 10/05/18.
@@ -45,9 +47,13 @@ public class Main_thread implements Runnable {
 
                 model.tick(tickcount);
 
+
+                if (model.goals_are_reached())
+                    continue;
+
                 window.update_resource_counters();
                 window.update_tick_counter(tickcount);
-                window.update_resource_probs();
+                //window.update_resource_probs();
                 window.update_resource_goals();
 
             }
