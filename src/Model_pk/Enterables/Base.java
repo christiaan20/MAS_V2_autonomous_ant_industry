@@ -91,10 +91,11 @@ public class Base extends Enterable_object {
             {
                 double random = Model.getInstance().getRandom().nextDouble();
                 worker.setTask(model.getBehaviour().getTask_explorer());
-                if(random > chance_of_general_explorer)
-                {
-                    worker.setResource_type(null);
-                }
+                worker.setResource_type(null);
+//                if(random > chance_of_general_explorer)
+//                {
+//                    worker.setResource_type(null);
+//                }
             }
 
 
@@ -157,11 +158,11 @@ public class Base extends Enterable_object {
         this.obtained_resources = obtained_resources;
     }
 
-    public Abstr_Task_manager getTask_managerSimple() {
+    public Abstr_Task_manager getTask_manager() {
         return task_manager;
     }
 
-    public void setTask_managerSimple(Abstr_Task_manager task_manager) {
+    public void setTask_manager(Abstr_Task_manager task_manager) {
         this.task_manager = task_manager;
     }
 

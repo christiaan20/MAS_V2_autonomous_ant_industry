@@ -10,6 +10,10 @@ import Model_pk.Behaviour.Task_Enum;
 import Model_pk.Model;
 import Model_pk.Resource_Type;
 import Controller.Controller;
+import Model_pk.Task_managers.Abstr_Task_manager;
+import Model_pk.Task_managers.Avg_travel_time;
+import Model_pk.Task_managers.Task_Manager_Simple;
+import Model_pk.Task_managers.Task_manager_extended;
 
 /**
  * Created by christiaan on 10/05/18.
@@ -291,19 +295,42 @@ public class Window extends Panel implements ActionListener
         Model model = Model.getInstance();
         int last_value = 0;
 
-//        HashMap<Resource_Type, Integer> resources = model.getBase().getTask_manager().get_resource_acumm_percentage_rates();
-//        if (resources == null)
-//            return;
-//        for(Resource_Type type: Resource_Type.values())
-//        {
-//            int value = resources.get(type);
-//            int display_value = value - last_value;
-//            last_value = value;
-//
-//
-//            resource_prob_labels.get(type).setText( type.toString() + ": " + String.valueOf(display_value)  );
-//
-//        }
+        Abstr_Task_manager task_manager = model.getBase().getTask_manager();
+
+        if ( task_manager instanceof Task_manager_extended){
+            Task_manager_extended task_manager_extended = (Task_manager_extended)task_manager;
+            HashMap<Resource_Type, Integer> distribution_of_worker = task_manager_extended.get_distribution_of_workers();
+            //HashMap<Resource_Type, Avg_travel_time> avg_travel_time_to_resource = task_manager_extended.get_avg_travel_time_to_resource();
+
+            for(Resource_Type type: Resource_Type.values())
+            {
+//                Avg_travel_time avg_travel_time_object = avg_travel_time_to_resource.get(type);
+//                int value;
+//                if( avg_travel_time_object == null)
+//                    value = 0;
+//                else
+//                    value = avg_travel_time_object.get_avg_travel_time();
+                int value = distribution_of_worker.get(type);
+                resource_prob_labels.get(type).setText( type.toString() + ": " + String.valueOf(value)  );
+            }
+
+        }
+        else if( task_manager instanceof Task_Manager_Simple){
+            Task_Manager_Simple task_Manager_Simple = (Task_Manager_Simple)task_manager;
+            HashMap<Resource_Type, Integer> resources = task_Manager_Simple.get_resource_acumm_percentage_rates();
+            if (resources == null)
+                return;
+            for(Resource_Type type: Resource_Type.values())
+            {
+                int value = resources.get(type);
+                int display_value = value - last_value;
+                last_value = value;
+
+                resource_prob_labels.get(type).setText( type.toString() + ": " + String.valueOf(display_value)  );
+
+            }
+
+        }
 
     }
 

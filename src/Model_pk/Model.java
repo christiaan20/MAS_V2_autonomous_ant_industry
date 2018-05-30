@@ -64,11 +64,11 @@ public class Model{
         behaviour = new Behaviour_Basic();
 
         size_x_field    = 800;
-        size_y_field    = 800;
+        size_y_field    = 600;
 
         View.getInstance().set_field_size(size_x_field, size_y_field);
         int base_x      = 450;
-        int base_y      = 450;
+        int base_y      = 150;
         int object_size = 50;
         int worker_size = 20;
 
@@ -125,8 +125,8 @@ public class Model{
             //create the resources
             enterable_objects.add(new Resource_pool(300,400,object_size,resource_time, Resource_Type.Stone,resource_pool_capacity));
             enterable_objects.add(new Resource_pool(75,325,object_size,resource_time, Resource_Type.Coal, resource_pool_capacity));
-            enterable_objects.add(new Resource_pool(700,325,object_size,resource_time, Resource_Type.Copper, resource_pool_capacity));
-            enterable_objects.add(new Resource_pool(700,500,object_size,resource_time, Resource_Type.Iron, resource_pool_capacity));
+            enterable_objects.add(new Resource_pool(550,325,object_size,resource_time, Resource_Type.Copper, resource_pool_capacity));
+            enterable_objects.add(new Resource_pool(250,100,object_size,resource_time, Resource_Type.Iron, resource_pool_capacity));
             enterable_objects.add(new Resource_pool(600,250,object_size,resource_time, Resource_Type.Uranium, resource_pool_capacity));
         }
 
@@ -345,7 +345,7 @@ public class Model{
             if(phero.isTask(task) && phero.isType(type))
             {
                 int x_w =  x;
-                int y_w =  x;
+                int y_w =  y;
                 int x_obj =  obj.getX();
                 int y_obj =  obj.getY();
 

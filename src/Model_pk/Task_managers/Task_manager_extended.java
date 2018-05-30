@@ -14,10 +14,13 @@ public class Task_manager_extended extends  Abstr_Task_manager{
 
     private Base base;
     private ArrayList<Worker_representation> workers_list;
+    private HashMap<Resource_Type, Avg_travel_time> avg_travel_time_per_resource;
 
     public Task_manager_extended(Base base) {
         this.base = base;
         this.workers_list = new ArrayList<>();
+        this.avg_travel_time_per_resource = new HashMap<>();
+        init_avg_travel_time_per_resource();
     }
 
     @Override
@@ -48,6 +51,15 @@ public class Task_manager_extended extends  Abstr_Task_manager{
         remember_task_of(worker);
     }
 
+    private void init_avg_travel_time_per_resource(){
+
+        for(Resource_Type type: Resource_Type.values()){
+            Avg_travel_time avg_travel_time = new Avg_travel_time();
+            avg_travel_time_per_resource.put(type, avg_travel_time);
+        }
+    }
+
+
     private Resource_Type get_max_diff_type(){
 
         HashMap<Resource_Type, Integer> diff_in_distribution_of_worker = get_diff_in_distribution_of_worker();
@@ -76,25 +88,25 @@ public class Task_manager_extended extends  Abstr_Task_manager{
     }
 
 
-    private HashMap<Resource_Type, Integer> get_new_distribution_of_worker(){
+    public HashMap<Resource_Type, Integer> get_new_distribution_of_worker(){
 
-        HashMap<Resource_Type, Integer> avg_travel_time_to_resource = get_avg_travel_time_to_resource();
+        HashMap<Resource_Type, Avg_travel_time> avg_travel_time_to_resource = get_avg_travel_time_to_resource();
         HashMap<Resource_Type, Integer> resources_to_obtain = base.resource_to_obtain();
         HashMap<Resource_Type, Integer> distribution_ratio = new HashMap<>();
 
         int resources_needed;
-        int avg_travel_time;
+        Avg_travel_time avg_travel_time_object;
         int distribution;
         int total_distribution = 0;
 
         for(Resource_Type type: Resource_Type.values()){
 
-            avg_travel_time = avg_travel_time_to_resource.get(type);
+            avg_travel_time_object = avg_travel_time_to_resource.get(type);
             resources_needed = resources_to_obtain.get(type);
             if(resources_needed < 0 )
                 resources_needed = 0;
 
-            distribution = avg_travel_time * resources_needed;
+            distribution = avg_travel_time_object.get_avg_travel_time() * resources_needed;
             distribution_ratio.put(type, distribution);
 
             total_distribution += distribution;
@@ -136,6 +148,8 @@ public class Task_manager_extended extends  Abstr_Task_manager{
             workers_list.add(worker_repr);
         }
 
+        update_avg_travel_time_to_resource(worker_repr);
+
     }
 
     private Worker_representation convert_to_representation(Worker worker){
@@ -144,55 +158,33 @@ public class Task_manager_extended extends  Abstr_Task_manager{
 
     }
 
-    private HashMap<Resource_Type, Integer> get_avg_travel_time_to_resource() {
+    private void update_avg_travel_time_to_resource(Worker_representation worker){
 
-        HashMap<Resource_Type, Integer> distribution_of_workers = get_distribution_of_workers();
-        HashMap<Resource_Type, Integer> total_travel_time_to_resource = get_total_travel_time_to_resource();
-        HashMap<Resource_Type, Integer> avg_travel_time_to_resource = new HashMap<>();
-        int avg_travel_time;
+        Resource_Type type = worker.getType();
+        if( type == null)
+            return;
 
-        for(Resource_Type type: Resource_Type.values()){
-
-            Integer total_travel_time = total_travel_time_to_resource.get(type);
-            Integer worker_amount = distribution_of_workers.get(type);
-            if(total_travel_time == null || worker_amount == null){
-                avg_travel_time_to_resource.put(type, 0);
-            }
-            else if( worker_amount == 0 ){
-                avg_travel_time_to_resource.put(type, 0);
-            }
-            else {
-                avg_travel_time = total_travel_time / worker_amount;
-                avg_travel_time_to_resource.put(type, avg_travel_time);
-            }
+        Avg_travel_time avg_travel = avg_travel_time_per_resource.get(type);
+        if ( avg_travel == null ){
+            avg_travel = new Avg_travel_time(worker.getTravel_time());
+            avg_travel_time_per_resource.put(type, avg_travel);
         }
-        return avg_travel_time_to_resource;
-    }
-
-    private HashMap<Resource_Type, Integer> get_total_travel_time_to_resource() {
-
-        HashMap<Resource_Type, Integer> total_travel_time_to_resource = new HashMap<>();
-
-        for (Worker_representation worker : workers_list) {
-
-            Resource_Type type = worker.getType();
-            int travel_time = worker.getTravel_time();
-            Integer total_travel_time = total_travel_time_to_resource.get(type);
-
-            if(total_travel_time == null) {
-                total_travel_time_to_resource.put(type, travel_time);
-            }
-            else {
-                total_travel_time_to_resource.put(type, total_travel_time + travel_time);
-            }
-
+        else{
+            avg_travel.update_travel_time(worker.getTravel_time());
+            avg_travel_time_per_resource.replace(type, avg_travel);
         }
-
-        return total_travel_time_to_resource;
 
     }
 
-    private  HashMap<Resource_Type, Integer> get_distribution_of_workers() {
+    public HashMap<Resource_Type, Avg_travel_time> get_avg_travel_time_to_resource() {
+        return avg_travel_time_per_resource;
+    }
+
+    public void set_avg_travel_time_to_resource(HashMap<Resource_Type, Avg_travel_time> avg_travel_time_per_resource) {
+        this.avg_travel_time_per_resource = avg_travel_time_per_resource;
+    }
+
+    public HashMap<Resource_Type, Integer> get_distribution_of_workers() {
 
         HashMap<Resource_Type, Integer> distribution_of_workers = new HashMap<>();
 
@@ -213,6 +205,56 @@ public class Task_manager_extended extends  Abstr_Task_manager{
 
         return distribution_of_workers;
     }
+
+
+//    public HashMap<Resource_Type, Integer> get_avg_travel_time_to_resource() {
+//
+//        HashMap<Resource_Type, Integer> distribution_of_workers = get_distribution_of_workers();
+//        HashMap<Resource_Type, Integer> total_travel_time_to_resource = get_total_travel_time_to_resource();
+//        HashMap<Resource_Type, Integer> avg_travel_time_to_resource = new HashMap<>();
+//        int Avg_travel_time;
+//
+//        for(Resource_Type type: Resource_Type.values()){
+//
+//            Integer total_travel_time = total_travel_time_to_resource.get(type);
+//            Integer worker_amount = distribution_of_workers.get(type);
+//            if(total_travel_time == null || worker_amount == null){
+//                avg_travel_time_to_resource.put(type, 0);
+//            }
+//            else if( worker_amount == 0 ){
+//                avg_travel_time_to_resource.put(type, total_travel_time);
+//            }
+//            else {
+//                Avg_travel_time = total_travel_time / worker_amount;
+//                avg_travel_time_to_resource.put(type, Avg_travel_time);
+//            }
+//        }
+//        return avg_travel_time_to_resource;
+//    }
+//
+//    private HashMap<Resource_Type, Integer> get_total_travel_time_to_resource() {
+//
+//        HashMap<Resource_Type, Integer> total_travel_time_to_resource = new HashMap<>();
+//
+//        for (Worker_representation worker : workers_list) {
+//
+//            Resource_Type type = worker.getType();
+//            int travel_time = worker.getTravel_time();
+//            Integer total_travel_time = total_travel_time_to_resource.get(type);
+//
+//            if(total_travel_time == null) {
+//                total_travel_time_to_resource.put(type, travel_time);
+//            }
+//            else {
+//                total_travel_time_to_resource.put(type, total_travel_time + travel_time);
+//            }
+//
+//        }
+//
+//        return total_travel_time_to_resource;
+//
+//    }
+
 
 
 }
