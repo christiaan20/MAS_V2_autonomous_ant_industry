@@ -1,9 +1,8 @@
 package Model_pk.Task_managers;
 
-import Model_pk.Enterables.Base;
-import Model_pk.Resource_Type;
-import Model_pk.Task_managers.Abstr_Task_manager;
-import Model_pk.Worker;
+import Model_pk.Objects.Enterables.Base;
+import Model_pk.Enums.Resource_Type_Enum;
+import Model_pk.Objects.Worker;
 
 import java.util.HashMap;
 import java.util.Random;
@@ -13,40 +12,44 @@ import java.util.Random;
  */
 public class Task_Manager_Simple extends Abstr_Task_manager {
 
-    private Base base;
     private int base_rate;
     private Random  rand;
 
-    public Task_Manager_Simple(Base base) {
-        this.base = base;
+    public Task_Manager_Simple()
+    {
         base_rate = 10;
         rand = new Random();
+    }
+
+    public Task_Manager_Simple(Base base) {
+        this();
+        super.base = base;
     }
 
     @Override
     public void update_task_of( Worker worker){
 
         //if(Task_Enum.miner == worker.getTask().getTask()){
-            Resource_Type new_type = get_new_resource_type();
+            Resource_Type_Enum new_type = get_new_resource_type();
             worker.setResource_type(new_type);
 
-            //worker.setResource_type(Resource_Type.Coal); // for testing
+            //worker.setResource_type(Resource_Type_Enum.Coal); // for testing
 
         //}
 
-        //Resource_Type type = worker.getResource_type();
+        //Resource_Type_Enum type = worker.getResource_type();
         //Abstr_Task task = worker.getTask();
         //worker.setTask(task);
     }
 
-    private Resource_Type get_new_resource_type(){
+    private Resource_Type_Enum get_new_resource_type(){
 
         int  random = rand.nextInt(100) ;
         int rate;
 
-        HashMap<Resource_Type, Integer> resource_rates = get_resource_acumm_percentage_rates();
+        HashMap<Resource_Type_Enum, Integer> resource_rates = get_resource_acumm_percentage_rates();
 
-        for(Resource_Type type: Resource_Type.values())
+        for(Resource_Type_Enum type: Resource_Type_Enum.values())
         {
             rate = resource_rates.get(type);
 
@@ -59,16 +62,16 @@ public class Task_Manager_Simple extends Abstr_Task_manager {
 
     }
 
-    public HashMap<Resource_Type, Integer> get_resource_acumm_percentage_rates(){
+    public HashMap<Resource_Type_Enum, Integer> get_resource_acumm_percentage_rates(){
 
-        HashMap<Resource_Type, Integer> resources_to_obtain = base.resource_to_obtain();
+        HashMap<Resource_Type_Enum, Integer> resources_to_obtain = base.resource_to_obtain();
         if (resources_to_obtain == null)
             return null;
-        HashMap<Resource_Type, Integer> resource_rates = new HashMap<>();
+        HashMap<Resource_Type_Enum, Integer> resource_rates = new HashMap<>();
         int total_amount = 0;
         int new_amount;
 
-        for(Resource_Type type: Resource_Type.values())
+        for(Resource_Type_Enum type: Resource_Type_Enum.values())
         {
             new_amount = resources_to_obtain.get(type) + base_rate;
 
@@ -82,7 +85,7 @@ public class Task_Manager_Simple extends Abstr_Task_manager {
 
         int accum = 0;
 
-        for(Resource_Type type: Resource_Type.values())
+        for(Resource_Type_Enum type: Resource_Type_Enum.values())
         {
             if(total_amount == 0)
                 new_amount = 0;

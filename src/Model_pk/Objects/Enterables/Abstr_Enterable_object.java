@@ -1,16 +1,15 @@
-package Model_pk.Enterables;
+package Model_pk.Objects.Enterables;
 
-import Model_pk.Object;
-import Model_pk.Resource;
-import Model_pk.Worker;
+import Model_pk.Objects.Abstr_Object;
+import Model_pk.Objects.Worker;
 
 /**
  * Created by christiaan on 10/05/18.
  */
-public abstract class Enterable_object extends Object {
+public abstract class Abstr_Enterable_object extends Abstr_Object {
     protected int time; //time in ticks
 
-    public Enterable_object( int x, int y, int size, int time) {
+    public Abstr_Enterable_object(int x, int y, int size, int time) {
         super(x, y, size);
         this.time = time;
 

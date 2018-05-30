@@ -1,12 +1,11 @@
 package Model_pk.Behaviour.Basic.Task_Adv;
 
+import Model_pk.Objects.Abstr_Object;
 import Model_pk.Behaviour.Basic.Task.Task_Basic.Task_Miner_Basic;
 import Model_pk.Behaviour.Task_Enum;
-import Model_pk.Enterables.Resource_pool;
-import Model_pk.Object;
-import Model_pk.Pheromone;
-import Model_pk.Worker;
-import Model_pk.Worker_State_Enum;
+import Model_pk.Objects.Pheromone;
+import Model_pk.Objects.Worker;
+import Model_pk.Enums.Worker_State_Enum;
 
 /**
  * Created by christiaan on 28/05/18.
@@ -17,7 +16,7 @@ public class Task_Miner_Adv extends Task_Miner_Basic
     private boolean return_from_resource;
 
     @Override
-    public boolean is_obj_relevant_to_task(Worker worker, Object obj)
+    public boolean is_obj_relevant_to_task(Worker worker, Abstr_Object obj)
     {
         if(obj instanceof Pheromone)
         {
@@ -43,7 +42,7 @@ public class Task_Miner_Adv extends Task_Miner_Basic
         //when the unit is returning from having just found the resource it will only follow his own explorer path
         if(found_resource) //only when the resource_pool has been found recently will the miner follow his own explorer path
         {
-            Object obj = worker.closest_owned_phero_of_type(worker, Task_Enum.explorer,null);
+            Abstr_Object obj = worker.closest_owned_phero_of_type(worker, Task_Enum.explorer,null);
             if(obj != null)
             {
                 setDrop_enabled(true);

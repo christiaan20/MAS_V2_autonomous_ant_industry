@@ -1,13 +1,8 @@
 package Main;
 
-import Model_pk.Resource_Type;
-import Model_pk.Tester;
 import View.View;
 import Model_pk.Model;
 import View.Window;
-
-import java.io.IOException;
-import java.util.HashMap;
 
 /**
  * Created by christiaan on 10/05/18.
@@ -18,6 +13,7 @@ public class Main_thread implements Runnable {
     private Window window;
 
     private boolean running = false; // whether the mainthread is running or not
+    private boolean restart_activated = false; // whether the mainthread has to restart_activated the simulation or not
     private int refresh_time = 25;     // refresh_time of ticks and refreshes in ms
     private int tickcount = 0;
 
@@ -41,6 +37,12 @@ public class Main_thread implements Runnable {
 
         while(true)
         {
+            if(restart_activated)
+            {
+                restart();
+                setRestart_activated(false);
+            }
+
             if(running)
             {
                 tickcount++;
@@ -49,7 +51,8 @@ public class Main_thread implements Runnable {
 
 
                 if (model.goals_are_reached())
-                    continue;
+                    setRestart_activated(true);
+                    // continue;
 
                 window.update_resource_counters();
                 window.update_tick_counter(tickcount);
@@ -71,6 +74,21 @@ public class Main_thread implements Runnable {
         }
 
 
+    }
+
+    public void restart()
+    {
+        tickcount =0;
+        model.restart();
+        view.restart();
+    }
+
+    public boolean isRestart_activated() {
+        return restart_activated;
+    }
+
+    public void setRestart_activated(boolean restart_activated) {
+        this.restart_activated = restart_activated;
     }
 
     public int getTickcount() {

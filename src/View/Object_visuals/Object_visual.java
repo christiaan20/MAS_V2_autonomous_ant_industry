@@ -2,7 +2,7 @@ package View.Object_visuals;
 
 import java.awt.*;
 
-import Model_pk.Object;
+import Model_pk.Objects.Abstr_Object;
 import View.View;
 
 /**
@@ -14,14 +14,14 @@ public abstract class Object_visual {
     protected int x;    //x position as drawn by the view
     protected int y;    //y position as drawn by the view
     protected int size;
-    protected Object model_object;
+    protected Abstr_Object model_object;
 
     protected boolean selected;
     protected boolean hover_over;
 
     protected int text_size;
 
-    public Object_visual(int x, int y, int size, Object model_object)
+    public Object_visual(int x, int y, int size, Abstr_Object model_object)
     {
         view = View.getInstance();
         this.update_parameter(x,y,size);
@@ -129,11 +129,11 @@ public abstract class Object_visual {
         this.hover_over = hover_over;
     }
 
-    public Object getModel_object() {
+    public Abstr_Object getModel_object() {
         return model_object;
     }
 
-    public void setModel_object(Object model_object) {
+    public void setModel_object(Abstr_Object model_object) {
         this.model_object = model_object;
     }
 }

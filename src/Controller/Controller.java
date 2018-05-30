@@ -1,10 +1,10 @@
 package Controller;
 
+import Model_pk.Objects.Abstr_Object;
 import Model_pk.Behaviour.Task_Enum;
 import Model_pk.Model;
-import Model_pk.Object;
-import Model_pk.Resource_Type;
-import Model_pk.Worker;
+import Model_pk.Enums.Resource_Type_Enum;
+import Model_pk.Objects.Worker;
 import View.Object_visuals.Object_visual;
 import View.View;
 
@@ -19,7 +19,7 @@ public class Controller implements MouseListener, MouseMotionListener, KeyListen
     View view;
 
     private boolean create_phero = false;
-    private Resource_Type create_type = Resource_Type.Coal;
+    private Resource_Type_Enum create_type = Resource_Type_Enum.Coal;
     private Task_Enum create_task = Task_Enum.explorer;
     private Worker creat_worker = null;
 
@@ -61,7 +61,7 @@ public class Controller implements MouseListener, MouseMotionListener, KeyListen
             int model_x = view.x_view_to_model(e.getX());
             int model_y = view.y_view_to_model(e.getY());
 
-            Object obj = view.getSelected_visual().getModel_object();
+            Abstr_Object obj = view.getSelected_visual().getModel_object();
             if(obj instanceof Worker)
             {
                 Worker worker = (Worker) obj;
@@ -78,7 +78,7 @@ public class Controller implements MouseListener, MouseMotionListener, KeyListen
         int model_y = view.y_view_to_model(e.getY());
 
         Object_visual vis = view.getSelected_visual();
-        Object obj = null;
+        Abstr_Object obj = null;
         if(vis != null)
         {
            obj = view.getSelected_visual().getModel_object();
@@ -174,11 +174,11 @@ public class Controller implements MouseListener, MouseMotionListener, KeyListen
         this.create_phero = create_phero;
     }
 
-    public Resource_Type getCreate_type() {
+    public Resource_Type_Enum getCreate_type() {
         return create_type;
     }
 
-    public void setCreate_type(Resource_Type create_type) {
+    public void setCreate_type(Resource_Type_Enum create_type) {
         this.create_type = create_type;
     }
 

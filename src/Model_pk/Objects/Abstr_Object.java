@@ -1,4 +1,4 @@
-package Model_pk;
+package Model_pk.Objects;
 
 import View.Object_visuals.Object_visual;
 import View.View;
@@ -6,7 +6,7 @@ import View.View;
 /**
  * Created by christiaan on 10/05/18.
  */
-public abstract class Object {
+public abstract class Abstr_Object {
 
     private static long ID_count = 0;
     protected long ID;
@@ -20,10 +20,10 @@ public abstract class Object {
 
     protected boolean expired;
 
-    public Object() {
+    public Abstr_Object() {
     }
 
-    public Object(int x, int y, int size) {
+    public Abstr_Object(int x, int y, int size) {
         this.ID = ID_count;
         this.x = x;
         this.y = y;
@@ -124,11 +124,11 @@ public abstract class Object {
         this.visual = null;
     }
 
-    public boolean equals(Object o) {
+    public boolean equals(Abstr_Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Object object = o;
+        Abstr_Object object = o;
 
         if (getID() != object.getID()) return false;
         if (getX() != object.getX()) return false;

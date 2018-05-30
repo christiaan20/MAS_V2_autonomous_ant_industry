@@ -1,8 +1,8 @@
 package View.Object_visuals;
 
-import Model_pk.Enterables.Resource_pool;
-import Model_pk.Object;
-import Model_pk.Resource_Type;
+import Model_pk.Objects.Enterables.Resource_pool;
+import Model_pk.Objects.Abstr_Object;
+import Model_pk.Enums.Resource_Type_Enum;
 
 import java.awt.*;
 
@@ -11,9 +11,9 @@ import java.awt.*;
  */
 public class Resource_pool_visual extends Object_visual
 {
-    Resource_Type type;
+    Resource_Type_Enum type;
 
-    public Resource_pool_visual(int x, int y, int size, Object model_object, Resource_Type type)
+    public Resource_pool_visual(int x, int y, int size, Abstr_Object model_object, Resource_Type_Enum type)
     {
         super(x, y, size, model_object);
         this.type = type;
@@ -23,23 +23,23 @@ public class Resource_pool_visual extends Object_visual
     public void draw_visual(Graphics g, int offset_x, int offset_y)
     {
         Resource_pool res = (Resource_pool) model_object;
-        if( type == Resource_Type.Stone)
+        if( type == Resource_Type_Enum.Stone)
         {
             draw_type_stone(g);
         }
-        if(type == Resource_Type.Coal )
+        if(type == Resource_Type_Enum.Coal )
         {
             draw_type_coal(g);
         }
-        if(type == Resource_Type.Copper )
+        if(type == Resource_Type_Enum.Copper )
         {
             draw_type_Copper(g);
         }
-        if(type == Resource_Type.Uranium )
+        if(type == Resource_Type_Enum.Uranium )
         {
             draw_type_uranium(g);
         }
-        if(type == Resource_Type.Iron )
+        if(type == Resource_Type_Enum.Iron )
         {
             draw_type_iron(g);
         }
@@ -82,7 +82,7 @@ public class Resource_pool_visual extends Object_visual
 
     public void draw_type_coal(Graphics g)
 {
-    Color color = Colors.getInstance().get_resource_pool_color(Resource_Type.Coal);
+    Color color = Colors.getInstance().get_resource_pool_color(Resource_Type_Enum.Coal);
 
     color = check_draw_selected(color);
 
@@ -98,7 +98,7 @@ public class Resource_pool_visual extends Object_visual
 
     public void draw_type_Copper(Graphics g)
     {
-        Color color = Colors.getInstance().get_resource_pool_color(Resource_Type.Copper);
+        Color color = Colors.getInstance().get_resource_pool_color(Resource_Type_Enum.Copper);
 
         color = check_draw_selected(color);
 
@@ -114,7 +114,7 @@ public class Resource_pool_visual extends Object_visual
 
     public void draw_type_uranium(Graphics g)
     {
-        Color color = Colors.getInstance().get_resource_pool_color(Resource_Type.Uranium);
+        Color color = Colors.getInstance().get_resource_pool_color(Resource_Type_Enum.Uranium);
 
         color = check_draw_selected(color);
 

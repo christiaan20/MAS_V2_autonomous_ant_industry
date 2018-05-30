@@ -1,19 +1,20 @@
-package Model_pk;
+package Model_pk.Objects;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import Model_pk.*;
 import Model_pk.Behaviour.*;
-import Model_pk.Enterables.Base;
-import Model_pk.Enterables.Resource_pool;
+import Model_pk.Enums.Resource_Type_Enum;
+import Model_pk.Enums.Worker_State_Enum;
+import Model_pk.Objects.Enterables.Base;
 import View.Object_visuals.Object_visual;
 import View.Object_visuals.Worker_visual;
 
 /**
  * Created by christiaan on 10/05/18.
  */
-public class Worker extends Object {
+public class Worker extends Abstr_Object {
 
     private Model model;
 
@@ -24,16 +25,16 @@ public class Worker extends Object {
     private int                 max_load;                   //the maximum amount of resources the worker can carry
     private int                 time;                       //the amount of ticks that the worker is within a object without receiving an resource
 
-    private Object curr_target_object;      //the current object the worker is moving towards
+    private Abstr_Object curr_target_object;      //the current object the worker is moving towards
     private boolean found_new_target;
 
 
     private ArrayList<CustomStruct> detected_objects = new ArrayList<>();   //The list of objects it can see now
-    private ArrayList<Object> visited_objects = new ArrayList<>();          //The list of objects it has already passed
+    private ArrayList<Abstr_Object> visited_objects = new ArrayList<>();          //The list of objects it has already passed
 
     //private Abstr_Behaviour abstrBehaviour;
     private Abstr_Task      task;           //The Task it is currently doing
-    private Resource_Type resource_type;    //The resource it will mine, transport for or look for
+    private Resource_Type_Enum resource_type;    //The resource it will mine, transport for or look for
 
     private int travel_time;
 
@@ -57,7 +58,7 @@ public class Worker extends Object {
        // task.test_tan_function();
     }
 
-    public Worker( int x, int y, int size, double currDirection, int max_load, Abstr_Task task, Resource_Type type, Base base)
+    public Worker(int x, int y, int size, double currDirection, int max_load, Abstr_Task task, Resource_Type_Enum type, Base base)
     {
 //        super( x, y, size);
 //        this.currDirection = currDirection;
@@ -131,11 +132,11 @@ public class Worker extends Object {
         this.max_load = max_load;
     }
 
-    public Object getCurr_target_object() {
+    public Abstr_Object getCurr_target_object() {
         return curr_target_object;
     }
 
-    public void setCurr_target_object(Object curr_target_object) {
+    public void setCurr_target_object(Abstr_Object curr_target_object) {
 
         if(curr_target_object == null)
         {
@@ -158,11 +159,11 @@ public class Worker extends Object {
         this.task = task;
     }
 
-    public Resource_Type getResource_type() {
+    public Resource_Type_Enum getResource_type() {
         return resource_type;
     }
 
-    public void setResource_type(Resource_Type resource_type) {
+    public void setResource_type(Resource_Type_Enum resource_type) {
         this.resource_type = resource_type;
     }
 
@@ -196,8 +197,6 @@ public class Worker extends Object {
                 load.add(resource);
             }
 
-
-
             return true;
         }
 
@@ -205,7 +204,7 @@ public class Worker extends Object {
 
     }
 
-    public Resource get_resource_of_type(Resource_Type type)
+    public Resource get_resource_of_type(Resource_Type_Enum type)
     {
         for(Resource res: load)
         {
@@ -280,17 +279,17 @@ public class Worker extends Object {
         this.load = load;
     }
 
-    public void add_visited_pheromone(Object obj)
+    public void add_visited_pheromone(Abstr_Object obj)
     {
         remove_obj_from_detected_pheromones(obj);
         visited_objects.add(obj);
     }
 
-    public void remove_obj_from_visited_pheromones(Object obj)
+    public void remove_obj_from_visited_pheromones(Abstr_Object obj)
     {
-        Iterator<Object> iter = visited_objects.iterator();
+        Iterator<Abstr_Object> iter = visited_objects.iterator();
         while (iter.hasNext()) {
-            Object object = iter.next();
+            Abstr_Object object = iter.next();
             if(object.equals(obj) )
                 iter.remove();
 
@@ -302,7 +301,7 @@ public class Worker extends Object {
             detected_objects.add(struct);
     }
 
-    public void remove_obj_from_detected_pheromones(Object obj)
+    public void remove_obj_from_detected_pheromones(Abstr_Object obj)
     {
         Iterator<CustomStruct> iter = detected_objects.iterator();
         while (iter.hasNext()) {
@@ -321,29 +320,28 @@ public class Worker extends Object {
 
         for(CustomStruct struct: detected_objects)
         {
-            Object obj = struct.getObject();
+            Abstr_Object obj = struct.getObject();
             if(obj instanceof Pheromone)
             {
                 Pheromone phero = (Pheromone) obj;
 
-                    if(closest_phero.is_farther_than(struct))
-                    {
-                        closest_phero = struct;
-                    }
+                if(closest_phero.is_farther_than(struct))
+                {
+                    closest_phero = struct;
+                }
             }
         }
 
         return (Pheromone) closest_phero.getObject();
     }
 
-    public Pheromone closest_phero_of_type(Task_Enum task,Resource_Type type)
+    public Pheromone closest_phero_of_type(Task_Enum task, Resource_Type_Enum type)
     {
         CustomStruct closest_phero = new CustomStruct(null,10000000);
 
-
         for(CustomStruct struct: detected_objects)
         {
-            Object obj = struct.getObject();
+            Abstr_Object obj = struct.getObject();
             if(obj instanceof Pheromone)
             {
                 Pheromone phero = (Pheromone) obj;
@@ -361,13 +359,13 @@ public class Worker extends Object {
         return (Pheromone) closest_phero.getObject();
     }
 
-    public Pheromone closest_owned_phero_of_type(Worker owner,Task_Enum task,Resource_Type type)
+    public Pheromone closest_owned_phero_of_type(Worker owner, Task_Enum task, Resource_Type_Enum type)
     {
         CustomStruct closest_phero = new CustomStruct(null,10000000);
 
         for(CustomStruct struct: detected_objects)
         {
-            Object obj = struct.getObject();
+            Abstr_Object obj = struct.getObject();
             if(obj instanceof Pheromone)
             {
                 Pheromone phero = (Pheromone) obj;
@@ -385,8 +383,78 @@ public class Worker extends Object {
         return (Pheromone) closest_phero.getObject();
     }
 
+    public Pheromone most_attractive_phero()
+    {
+        CustomStruct closest_phero = new CustomStruct(null,10000000);
 
-    public boolean isVisited(Object obj)
+
+        for(CustomStruct struct: detected_objects)
+        {
+            Abstr_Object obj = struct.getObject();
+            if(obj instanceof Pheromone)
+            {
+                Pheromone phero = (Pheromone) obj;
+
+                if(closest_phero.is_less_attractive_than(struct))
+                {
+                    closest_phero = struct;
+                }
+            }
+        }
+
+        return (Pheromone) closest_phero.getObject();
+    }
+
+    public Pheromone most_attractive_phero_of_type(Task_Enum task, Resource_Type_Enum type)
+    {
+        CustomStruct closest_phero = new CustomStruct(null,10000000);
+
+        for(CustomStruct struct: detected_objects)
+        {
+            Abstr_Object obj = struct.getObject();
+            if(obj instanceof Pheromone)
+            {
+                Pheromone phero = (Pheromone) obj;
+
+                if(phero.getType() == type && phero.getTask() == task)
+                {
+                    if(closest_phero.is_less_attractive_than(struct))
+                    {
+                        closest_phero = struct;
+                    }
+                }
+            }
+        }
+
+        return (Pheromone) closest_phero.getObject();
+    }
+
+    public Pheromone most_attractive_owned_phero_of_type(Worker owner, Task_Enum task, Resource_Type_Enum type)
+    {
+        CustomStruct closest_phero = new CustomStruct(null,10000000);
+
+        for(CustomStruct struct: detected_objects)
+        {
+            Abstr_Object obj = struct.getObject();
+            if(obj instanceof Pheromone)
+            {
+                Pheromone phero = (Pheromone) obj;
+
+                if((phero.isType(type) || type == null)&& phero.isTask(task) && phero.isOwner(owner))
+                {
+                    if(closest_phero.is_less_attractive_than(struct))
+                    {
+                        closest_phero = struct;
+                    }
+                }
+            }
+        }
+
+        return (Pheromone) closest_phero.getObject();
+    }
+
+
+    public boolean isVisited(Abstr_Object obj)
     {
         return visited_objects.contains(obj);
     }
@@ -409,11 +477,11 @@ public class Worker extends Object {
         this.state = state;
     }
 
-    public Object pop_last_visited_phero()
+    public Abstr_Object pop_last_visited_phero()
     {
         if(visited_objects.size() >  0)
         {
-            Object obj = visited_objects.get(visited_objects.size()-1);
+            Abstr_Object obj = visited_objects.get(visited_objects.size()-1);
             remove_obj_from_visited_pheromones(obj);
             return obj;
         }
@@ -429,11 +497,11 @@ public class Worker extends Object {
         this.detected_objects = detected_objects;
     }
 
-    public ArrayList<Object> getVisited_objects() {
+    public ArrayList<Abstr_Object> getVisited_objects() {
         return visited_objects;
     }
 
-    public void setVisited_objects(ArrayList<Object> visited_objects) {
+    public void setVisited_objects(ArrayList<Abstr_Object> visited_objects) {
         this.visited_objects = visited_objects;
     }
 

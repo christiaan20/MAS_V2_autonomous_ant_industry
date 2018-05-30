@@ -8,7 +8,7 @@ import java.util.Map;
 import Main.Main_thread;
 import Model_pk.Behaviour.Task_Enum;
 import Model_pk.Model;
-import Model_pk.Resource_Type;
+import Model_pk.Enums.Resource_Type_Enum;
 import Controller.Controller;
 
 /**
@@ -32,13 +32,13 @@ public class Window extends Panel implements ActionListener
     private Label   tickcount_label;
     private String  resource_goal_text;
     private Label   resource_goal_label;
-    private Map<Resource_Type,Label> resource_goal_labels = new HashMap<>();
+    private Map<Resource_Type_Enum,Label> resource_goal_labels = new HashMap<>();
     private String  resource_count_text;
     private Label   resource_count_label;
-    private Map<Resource_Type,Label> resource_count_labels = new HashMap<>();
+    private Map<Resource_Type_Enum,Label> resource_count_labels = new HashMap<>();
     private String  resource_prob_text;
     private Label   resource_prob_label;
-    private Map<Resource_Type,Label> resource_prob_labels  = new HashMap<>();
+    private Map<Resource_Type_Enum,Label> resource_prob_labels  = new HashMap<>();
 
     //buttons regarding to simulation speed
     private Button pause_button;
@@ -53,7 +53,7 @@ public class Window extends Panel implements ActionListener
     //buttons regarding the creation of aspects
     private Button create_pheromones_button;
     private Map<Task_Enum,Button> task_buttons = new HashMap<>();
-    private Map<Resource_Type,Button> resource_type_buttons = new HashMap<>();
+    private Map<Resource_Type_Enum,Button> resource_type_buttons = new HashMap<>();
 
     //button to restart the simulation
     private Button restart_button;
@@ -74,7 +74,7 @@ public class Window extends Panel implements ActionListener
     }
 
     /**
-     * Method that builds the panels on the top and side of the window and includes the middel View Object where the world is displays
+     * Method that builds the panels on the top and side of the window and includes the middel View Abstr_Object where the world is displays
      * First buttons, parameter displays and other interactives are created and their non-default parameters are set
      * Second the panels at the edges are created, their parameters are also set
      * The resource counters now created seperately based on the enum valuse of Resource_type
@@ -193,7 +193,7 @@ public class Window extends Panel implements ActionListener
 
     public void add_goal_labels(Panel panel)
     {
-        for(Resource_Type type: Resource_Type.values())
+        for(Resource_Type_Enum type: Resource_Type_Enum.values())
         {
             // System.out.print(type.toString());
             Label new_resource_count_label = new Label(type.toString() + ": 0" );
@@ -204,7 +204,7 @@ public class Window extends Panel implements ActionListener
 
     public void add_resource_count_labels(Panel panel)
     {
-        for(Resource_Type type: Resource_Type.values())
+        for(Resource_Type_Enum type: Resource_Type_Enum.values())
         {
            // System.out.print(type.toString());
             Label new_resource_count_label = new Label(type.toString() + ": 0" );
@@ -215,7 +215,7 @@ public class Window extends Panel implements ActionListener
 
     public void add_resource_prob_labels(Panel panel)
     {
-        for(Resource_Type type: Resource_Type.values())
+        for(Resource_Type_Enum type: Resource_Type_Enum.values())
         {
             // System.out.print(type.toString());
             Label new_resource_count_label = new Label(type.toString() + ": 0" );
@@ -226,7 +226,7 @@ public class Window extends Panel implements ActionListener
 
     public void add_resource_type_buttons(Panel panel)
     {
-        for(Resource_Type type: Resource_Type.values())
+        for(Resource_Type_Enum type: Resource_Type_Enum.values())
         {
             //System.out.print(type.toString());
             Button new_resource_type_button = new Button(type.toString() );
@@ -258,9 +258,9 @@ public class Window extends Panel implements ActionListener
     {
         Model model = Model.getInstance();
 
-        HashMap<Resource_Type, Integer> goal = model.getTest_setting().get_current_goal();
+        HashMap<Resource_Type_Enum, Integer> goal = model.getTest_setting().get_current_goal();
 
-        for(Resource_Type type: Resource_Type.values())
+        for(Resource_Type_Enum type: Resource_Type_Enum.values())
         {
             int value = goal.get(type);
 
@@ -274,9 +274,9 @@ public class Window extends Panel implements ActionListener
     {
         Model model = Model.getInstance();
 
-        HashMap<Resource_Type, Integer> resources = model.getBase().get_obtained_resources_resources();
+        HashMap<Resource_Type_Enum, Integer> resources = model.getBase().get_obtained_resources_resources();
 
-        for(Resource_Type type: Resource_Type.values())
+        for(Resource_Type_Enum type: Resource_Type_Enum.values())
         {
             int value = resources.get(type);
 
@@ -291,10 +291,10 @@ public class Window extends Panel implements ActionListener
         Model model = Model.getInstance();
         int last_value = 0;
 
-//        HashMap<Resource_Type, Integer> resources = model.getBase().getTask_manager().get_resource_acumm_percentage_rates();
+//        HashMap<Resource_Type_Enum, Integer> resources = model.getBase().getTask_manager().get_resource_acumm_percentage_rates();
 //        if (resources == null)
 //            return;
-//        for(Resource_Type type: Resource_Type.values())
+//        for(Resource_Type_Enum type: Resource_Type_Enum.values())
 //        {
 //            int value = resources.get(type);
 //            int display_value = value - last_value;
@@ -349,8 +349,7 @@ public class Window extends Panel implements ActionListener
     {
         if( e.getSource() == restart_button )
         {
-            View.getInstance().restart();
-            Model.getInstance().restart();
+           main_thread.setRestart_activated(true);
 
         }
     }
@@ -397,7 +396,7 @@ public class Window extends Panel implements ActionListener
     public void check_resource_type_button(ActionEvent e)
     {
 
-        for(Resource_Type res: Resource_Type.values())
+        for(Resource_Type_Enum res: Resource_Type_Enum.values())
         {
             Button resource_type_button  = resource_type_buttons.get(res);
             resource_type_button.setBackground(Color.lightGray);
@@ -406,7 +405,7 @@ public class Window extends Panel implements ActionListener
                 control.setCreate_type(res);
             }
         }
-        Resource_Type type = control.getCreate_type();
+        Resource_Type_Enum type = control.getCreate_type();
         if(type != null)
         {
             resource_type_buttons.get(type).setBackground(Color.RED);

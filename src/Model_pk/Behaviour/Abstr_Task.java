@@ -1,9 +1,12 @@
 package Model_pk.Behaviour;
 
 import Model_pk.*;
-import Model_pk.Enterables.Base;
-import Model_pk.Enterables.Enterable_object;
-import Model_pk.Object;
+import Model_pk.Enums.Worker_State_Enum;
+import Model_pk.Objects.Enterables.Base;
+import Model_pk.Objects.Enterables.Abstr_Enterable_object;
+import Model_pk.Objects.Abstr_Object;
+import Model_pk.Objects.Pheromone;
+import Model_pk.Objects.Worker;
 import View.Object_visuals.Worker_visual;
 
 import java.util.Random;
@@ -56,7 +59,7 @@ public abstract class Abstr_Task
     //parameters for the return mechanism of the workers
     private int ticks_before_return ; // the number of ticks before the worker has to return if it wants to find it's way home
     private int ticks_since_enter     ;    // the counter for
-    private Enterable_object last_entered_object ;
+    private Abstr_Enterable_object last_entered_object ;
 
     //parameter for  the vector based path finding
     private double vector_ignore_chance;    //the chance that a vector during vector calculation is ignored
@@ -99,19 +102,19 @@ public abstract class Abstr_Task
         //parameters for the return mechanism of the workers
         ticks_before_return     = behaviour.getTicks_before_return(); // the number of ticks before the worker has to return if it wants to find it's way home
         ticks_since_enter       = behaviour.getTicks_since_enter();    // the counter for
-        Enterable_object last_entered_object = behaviour.getLast_entered_object();
+        Abstr_Enterable_object last_entered_object = behaviour.getLast_entered_object();
 
         vector_ignore_chance = behaviour.getIgnore_chance();
 
 
     }
 
-    public abstract boolean is_obj_relevant_to_task(Worker worker, Object obj);
+    public abstract boolean is_obj_relevant_to_task(Worker worker, Abstr_Object obj);
     public abstract void select_target(Worker worker);
     public abstract void move(Worker worker);
-    public abstract boolean on_reached(Worker worker, Object obj);
+    public abstract boolean on_reached(Worker worker, Abstr_Object obj);
     public abstract boolean at_base(Worker worker, Base base);
-    public abstract boolean out_of_base(Worker worker, Object base);
+    public abstract boolean out_of_base(Worker worker, Abstr_Object base);
 
   /*  public void setWorker(Worker worker) {
         this.worker = worker;
@@ -122,7 +125,7 @@ public abstract class Abstr_Task
         ticks_since_enter++;
 
         //check if the worker has reached an object
-        Object reached = model.check_if_reached_an_object(worker.getX(), worker.getY());
+        Abstr_Object reached = model.check_if_reached_an_object(worker.getX(), worker.getY());
 
         //if the reached object is the one he entered last, the return mechanism counter is reset
         if(will_enter_reached(worker, reached))   //returns true if the worker goes into the object
@@ -161,7 +164,7 @@ public abstract class Abstr_Task
                 model.find_objects(worker);
 
                 //add the current targetted object to the visited objects
-                Object curr_target = worker.getCurr_target_object();
+                Abstr_Object curr_target = worker.getCurr_target_object();
                 if(curr_target != null )
                 {
                     worker.add_visited_pheromone(curr_target );
@@ -194,7 +197,7 @@ public abstract class Abstr_Task
 
 
         worker.setState(Worker_State_Enum.returning);
-        Object obj =  worker.closest_owned_phero_of_type(worker,getTask(),worker.getResource_type());
+        Abstr_Object obj =  worker.closest_owned_phero_of_type(worker,getTask(),worker.getResource_type());
         if(obj != null)
         {
             go_to_phero(worker,obj);
@@ -206,7 +209,7 @@ public abstract class Abstr_Task
 
     }
 
-    public boolean will_enter_reached(Worker worker, Object reached)
+    public boolean will_enter_reached(Worker worker, Abstr_Object reached)
     {
         if(reached == null)
         {
@@ -460,7 +463,7 @@ public abstract class Abstr_Task
     }
 
 
-    public void go_to_phero(Worker worker, Object obj)
+    public void go_to_phero(Worker worker, Abstr_Object obj)
     {
         setTarget(worker,obj.getX(),obj.getY());
     }
@@ -681,11 +684,11 @@ public abstract class Abstr_Task
         this.ticks_since_enter = ticks_since_enter;
     }
 
-    public Enterable_object getLast_entered_object() {
+    public Abstr_Enterable_object getLast_entered_object() {
         return last_entered_object;
     }
 
-    public boolean isLast_entered_object(Enterable_object obj)
+    public boolean isLast_entered_object(Abstr_Enterable_object obj)
     {
         if(obj != null && last_entered_object != null)
         {
@@ -698,7 +701,7 @@ public abstract class Abstr_Task
 
     }
 
-    public void setLast_entered_object(Enterable_object last_entered_object)
+    public void setLast_entered_object(Abstr_Enterable_object last_entered_object)
     {
         this.last_entered_object = last_entered_object;
         setTicks_since_enter(0);

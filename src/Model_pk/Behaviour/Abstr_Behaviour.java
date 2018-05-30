@@ -1,8 +1,6 @@
 package Model_pk.Behaviour;
 
-import Model_pk.Enterables.Enterable_object;
-
-import java.util.Random;
+import Model_pk.Objects.Enterables.Abstr_Enterable_object;
 
 /**
  * Created by christiaan on 10/05/18.
@@ -44,14 +42,14 @@ public abstract class Abstr_Behaviour
     //parameters for the return mechanism of the workers
     protected int ticks_before_return     = (int) (degrade_time*start_phero_strength*0.5); // the number of ticks before the worker has to return if it wants to find it's way home
     protected int ticks_since_enter       = 0;    // the counter for
-    protected Enterable_object last_entered_object = null;
+    protected Abstr_Enterable_object last_entered_object = null;
 
     //parameters for the behavior advanced
     protected  double ignore_chance;
 
     //parameters for the behavior basic
-    protected boolean incalculate_strength; // whether the workers decide on following the strongest pheromone or only distance
-    protected double  strength_influence;   // how much infleunce the strength has when taken into account
+    protected boolean incalculate_strength = false; // whether the workers decide on following the strongest pheromone or only distance
+    protected double  strength_influence  = 1 ;   // how much infleunce the strength has when taken into account
 
 
 
@@ -158,7 +156,7 @@ public abstract class Abstr_Behaviour
         return ticks_since_enter;
     }
 
-    public Enterable_object getLast_entered_object() {
+    public Abstr_Enterable_object getLast_entered_object() {
         return last_entered_object;
     }
 
@@ -173,4 +171,6 @@ public abstract class Abstr_Behaviour
     public double getStrength_influence() {
         return strength_influence;
     }
+
+
 }

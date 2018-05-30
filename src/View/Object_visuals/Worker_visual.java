@@ -2,7 +2,10 @@ package View.Object_visuals;
 
 import Model_pk.*;
 import Model_pk.Behaviour.Task_Enum;
-import Model_pk.Object;
+import Model_pk.Enums.Resource_Type_Enum;
+import Model_pk.Enums.Worker_State_Enum;
+import Model_pk.Objects.Abstr_Object;
+import Model_pk.Objects.Worker;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -14,7 +17,7 @@ public class Worker_visual extends Object_visual
 {
     ArrayList<CustomStruct> vectors = new ArrayList<>();
 
-    public Worker_visual(int x, int y, int size, Object model_object) {
+    public Worker_visual(int x, int y, int size, Abstr_Object model_object) {
 
         super(x, y, size, model_object);
     }
@@ -108,7 +111,7 @@ public class Worker_visual extends Object_visual
     public void draw_task(Graphics g, Worker worker, int height )
     {
         Task_Enum task = worker.getTask().getTask();
-        Resource_Type type = worker.getResource_type();
+        Resource_Type_Enum type = worker.getResource_type();
 
         //if(task == Task_Enum.miner)
         //{
@@ -164,10 +167,10 @@ public class Worker_visual extends Object_visual
 
     public void draw_visited(Graphics g, Worker worker)
     {
-        ArrayList<Object> visit = worker.getVisited_objects();
+        ArrayList<Abstr_Object> visit = worker.getVisited_objects();
         for(int i = 0 ; i < visit.size(); i++ )
         {
-            Object obj = visit.get(i);
+            Abstr_Object obj = visit.get(i);
             String target_x = String.valueOf(obj.getX());
             String target_y = String.valueOf(obj.getY());
             g.drawString(String.valueOf(i)+ " (" + target_x + "," + target_y + ")",worker.getX()-100,y-text_size*i);

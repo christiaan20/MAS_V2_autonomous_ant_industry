@@ -1,7 +1,7 @@
 package View.Object_visuals;
 
-import Model_pk.Enterables.Base;
-import Model_pk.Object;
+import Model_pk.Objects.Enterables.Base;
+import Model_pk.Objects.Abstr_Object;
 
 import java.awt.*;
 
@@ -10,7 +10,7 @@ import java.awt.*;
  */
 public class Base_visual extends Object_visual{
 
-    public Base_visual(int x, int y, int size, Object model_object) {
+    public Base_visual(int x, int y, int size, Abstr_Object model_object) {
         super(x, y, size, model_object);
     }
 

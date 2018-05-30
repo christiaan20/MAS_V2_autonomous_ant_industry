@@ -1,4 +1,4 @@
-package Model_pk;
+package Model_pk.Enums;
 
 /**
  * Created by christiaan on 21/05/18.
