@@ -1,19 +1,18 @@
-package Model_pk.Enterables;
+package Model_pk.Objects.Enterables;
 
 import Model_pk.Resource;
-import Model_pk.Resource_Type;
-import Model_pk.Worker;
+import Model_pk.Enums.Resource_Type_Enum;
+import Model_pk.Objects.Worker;
 import View.Object_visuals.Resource_pool_visual;
-import View.View;
 
 /**
  * Created by christiaan on 10/05/18.
  */
-public class Resource_pool extends Enterable_object {
-    private Resource_Type type;
+public class Resource_pool extends Abstr_Enterable_object {
+    private Resource_Type_Enum type;
     private int capacity;
 
-    public Resource_pool( int x, int y, int size, int time, Resource_Type type,int capacity) {
+    public Resource_pool(int x, int y, int size, int time, Resource_Type_Enum type, int capacity) {
         super(x, y, size, time);
         this.type = type;
         this.capacity = capacity;
@@ -25,11 +24,11 @@ public class Resource_pool extends Enterable_object {
 
     }
 
-    public Resource_Type getType() {
+    public Resource_Type_Enum getType() {
         return type;
     }
 
-    public void setType(Resource_Type type) {
+    public void setType(Resource_Type_Enum type) {
         this.type = type;
     }
 

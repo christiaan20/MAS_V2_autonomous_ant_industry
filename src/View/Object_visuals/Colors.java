@@ -1,8 +1,7 @@
 package View.Object_visuals;
 
-import Model_pk.Behaviour.Abstr_Task;
 import Model_pk.Behaviour.Task_Enum;
-import Model_pk.Resource_Type;
+import Model_pk.Enums.Resource_Type_Enum;
 
 import java.awt.*;
 
@@ -42,7 +41,7 @@ public class Colors
         return colors;
     }
 
-    public Color get_resource_pool_color(Resource_Type type)
+    public Color get_resource_pool_color(Resource_Type_Enum type)
     {
         Color out = null;
         switch(type)
@@ -67,7 +66,7 @@ public class Colors
         return out;
     }
 
-    public Color getPheroColor(Task_Enum task, Resource_Type type)
+    public Color getPheroColor(Task_Enum task, Resource_Type_Enum type)
     {
         Color out = null;
         if(task == Task_Enum.explorer)

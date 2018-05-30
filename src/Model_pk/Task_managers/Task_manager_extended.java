@@ -1,9 +1,9 @@
 package Model_pk.Task_managers;
 
-import Model_pk.Enterables.Base;
 import Model_pk.Model;
-import Model_pk.Resource_Type;
-import Model_pk.Worker;
+import Model_pk.Objects.Enterables.Base;
+import Model_pk.Enums.Resource_Type_Enum;
+import Model_pk.Objects.Worker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,15 +13,13 @@ import java.util.HashMap;
  */
 public class Task_manager_extended extends  Abstr_Task_manager{
 
-    private Base base;
     private ArrayList<Worker_representation> workers_list;
-    private HashMap<Resource_Type, Avg_travel_time> avg_travel_time_per_resource;
+    private HashMap<Resource_Type_Enum, Avg_travel_time> avg_travel_time_per_resource;
     private Model model;
     private int worker_broken_threshold;
 
-    public Task_manager_extended(Base base) {
+    public Task_manager_extended() {
         this.model = Model.getInstance();
-        this.base = base;
         this.workers_list = new ArrayList<>();
         this.avg_travel_time_per_resource = new HashMap<>();
         init_avg_travel_time_per_resource();
@@ -29,16 +27,22 @@ public class Task_manager_extended extends  Abstr_Task_manager{
 
     }
 
+    public Task_manager_extended(Base base)
+    {
+        this();
+        super.base = base;
+    }
+
     @Override
     public void update_task_of( Worker worker){
         remember_task_of(worker);
 
-        HashMap<Resource_Type, Integer> diff_in_distribution_of_worker = get_diff_in_distribution_of_worker();
-        HashMap<Resource_Type, Integer> distribution_of_workers =  get_distribution_of_workers();
+        HashMap<Resource_Type_Enum, Integer> diff_in_distribution_of_worker = get_diff_in_distribution_of_worker();
+        HashMap<Resource_Type_Enum, Integer> distribution_of_workers =  get_distribution_of_workers();
 
-        Resource_Type worker_type = worker.getResource_type();
+        Resource_Type_Enum worker_type = worker.getResource_type();
         if( worker_type == null ){
-            Resource_Type new_type = get_max_diff_type();
+            Resource_Type_Enum new_type = get_max_diff_type();
             worker.setResource_type(new_type);
             return;
         }
@@ -49,7 +53,7 @@ public class Task_manager_extended extends  Abstr_Task_manager{
 
         int diff = diff_in_distribution_of_worker.get(worker_type);
         if(diff < 0 ){
-            Resource_Type new_type = get_max_diff_type();
+            Resource_Type_Enum new_type = get_max_diff_type();
             worker.setResource_type(new_type);
         }
 
@@ -82,19 +86,18 @@ public class Task_manager_extended extends  Abstr_Task_manager{
 
     private void init_avg_travel_time_per_resource(){
 
-        for(Resource_Type type: Resource_Type.values()){
+        for(Resource_Type_Enum  type: Resource_Type_Enum.values()){
             Avg_travel_time avg_travel_time = new Avg_travel_time();
             avg_travel_time_per_resource.put(type, avg_travel_time);
         }
     }
 
+    private Resource_Type_Enum get_max_diff_type(){
 
-    private Resource_Type get_max_diff_type(){
-
-        HashMap<Resource_Type, Integer> diff_in_distribution_of_worker = get_diff_in_distribution_of_worker();
+        HashMap<Resource_Type_Enum, Integer> diff_in_distribution_of_worker = get_diff_in_distribution_of_worker();
         int max_diff = 0;
-        Resource_Type max_type = null;
-        for(Resource_Type type: Resource_Type.values()){
+        Resource_Type_Enum max_type = null;
+        for(Resource_Type_Enum type: Resource_Type_Enum.values()){
             int diff = diff_in_distribution_of_worker.get(type);
             if( diff >= max_diff)
                 max_type = type;
@@ -103,13 +106,13 @@ public class Task_manager_extended extends  Abstr_Task_manager{
     }
 
 
-    private HashMap<Resource_Type, Integer> get_diff_in_distribution_of_worker(){
+    private HashMap<Resource_Type_Enum, Integer> get_diff_in_distribution_of_worker(){
 
-        HashMap<Resource_Type, Integer> distribution_of_workers =  get_distribution_of_workers();
-        HashMap<Resource_Type, Integer> new_distribution_of_workers = get_new_distribution_of_worker();
-        HashMap<Resource_Type, Integer> diff_in_distribution_of_worker = new HashMap<>();
+        HashMap<Resource_Type_Enum, Integer> distribution_of_workers =  get_distribution_of_workers();
+        HashMap<Resource_Type_Enum, Integer> new_distribution_of_workers = get_new_distribution_of_worker();
+        HashMap<Resource_Type_Enum, Integer> diff_in_distribution_of_worker = new HashMap<>();
 
-        for(Resource_Type type: Resource_Type.values()){
+        for(Resource_Type_Enum type: Resource_Type_Enum.values()){
             int diff = new_distribution_of_workers.get(type) - distribution_of_workers.get(type);
             diff_in_distribution_of_worker.put(type, diff);
         }
@@ -117,18 +120,18 @@ public class Task_manager_extended extends  Abstr_Task_manager{
     }
 
 
-    public HashMap<Resource_Type, Integer> get_new_distribution_of_worker(){
+    private HashMap<Resource_Type_Enum, Integer> get_new_distribution_of_worker(){
 
-        HashMap<Resource_Type, Avg_travel_time> avg_travel_time_to_resource = get_avg_travel_time_to_resource();
-        HashMap<Resource_Type, Integer> resources_to_obtain = base.resource_to_obtain();
-        HashMap<Resource_Type, Integer> distribution_ratio = new HashMap<>();
+        HashMap<Resource_Type_Enum, Avg_travel_time> avg_travel_time_to_resource = get_avg_travel_time_to_resource();
+        HashMap<Resource_Type_Enum, Integer> resources_to_obtain = base.resource_to_obtain();
+        HashMap<Resource_Type_Enum, Integer> distribution_ratio = new HashMap<>();
 
         int resources_needed;
         Avg_travel_time avg_travel_time_object;
         int distribution;
         int total_distribution = 0;
 
-        for(Resource_Type type: Resource_Type.values()){
+        for(Resource_Type_Enum type: Resource_Type_Enum.values()){
 
             avg_travel_time_object = avg_travel_time_to_resource.get(type);
             resources_needed = resources_to_obtain.get(type);
@@ -142,12 +145,12 @@ public class Task_manager_extended extends  Abstr_Task_manager{
 
         }
 
-        HashMap<Resource_Type, Integer> distribution_of_workers =  get_distribution_of_workers();
+        HashMap<Resource_Type_Enum, Integer> distribution_of_workers =  get_distribution_of_workers();
         double distr_ratio;
         int worker_amount;
         int new_worker_amount;
 
-        for(Resource_Type type: Resource_Type.values()){
+        for(Resource_Type_Enum type: Resource_Type_Enum.values()){
 
             distribution = distribution_ratio.get(type);
             worker_amount = distribution_of_workers.get(type);
@@ -189,7 +192,7 @@ public class Task_manager_extended extends  Abstr_Task_manager{
 
     private void update_avg_travel_time_to_resource(Worker_representation worker){
 
-        Resource_Type type = worker.getType();
+        Resource_Type_Enum type = worker.getType();
         if( type == null)
             return;
 
@@ -205,25 +208,25 @@ public class Task_manager_extended extends  Abstr_Task_manager{
 
     }
 
-    public HashMap<Resource_Type, Avg_travel_time> get_avg_travel_time_to_resource() {
+    public HashMap<Resource_Type_Enum, Avg_travel_time> get_avg_travel_time_to_resource() {
         return avg_travel_time_per_resource;
     }
 
-    public void set_avg_travel_time_to_resource(HashMap<Resource_Type, Avg_travel_time> avg_travel_time_per_resource) {
+    public void set_avg_travel_time_to_resource(HashMap<Resource_Type_Enum, Avg_travel_time> avg_travel_time_per_resource) {
         this.avg_travel_time_per_resource = avg_travel_time_per_resource;
     }
 
-    public HashMap<Resource_Type, Integer> get_distribution_of_workers() {
+    private  HashMap<Resource_Type_Enum, Integer> get_distribution_of_workers() {
 
-        HashMap<Resource_Type, Integer> distribution_of_workers = new HashMap<>();
+        HashMap<Resource_Type_Enum, Integer> distribution_of_workers = new HashMap<>();
 
-        for(Resource_Type type: Resource_Type.values()){
+        for(Resource_Type_Enum type: Resource_Type_Enum.values()){
             distribution_of_workers.put(type, 0);
         }
 
         for (Worker_representation worker : workers_list) {
 
-            Resource_Type type = worker.getType();
+            Resource_Type_Enum type = worker.getType();
             if (type == null){
                 continue;
             }

@@ -1,11 +1,11 @@
 package Model_pk.Behaviour.Basic.Task.Task_Basic;
 
+import Model_pk.Objects.Abstr_Object;
 import Model_pk.Behaviour.Abstr_Task;
 import Model_pk.Behaviour.Task_Enum;
-import Model_pk.Enterables.Base;
-import Model_pk.Object;
-import Model_pk.Worker;
-import Model_pk.Worker_State_Enum;
+import Model_pk.Objects.Enterables.Base;
+import Model_pk.Objects.Worker;
+import Model_pk.Enums.Worker_State_Enum;
 
 /**
  * Created by christiaan on 16/05/18.
@@ -19,7 +19,7 @@ public class Task_Transporter_Basic extends Abstr_Task
     }
 
     @Override
-    public boolean is_obj_relevant_to_task(Worker worker, Object obj) {
+    public boolean is_obj_relevant_to_task(Worker worker, Abstr_Object obj) {
         return false;
     }
 
@@ -36,7 +36,7 @@ public class Task_Transporter_Basic extends Abstr_Task
     }
 
     @Override
-    public boolean on_reached(Worker worker, Object obj)
+    public boolean on_reached(Worker worker, Abstr_Object obj)
     {
         return false;
     }
@@ -47,7 +47,7 @@ public class Task_Transporter_Basic extends Abstr_Task
     }
 
     @Override
-    public boolean out_of_base(Worker worker, Object base) {
+    public boolean out_of_base(Worker worker, Abstr_Object base) {
         return false;
     }
 }

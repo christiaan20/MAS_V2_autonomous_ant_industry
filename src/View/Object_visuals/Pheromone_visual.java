@@ -1,10 +1,9 @@
 package View.Object_visuals;
 
+import Model_pk.Objects.Abstr_Object;
 import Model_pk.Behaviour.Task_Enum;
-import Model_pk.Object;
-import Model_pk.Pheromone;
-import Model_pk.Resource_Type;
-import Model_pk.Worker;
+import Model_pk.Objects.Pheromone;
+import Model_pk.Enums.Resource_Type_Enum;
 
 import java.awt.*;
 
@@ -14,7 +13,7 @@ import java.awt.*;
 public class Pheromone_visual extends Object_visual
 {
 
-    public Pheromone_visual(int x, int y, int size, Object model_object) {
+    public Pheromone_visual(int x, int y, int size, Abstr_Object model_object) {
         super(x, y, size, model_object);
     }
 
@@ -69,7 +68,7 @@ public class Pheromone_visual extends Object_visual
     public void draw_task(Graphics g, Pheromone phero, int height )
     {
         Task_Enum task = phero.getTask();
-        Resource_Type type = phero.getType();
+        Resource_Type_Enum type = phero.getType();
 
         //if(task == Task_Enum.miner)
         //{

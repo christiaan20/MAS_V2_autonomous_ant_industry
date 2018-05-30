@@ -1,8 +1,7 @@
 package Model_pk;
 
-import Model_pk.Enterables.Base;
+import Model_pk.Enums.Resource_Type_Enum;
 
-import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -17,7 +16,7 @@ import java.util.HashMap;
 public class Tester {
 
     private Model model;
-    private ArrayList<HashMap<Resource_Type, Integer>> goals;
+    private ArrayList<HashMap<Resource_Type_Enum, Integer>> goals;
     private boolean results_written_to_file;
     private ArrayList<Integer> tick_counts_goals;
     private ArrayList<String> surplus_goals;
@@ -37,18 +36,18 @@ public class Tester {
 
     public void init_goal(){
 
-        HashMap<Resource_Type, Integer> first_goal = fill_all_resources_with(10);
+        HashMap<Resource_Type_Enum, Integer> first_goal = fill_all_resources_with(10);
 
         goals.add(first_goal);
         goals.add(first_goal);
 
     }
 
-    public HashMap<Resource_Type, Integer> fill_all_resources_with(int amount){
+    public HashMap<Resource_Type_Enum, Integer> fill_all_resources_with(int amount){
 
-        HashMap<Resource_Type, Integer> goal = new HashMap<>();
+        HashMap<Resource_Type_Enum, Integer> goal = new HashMap<>();
 
-        for(Resource_Type type: Resource_Type.values())
+        for(Resource_Type_Enum type: Resource_Type_Enum.values())
         {
             goal.put(type, amount);
         }
@@ -67,7 +66,7 @@ public class Tester {
 
     private void write_goals_to_log() throws IOException {
 
-        for( HashMap<Resource_Type, Integer> goal: goals){
+        for( HashMap<Resource_Type_Enum, Integer> goal: goals){
             write_to_log_file( goal.toString());
         }
 
@@ -114,18 +113,18 @@ public class Tester {
             return true;
         }
 
-        HashMap<Resource_Type, Integer> current_resources = get_current_resources();
+        HashMap<Resource_Type_Enum, Integer> current_resources = get_current_resources();
         int to_reach_amount;
         int current_amount;
 
-        HashMap<Resource_Type, Integer> goal = goals.get(0);
+        HashMap<Resource_Type_Enum, Integer> goal = goals.get(0);
 
         if (goal == null) {
             System.out.println("no goal");
             return false;
         }
 
-        for(Resource_Type type: Resource_Type.values())
+        for(Resource_Type_Enum type: Resource_Type_Enum.values())
         {
 
             to_reach_amount = goal.get(type);
@@ -144,13 +143,13 @@ public class Tester {
 
     public void goal_is_reached(int tickcount) throws IOException {
 
-        HashMap<Resource_Type, Integer> goal = goals.get(0);
-        HashMap<Resource_Type, Integer> resources = get_current_resources();
+        HashMap<Resource_Type_Enum, Integer> goal = goals.get(0);
+        HashMap<Resource_Type_Enum, Integer> resources = get_current_resources();
         tick_counts_goals.add(tickcount);
 
         int new_amount;
 
-        for(Resource_Type type: Resource_Type.values())
+        for(Resource_Type_Enum type: Resource_Type_Enum.values())
         {
             new_amount = resources.get(type) - goal.get(type);
             resources.replace(type, new_amount);
@@ -181,18 +180,18 @@ public class Tester {
     }
 
 
-    private HashMap<Resource_Type, Integer> get_current_resources()
+    private HashMap<Resource_Type_Enum, Integer> get_current_resources()
     {
         return model.getBase().get_obtained_resources_resources();
     }
 
-    private void set_current_resources(HashMap<Resource_Type, Integer> new_resources)
+    private void set_current_resources(HashMap<Resource_Type_Enum, Integer> new_resources)
     {
         model.getBase().set_obtained_resources(new_resources);
     }
 
 
-    public HashMap<Resource_Type, Integer> get_current_goal(){
+    public HashMap<Resource_Type_Enum, Integer> get_current_goal(){
 
         if( all_goals_reached())
             return fill_all_resources_with(0);

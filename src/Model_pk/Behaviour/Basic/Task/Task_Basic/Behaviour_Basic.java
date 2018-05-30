@@ -1,9 +1,7 @@
 package Model_pk.Behaviour.Basic.Task.Task_Basic;
 
 import Model_pk.Behaviour.Abstr_Behaviour;
-import Model_pk.Enterables.Enterable_object;
-
-import java.util.Random;
+import Model_pk.Objects.Enterables.Abstr_Enterable_object;
 
 /**
  * Created by christiaan on 10/05/18.
@@ -55,11 +53,11 @@ public class Behaviour_Basic extends Abstr_Behaviour
         //parameters for the return mechanism of the workers
         ticks_before_return     = (int) (degrade_time*start_phero_strength*0.5); // the number of ticks before the worker has to return if it wants to find it's way home
         ticks_since_enter       = 0;    // the counter for
-        Enterable_object last_entered_object = null;
+        Abstr_Enterable_object last_entered_object = null;
 
         //feature settings
         this.incalculate_strength = true; // whether the workers decide on following the strongest pheromone or only distance
-        this.strength_influence = 0.5;   // how much infleunce the strength has when taken into account
+        this.strength_influence = 1;   // how much infleunce the strength has when taken into account
 
     }
 

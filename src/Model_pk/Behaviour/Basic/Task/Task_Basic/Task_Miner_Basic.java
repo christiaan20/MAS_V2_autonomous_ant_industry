@@ -1,11 +1,14 @@
 package Model_pk.Behaviour.Basic.Task.Task_Basic;
 
-import Model_pk.*;
 import Model_pk.Behaviour.Abstr_Task;
 import Model_pk.Behaviour.Task_Enum;
-import Model_pk.Enterables.Base;
-import Model_pk.Enterables.Resource_pool;
-import Model_pk.Object;
+import Model_pk.Enums.Resource_Type_Enum;
+import Model_pk.Enums.Worker_State_Enum;
+import Model_pk.Objects.Enterables.Base;
+import Model_pk.Objects.Enterables.Resource_pool;
+import Model_pk.Objects.Abstr_Object;
+import Model_pk.Objects.Pheromone;
+import Model_pk.Objects.Worker;
 
 /**
  * Created by christiaan on 16/05/18.
@@ -21,7 +24,7 @@ public class Task_Miner_Basic extends Abstr_Task
     }
 
     @Override
-    public boolean is_obj_relevant_to_task(Worker worker, Object obj) {
+    public boolean is_obj_relevant_to_task(Worker worker, Abstr_Object obj) {
         if(obj instanceof Pheromone)
         {
             Pheromone phero = (Pheromone) obj;
@@ -42,10 +45,14 @@ public class Task_Miner_Basic extends Abstr_Task
     @Override
     public void select_target(Worker worker)
     {
-        Object obj = null;
+
+        Abstr_Object obj = null;
         if(found_resource) //only when the resource_pool has been found recently will the miner follow his own explorer path
         {
-            obj = worker.closest_owned_phero_of_type(worker, Task_Enum.explorer,null);
+
+            //obj = worker.closest_owned_phero_of_type(worker, Task_Enum.explorer,null);
+            obj = get_owned_phero_of_type(worker,Task_Enum.explorer,null);
+
             if(obj != null)
             {
                 select_obj_as_new_target(worker, obj);
@@ -53,7 +60,8 @@ public class Task_Miner_Basic extends Abstr_Task
             }
         }
 
-        obj =  worker.closest_owned_phero_of_type(worker,getTask(),worker.getResource_type());
+        //obj =  worker.closest_owned_phero_of_type(worker,getTask(),worker.getResource_type());
+        obj = get_owned_phero_of_type(worker,getTask(),worker.getResource_type());
         if(obj != null)
         {
             select_obj_as_new_target(worker, obj);
@@ -61,7 +69,8 @@ public class Task_Miner_Basic extends Abstr_Task
         }
 
 
-        obj = worker.closest_phero_of_type(getTask(),worker.getResource_type());
+        //obj = worker.closest_phero_of_type(getTask(),worker.getResource_type());
+        obj = get_phero_of_type(worker,getTask(),worker.getResource_type());
         if(obj != null)
         {
             select_obj_as_new_target(worker, obj);
@@ -100,7 +109,7 @@ public class Task_Miner_Basic extends Abstr_Task
 
     }
 
-    private void select_obj_as_new_target(Worker worker, Object obj) {
+    private void select_obj_as_new_target(Worker worker, Abstr_Object obj) {
         setDrop_enabled(true);
         set_lost_phero_false();
         go_to_phero(worker,obj);
@@ -116,7 +125,7 @@ public class Task_Miner_Basic extends Abstr_Task
     }
 
     @Override
-    public boolean on_reached(Worker worker, Object obj)
+    public boolean on_reached(Worker worker, Abstr_Object obj)
     {
 
         if(obj instanceof Resource_pool)
@@ -150,7 +159,7 @@ public class Task_Miner_Basic extends Abstr_Task
     }
 
     @Override
-    public boolean out_of_base(Worker worker, Object base)
+    public boolean out_of_base(Worker worker, Abstr_Object base)
     {
 
         return false;
@@ -184,4 +193,28 @@ public class Task_Miner_Basic extends Abstr_Task
     public void setFound_resource(boolean found_resource) {
         this.found_resource = found_resource;
     }
+
+    protected Abstr_Object get_owned_phero_of_type(Worker worker, Task_Enum task, Resource_Type_Enum type)
+    {
+        boolean incalculate_strength = model.getBehaviour().isIncalculate_strength();
+
+        if(incalculate_strength)
+            return worker.most_attractive_owned_phero_of_type(worker, task,type);
+        else
+            return worker.closest_owned_phero_of_type(worker, task,type);
+
+    }
+
+    protected Abstr_Object get_phero_of_type(Worker worker, Task_Enum task, Resource_Type_Enum type)
+    {
+        boolean incalculate_strength = model.getBehaviour().isIncalculate_strength();
+
+        if(incalculate_strength)
+            return worker.most_attractive_phero_of_type(task,type);
+        else
+            return worker.closest_phero_of_type(task,type);
+
+    }
+
+
 }

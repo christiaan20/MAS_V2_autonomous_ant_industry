@@ -1,14 +1,13 @@
-package Model_pk.Enterables;
+package Model_pk.Objects.Enterables;
 
 
 import Model_pk.*;
 import Model_pk.Behaviour.Abstr_Task;
 import Model_pk.Behaviour.Basic.Task.Task_Basic.Behaviour_Basic;
+import Model_pk.Enums.Resource_Type_Enum;
+import Model_pk.Objects.Worker;
 import Model_pk.Task_managers.Abstr_Task_manager;
-import Model_pk.Task_managers.Task_Manager_Simple;
-import Model_pk.Task_managers.Task_manager_extended;
 import View.Object_visuals.Base_visual;
-import View.View;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,30 +15,30 @@ import java.util.HashMap;
 /**
  * Created by christiaan on 10/05/18.
  */
-public class Base extends Enterable_object {
+public class Base extends Abstr_Enterable_object {
     private Order order;
-    private HashMap<Resource_Type, Integer> obtained_resources;
+    private HashMap<Resource_Type_Enum, Integer> obtained_resources;
     //private Task_Manager_Simple task_managerSimple;
     private Abstr_Task_manager task_manager;
     private double chance_of_general_explorer = 0.75;
     private int detect_dist;
 
 
-
-    public Base(int x, int y, int size, int time) {
+    public Base(int x, int y, int size, int time,Abstr_Task_manager task_manager) {
         super( x, y, size, time);
         this.setVisual(new Base_visual( x, y, size,this));
         this.detect_dist = size*2;
         this.obtained_resources = new HashMap<>();
         init_obtained_resources();
 
-        this.task_manager = new Task_manager_extended(this);
+        this.task_manager = task_manager;
+
 
     }
 
     public void init_obtained_resources(){
 
-        for(Resource_Type type: Resource_Type.values())
+        for(Resource_Type_Enum type: Resource_Type_Enum.values())
         {
             this.obtained_resources.put(type, 0);
         }
@@ -66,11 +65,9 @@ public class Base extends Enterable_object {
 
             Abstr_Task worker_task = worker.getTask();
 
-            //if(worker_task.getTask() == Task_Enum.miner)
-            //{
 
             int original_detect_dist = 0;//for basic case
-        //hack to increase the detection range of the worker
+            //hack to increase the detection range of the worker
             if(model.getBehaviour() instanceof Behaviour_Basic)
             {
                 original_detect_dist = worker_task.getPhero_detect_dist(); //for basic case
@@ -80,7 +77,6 @@ public class Base extends Enterable_object {
 
             worker.clear_visited_objects();
             worker.clear_detected_objects();
-            //Model.getInstance().find_objects(worker);
             worker.setDetected_objects(model.find_objects(getX(),getY(),detect_dist,worker.getResource_type(),worker_task.getTask()));
             worker_task.select_target(worker);
             worker.clear_visited_objects();
@@ -115,16 +111,16 @@ public class Base extends Enterable_object {
     }
 
 
-    public HashMap<Resource_Type, Integer> resource_to_obtain(){
+    public HashMap<Resource_Type_Enum, Integer> resource_to_obtain(){
 
         Tester tester = Model.getInstance().getTest_setting();
-        HashMap<Resource_Type, Integer>  goal = tester.get_current_goal();
+        HashMap<Resource_Type_Enum, Integer>  goal = tester.get_current_goal();
         if (goal == null)
             return null;
-        HashMap<Resource_Type, Integer> resources_to_obtain = new HashMap<>();
+        HashMap<Resource_Type_Enum, Integer> resources_to_obtain = new HashMap<>();
         int new_amount;
 
-        for(Resource_Type type: Resource_Type.values())
+        for(Resource_Type_Enum type: Resource_Type_Enum.values())
         {
             new_amount =  goal.get(type) - obtained_resources.get(type);
             resources_to_obtain.put(type, new_amount);
@@ -141,7 +137,7 @@ public class Base extends Enterable_object {
         ArrayList<Resource> load =  worker.getLoad();
 
         for(Resource resource: load) {
-            Resource_Type type = resource.getType();
+            Resource_Type_Enum type = resource.getType();
             int previous_amount = this.obtained_resources.get(type);
             int new_amount = previous_amount + resource.getAmount();
 
@@ -153,11 +149,11 @@ public class Base extends Enterable_object {
     }
 
 
-    public HashMap<Resource_Type, Integer> get_obtained_resources_resources() {
+    public HashMap<Resource_Type_Enum, Integer> get_obtained_resources_resources() {
         return this.obtained_resources;
     }
 
-    public void set_obtained_resources(HashMap<Resource_Type, Integer> obtained_resources) {
+    public void set_obtained_resources(HashMap<Resource_Type_Enum, Integer> obtained_resources) {
         this.obtained_resources = obtained_resources;
     }
 

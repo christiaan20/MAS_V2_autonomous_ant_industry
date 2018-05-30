@@ -1,7 +1,7 @@
 package Model_pk.Behaviour.Basic.Task_Adv;
 
 import Model_pk.Behaviour.Basic.Task.Task_Basic.Task_Explorer_Basic;
-import Model_pk.Worker;
+import Model_pk.Objects.Worker;
 
 /**
  * Created by christiaan on 29/05/18.

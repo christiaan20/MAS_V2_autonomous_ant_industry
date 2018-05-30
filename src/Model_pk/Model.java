@@ -8,12 +8,17 @@ import java.util.Random;
 
 import Model_pk.Behaviour.Abstr_Behaviour;
 import Model_pk.Behaviour.Basic.Task.Task_Basic.Behaviour_Basic;
-import Model_pk.Behaviour.Basic.Task_Adv.Behaviour_Adv;
 import Model_pk.Behaviour.Task_Enum;
-import Model_pk.Enterables.Enterable_object;
-import Model_pk.Enterables.Base;
+import Model_pk.Enums.Resource_Type_Enum;
+import Model_pk.Objects.Enterables.Abstr_Enterable_object;
+import Model_pk.Objects.Enterables.Base;
 
-import Model_pk.Enterables.Resource_pool;
+import Model_pk.Objects.Enterables.Resource_pool;
+import Model_pk.Objects.Abstr_Object;
+import Model_pk.Objects.Pheromone;
+import Model_pk.Objects.Worker;
+import Model_pk.Task_managers.Abstr_Task_manager;
+import Model_pk.Task_managers.Task_Manager_Simple;
 import View.View;
 
 /**
@@ -25,6 +30,7 @@ public class Model{
     private static Model  model ;
 
     private Abstr_Behaviour behaviour;
+    private Abstr_Task_manager task_manager;
     private Random random = new Random();
 
     private int size_x_field;
@@ -33,7 +39,8 @@ public class Model{
 
     private Base base;
     private ArrayList<Worker> workers = new ArrayList<>();
-    private ArrayList<Enterable_object> enterable_objects = new ArrayList<>();
+    private ArrayList<Abstr_Enterable_object> enterable_objects = new ArrayList<>();
+    private ArrayList<Abstr_Enterable_object> impassable_objects = new ArrayList<>(); //NOT YET IMPLEMENTED
     private ArrayList<Pheromone> pheromones = new ArrayList<>();
 
     private Tester test_setting;
@@ -70,6 +77,7 @@ public class Model{
         workers_to_add = new ArrayList<>();
         tickcount = 0;
         behaviour = new Behaviour_Basic();
+        task_manager = new Task_Manager_Simple();
 
         size_x_field    = 800;
         size_y_field    = 600;
@@ -99,35 +107,35 @@ public class Model{
 
         if(test)
         {
-            base = new Base(base_x,base_y,object_size,base_time);
+            base = new Base(base_x,base_y,object_size,base_time,task_manager);
             enterable_objects.add(base);
 
             work_force_size = 1;
 
             for(int i = 0 ; i<5;i++)
             {
-                enterable_objects.add(new Resource_pool(base_x - 125 +object_size*i ,base_y - 125 +object_size*0 ,object_size,resource_time, Resource_Type.Coal,resource_pool_capacity));
-                enterable_objects.add(new Resource_pool(base_x - 125 +object_size*0 ,base_y - 125 +object_size*i ,object_size,resource_time, Resource_Type.Coal,resource_pool_capacity));
-                enterable_objects.add(new Resource_pool(base_x - 125 +object_size*5 ,base_y - 125 +object_size*i ,object_size,resource_time, Resource_Type.Coal,resource_pool_capacity));
-                enterable_objects.add(new Resource_pool(base_x - 125 +object_size*i ,base_y - 125 +object_size*5 ,object_size,resource_time, Resource_Type.Coal,resource_pool_capacity));
+                enterable_objects.add(new Resource_pool(base_x - 125 +object_size*i ,base_y - 125 +object_size*0 ,object_size,resource_time, Resource_Type_Enum.Coal,resource_pool_capacity));
+                enterable_objects.add(new Resource_pool(base_x - 125 +object_size*0 ,base_y - 125 +object_size*i ,object_size,resource_time, Resource_Type_Enum.Coal,resource_pool_capacity));
+                enterable_objects.add(new Resource_pool(base_x - 125 +object_size*5 ,base_y - 125 +object_size*i ,object_size,resource_time, Resource_Type_Enum.Coal,resource_pool_capacity));
+                enterable_objects.add(new Resource_pool(base_x - 125 +object_size*i ,base_y - 125 +object_size*5 ,object_size,resource_time, Resource_Type_Enum.Coal,resource_pool_capacity));
             }
 
 
         }
         else if(test_direction)
         {
-            base = new Base(base_x+200,base_y+200,object_size,base_time);
+            base = new Base(base_x+200,base_y+200,object_size,base_time,task_manager);
             enterable_objects.add(base);
 
 
             work_force_size = 0;
-            workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble()*Math.PI*2, max_worker_load, behaviour.getTask_miner(), Resource_Type.Coal,null));
-            pheromones.add(new Pheromone(null, base_x+30, base_y+30, 5, Task_Enum.miner,Resource_Type.Coal, 20, 10000, 15));
-            pheromones.add(new Pheromone(null, base_x-30, base_y+30, 5, Task_Enum.miner,Resource_Type.Coal, 10, 10000, 15));
+            workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble()*Math.PI*2, max_worker_load, behaviour.getTask_miner(), Resource_Type_Enum.Coal,null));
+            pheromones.add(new Pheromone(null, base_x+30, base_y+30, 5, Task_Enum.miner, Resource_Type_Enum.Coal, 20, 10000, 15));
+            pheromones.add(new Pheromone(null, base_x-30, base_y+30, 5, Task_Enum.miner, Resource_Type_Enum.Coal, 10, 10000, 15));
         }
         else
         {
-            base = new Base(base_x,base_y,object_size,base_time);
+            base = new Base(base_x,base_y,object_size,base_time,task_manager);
             enterable_objects.add(base);
 
             //create the resources
@@ -136,9 +144,14 @@ public class Model{
             enterable_objects.add(new Resource_pool(550,325,object_size,resource_time, Resource_Type.Copper, resource_pool_capacity));
             enterable_objects.add(new Resource_pool(250,100,object_size,resource_time, Resource_Type.Iron, resource_pool_capacity));
             enterable_objects.add(new Resource_pool(600,250,object_size,resource_time, Resource_Type.Uranium, resource_pool_capacity));
+
+
+
+
         }
 
-
+        //give the task manager a reference to the created base
+        task_manager.setBase(base);
 
         //create the workers
         for(int i = 0 ; i < work_force_size;i++)
@@ -146,8 +159,8 @@ public class Model{
             workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble()*Math.PI*2, max_worker_load, behaviour.getTask_explorer(),base));
         }
 
-        //workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble(), max_worker_load, behaviour.getTask_explorer(),Resource_Type.Coal,base));
-        //workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble(), max_worker_load, behaviour.getTask_explorer(),Resource_Type.Stone,base));
+        //workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble(), max_worker_load, behaviour.getTask_explorer(),Resource_Type_Enum.Coal,base));
+        //workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble(), max_worker_load, behaviour.getTask_explorer(),Resource_Type_Enum.Stone,base));
 
         this.test_setting = new Tester();
 
@@ -219,7 +232,7 @@ public class Model{
 
     public void tick_enterable_objects()
     {
-        for(Enterable_object o: enterable_objects)
+        for(Abstr_Enterable_object o: enterable_objects)
         {
             o.tick();
         }
@@ -233,9 +246,9 @@ public class Model{
         }
     }
 
-    public Object check_if_reached_an_object(int x, int y)
+    public Abstr_Object check_if_reached_an_object(int x, int y)
     {
-        for(Enterable_object o: enterable_objects)
+        for(Abstr_Enterable_object o: enterable_objects)
         {
             if(o.has_reached(x,y))
             {
@@ -281,7 +294,7 @@ public class Model{
 
     public boolean  detected_object(Worker worker, CustomStruct struct)
     {
-        Object obj= struct.getObject();
+        Abstr_Object obj= struct.getObject();
         if(worker.getTask().is_obj_relevant_to_task(worker,obj))
         {
             int x_w =  worker.getX();
@@ -310,7 +323,7 @@ public class Model{
     public void find_objects(Worker worker)
     {
 
-        for(Object o:pheromones)
+        for(Abstr_Object o:pheromones)
         {
             CustomStruct struct = new CustomStruct(o);
             if(detected_object(worker, struct))
@@ -319,7 +332,7 @@ public class Model{
             }
 
         }
-        for(Object o:enterable_objects)
+        for(Abstr_Object o:enterable_objects)
         {
             CustomStruct struct = new CustomStruct(o);
             if(detected_object(worker, struct)) //fills the struct with a the distance from the worker
@@ -331,11 +344,11 @@ public class Model{
 
     }
 
-    public ArrayList<CustomStruct> find_objects(int x, int y, int detect_dist, Resource_Type type, Task_Enum task)
+    public ArrayList<CustomStruct> find_objects(int x, int y, int detect_dist, Resource_Type_Enum type, Task_Enum task)
     {
         ArrayList<CustomStruct> objects = new ArrayList<>();
         CustomStruct struct = null;
-        for(Object o:pheromones)
+        for(Abstr_Object o:pheromones)
         {
             struct = new CustomStruct(o);
             if(detected_object(x,y,detect_dist,type,task, struct))
@@ -344,7 +357,7 @@ public class Model{
             }
 
         }
-        for(Object o:enterable_objects)
+        for(Abstr_Object o:enterable_objects)
         {
             struct = new CustomStruct(o);
             if(detected_object(x,y,detect_dist,type,task, struct)) //fills the struct with a the distance from the worker
@@ -358,9 +371,9 @@ public class Model{
 
     }
 
-    public boolean detected_object(int x, int y,int detect_dist,  Resource_Type type, Task_Enum task,CustomStruct struct)
+    public boolean detected_object(int x, int y, int detect_dist, Resource_Type_Enum type, Task_Enum task, CustomStruct struct)
     {
-        Object obj= struct.getObject();
+        Abstr_Object obj= struct.getObject();
         if(obj instanceof Pheromone)
         {
             Pheromone phero = (Pheromone) obj;
@@ -400,7 +413,7 @@ public class Model{
         return (int) Math.abs( Math.sqrt(Math.pow(Xdist,2)+ Math.pow(Ydist,2)));
     }
 
-    public void drop_pheromone(Worker worker,int x, int y,int size , Task_Enum task, Resource_Type type, int strength, int degrade_time, int max_size)
+    public void drop_pheromone(Worker worker, int x, int y, int size , Task_Enum task, Resource_Type_Enum type, int strength, int degrade_time, int max_size)
     {
         int left_border = (int) Math.floor(x/tile_size)* tile_size;
         int right_border  = left_border +tile_size;
@@ -441,7 +454,7 @@ public class Model{
 
     }
 
-    public void drop_seperate_pheromone(Worker worker,int x, int y,int size , Task_Enum task, Resource_Type type, int strength, int degrade_time, int max_size)
+    public void drop_seperate_pheromone(Worker worker, int x, int y, int size , Task_Enum task, Resource_Type_Enum type, int strength, int degrade_time, int max_size)
     {
         int left_border = (int) Math.floor(x/tile_size)* tile_size;
         int right_border  = left_border +tile_size;
@@ -483,9 +496,9 @@ public class Model{
     public void delete_expired_objects()
     {
 
-        Iterator<Enterable_object> iter1 = enterable_objects.iterator();
+        Iterator<Abstr_Enterable_object> iter1 = enterable_objects.iterator();
         while (iter1.hasNext()) {
-            Object obj = iter1.next();
+            Abstr_Object obj = iter1.next();
             if(obj.isExpired())
             {
                 obj.delete_visual();
@@ -497,7 +510,7 @@ public class Model{
 
         Iterator<Pheromone> iter2 = pheromones.iterator();
         while (iter2.hasNext()) {
-            Object obj = iter2.next();
+            Abstr_Object obj = iter2.next();
             if(obj.isExpired())
             {
                 obj.delete_visual();
@@ -509,11 +522,11 @@ public class Model{
 
     }
 
-    public void delete_enterable_object(Object o)
+    public void delete_enterable_object(Abstr_Object o)
     {
-        Iterator<Enterable_object> iter = enterable_objects.iterator();
+        Iterator<Abstr_Enterable_object> iter = enterable_objects.iterator();
         while (iter.hasNext()) {
-            Object obj = iter.next();
+            Abstr_Object obj = iter.next();
             if(obj.equals(o))
             {
                 iter.remove();
@@ -522,11 +535,11 @@ public class Model{
         }
     }
 
-    public void delete_pheromone(Object o)
+    public void delete_pheromone(Abstr_Object o)
     {
         Iterator<Pheromone> iter = pheromones.iterator();
         while (iter.hasNext()) {
-            Object obj = iter.next();
+            Abstr_Object obj = iter.next();
             if(obj.equals(o))
             {
                 iter.remove();

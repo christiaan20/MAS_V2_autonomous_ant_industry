@@ -1,6 +1,7 @@
-package Model_pk;
+package Model_pk.Objects;
 
 import Model_pk.Behaviour.Task_Enum;
+import Model_pk.Enums.Resource_Type_Enum;
 import View.Object_visuals.Pheromone_visual;
 import View.View;
 
@@ -9,10 +10,10 @@ import java.util.ArrayList;
 /**
  * Created by christiaan on 10/05/18.
  */
-public class Pheromone extends Object
+public class Pheromone extends Abstr_Object
 {
     private Task_Enum task;
-    private Resource_Type type;
+    private Resource_Type_Enum type;
 
     private ArrayList<Worker> owners = new ArrayList<>();
 
@@ -26,7 +27,7 @@ public class Pheromone extends Object
     public Pheromone() {
     }
 
-    public Pheromone(Worker owner, int x, int y, int size, Task_Enum task, Resource_Type type, int strength, int degrade_time, int max_size)
+    public Pheromone(Worker owner, int x, int y, int size, Task_Enum task, Resource_Type_Enum type, int strength, int degrade_time, int max_size)
     {
         super(x, y, size);
         this.task = task;
@@ -76,16 +77,16 @@ public class Pheromone extends Object
         return this.task == task;
     }
 
-    public Resource_Type getType() {
+    public Resource_Type_Enum getType() {
         return type;
     }
 
-    public boolean isType(Resource_Type type)
+    public boolean isType(Resource_Type_Enum type)
     {
         return this.type == type;
     }
 
-    public void setType(Resource_Type type) {
+    public void setType(Resource_Type_Enum type) {
         this.type = type;
     }
 

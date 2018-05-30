@@ -1,8 +1,7 @@
 package Model_pk.Task_managers;
 
 import Model_pk.Behaviour.Abstr_Task;
-import Model_pk.Resource_Type;
-import Model_pk.Worker_State_Enum;
+import Model_pk.Enums.Resource_Type_Enum;
 
 /**
  * Created by Gebruiker on 29/05/2018.
@@ -11,11 +10,11 @@ public class Worker_representation {
 
     private long ID;
     private Abstr_Task task;                //The Task it is currently doing
-    private Resource_Type type;    //The resource it will mine, transport for or look for
+    private Resource_Type_Enum type;    //The resource it will mine, transport for or look for
     private int travel_time;
     private int last_seen;
 
-    public Worker_representation(long ID, Abstr_Task task, Resource_Type type, int travel_time, int last_seen ){
+    public Worker_representation(long ID, Abstr_Task task, Resource_Type_Enum type, int travel_time) {
         this.ID = ID;
         this.task = task;
         this.type = type;
@@ -35,11 +34,11 @@ public class Worker_representation {
         this.task = task;
     }
 
-    public Resource_Type getType() {
+    public Resource_Type_Enum getType() {
         return type;
     }
 
-    public void setType(Resource_Type type) {
+    public void setType(Resource_Type_Enum type) {
         this.type = type;
     }
 
