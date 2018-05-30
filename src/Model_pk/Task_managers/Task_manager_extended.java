@@ -1,6 +1,7 @@
 package Model_pk.Task_managers;
 
 import Model_pk.Enterables.Base;
+import Model_pk.Model;
 import Model_pk.Resource_Type;
 import Model_pk.Worker;
 
@@ -15,12 +16,17 @@ public class Task_manager_extended extends  Abstr_Task_manager{
     private Base base;
     private ArrayList<Worker_representation> workers_list;
     private HashMap<Resource_Type, Avg_travel_time> avg_travel_time_per_resource;
+    private Model model;
+    private int worker_broken_threshold;
 
     public Task_manager_extended(Base base) {
+        this.model = Model.getInstance();
         this.base = base;
         this.workers_list = new ArrayList<>();
         this.avg_travel_time_per_resource = new HashMap<>();
         init_avg_travel_time_per_resource();
+        worker_broken_threshold = 1500;
+
     }
 
     @Override
@@ -49,6 +55,29 @@ public class Task_manager_extended extends  Abstr_Task_manager{
 
         worker.setTravel_time(0);
         remember_task_of(worker);
+
+        broken_worker_manager();
+
+        worker.setTravel_time(model.getTickcount());
+    }
+
+    public void broken_worker_manager(){
+
+        int current_time = model.getTickcount();
+        ArrayList<Worker_representation> broken_workers = new ArrayList<>();
+
+        for( Worker_representation worker: workers_list){
+            if( current_time - worker.getLast_seen() > worker_broken_threshold)
+                broken_workers.add(worker);
+        }
+        for( Worker_representation worker: broken_workers){
+            workers_list.remove(worker);
+        }
+
+        int amount_of_new_workers = broken_workers.size();
+        if( amount_of_new_workers > 0)
+            model.add_worker(amount_of_new_workers);
+
     }
 
     private void init_avg_travel_time_per_resource(){
@@ -154,7 +183,7 @@ public class Task_manager_extended extends  Abstr_Task_manager{
 
     private Worker_representation convert_to_representation(Worker worker){
 
-        return new Worker_representation(worker.getID(), worker.getTask(),worker.getResource_type(), worker.getTravel_time());
+        return new Worker_representation(worker.getID(), worker.getTask(),worker.getResource_type(), worker.getTravel_time(),model.getTickcount() );
 
     }
 

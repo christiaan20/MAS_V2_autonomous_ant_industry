@@ -25,6 +25,7 @@ public class Base extends Enterable_object {
     private int detect_dist;
 
 
+
     public Base(int x, int y, int size, int time) {
         super( x, y, size, time);
         this.setVisual(new Base_visual( x, y, size,this));
@@ -97,6 +98,8 @@ public class Base extends Enterable_object {
 //                    worker.setResource_type(null);
 //                }
             }
+
+        worker.setBreak_chance(0.01);
 
 
 
