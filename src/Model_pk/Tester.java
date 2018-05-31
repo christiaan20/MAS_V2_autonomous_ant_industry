@@ -37,6 +37,7 @@ public class Tester {
     public void init_goal(){
 
 
+        HashMap<Resource_Type_Enum, Integer> test_goal = fill_all_resources_with(10);
 
         HashMap<Resource_Type_Enum, Integer> first_goal = fill_resources_with(500,100,20,250,100);
         HashMap<Resource_Type_Enum, Integer> second_goal = fill_all_resources_with(250);
@@ -45,6 +46,10 @@ public class Tester {
         goals.add(first_goal);
         goals.add(second_goal);
         goals.add(third_goal);
+
+//        goals.add(test_goal);
+
+
 
     }
 

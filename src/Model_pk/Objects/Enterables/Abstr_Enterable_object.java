@@ -23,6 +23,7 @@ public abstract class Abstr_Enterable_object extends Abstr_Object {
         if(worker.getTime() >= time)
         {
             worker.setTime(0);
+            worker.getTask().setEnter_base(false);
             return action(worker);
         }
         else

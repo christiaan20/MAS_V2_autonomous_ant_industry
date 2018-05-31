@@ -20,9 +20,22 @@ public class Main extends Frame {
     private Controller controller;
     private Main_thread main_thread;
     private Thread t;
+    private boolean small_scenario = false;
 
     private int size_x = 900;
     private int size_y = 700;
+
+    if(small_scenario)
+    {
+        size_x = 900;
+        size_y = 700;
+    }
+    else
+    {
+
+    }
+
+
 
     public Main() throws HeadlessException {
 

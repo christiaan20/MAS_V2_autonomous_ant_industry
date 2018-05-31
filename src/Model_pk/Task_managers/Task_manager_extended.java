@@ -25,7 +25,7 @@ public class Task_manager_extended extends  Abstr_Task_manager{
         init_avg_travel_time_per_resource();
         //worker_broken_threshold = 2500;
         worker_broken_threshold = 4000;
-
+        //worker_broken_threshold = 100; // FOR TESTING
     }
 
     public Task_manager_extended(Base base)

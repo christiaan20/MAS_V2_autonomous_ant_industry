@@ -159,7 +159,7 @@ public class Main_thread implements Runnable {
         }
         else
         {
-            this.refresh_time = 5;
+            this.refresh_time = 1;
         }
 
     }

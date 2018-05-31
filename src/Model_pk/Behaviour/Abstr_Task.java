@@ -27,6 +27,7 @@ public abstract class Abstr_Task
     protected int target_x; //absolute x coordinate where the workers is going to
     protected int target_y; //absolute y coordinate where the workers is going to
     protected boolean refresh_target = false; //whether a new target needs to be chosen
+    protected boolean enter_base = false;
 
     // parameters for the movement of the worker
     private int worker_speed;                   //the size of the step of a worker at each tick
@@ -738,4 +739,11 @@ public abstract class Abstr_Task
     public void setReturn_from_resource(boolean return_from_resource) {
     }
 
+    public boolean isEnter_base() {
+        return enter_base;
+    }
+
+    public void setEnter_base(boolean enter_base) {
+        this.enter_base = enter_base;
+    }
 }
