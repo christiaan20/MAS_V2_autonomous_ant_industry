@@ -10,10 +10,12 @@ import Model_pk.Behaviour.Task_Enum;
 import Model_pk.Model;
 import Model_pk.Enums.Resource_Type_Enum;
 import Controller.Controller;
+import Model_pk.Objects.Abstr_Object;
 import Model_pk.Task_managers.Abstr_Task_manager;
 import Model_pk.Task_managers.Avg_travel_time;
 import Model_pk.Task_managers.Task_Manager_Simple;
 import Model_pk.Task_managers.Task_manager_extended;
+import View.Object_visuals.Object_visual;
 
 /**
  * Created by christiaan on 10/05/18.
@@ -129,6 +131,9 @@ public class Window extends Panel implements ActionListener
         restart_button.setBackground(Color.lightGray);
         restart_button.addActionListener(this);
 
+        break_worker_button = new Button("Break worker");
+        break_worker_button.setBackground(Color.lightGray);
+        break_worker_button.addActionListener(this);
 
         //create labels
         ticks_per_second_text = "Ticks/sec: ";
@@ -171,6 +176,7 @@ public class Window extends Panel implements ActionListener
 
         //bottom_panel_1
 
+        bottom_panel_1.add(break_worker_button);
         bottom_panel_1.add(draw_pheromones_button);
         bottom_panel_1.add(restart_button);
         bottom_panel_1.add(pause_button);
@@ -361,6 +367,7 @@ public class Window extends Panel implements ActionListener
         check_resource_type_button(e);
         check_task_button(e);
         check_restart_button(e);
+        check_break_worker_button(e);
     }
 
     public void check_pause_button(ActionEvent e)
@@ -378,6 +385,18 @@ public class Window extends Panel implements ActionListener
                 pause_button.setBackground(Color.lightGray);
             }
 
+        }
+    }
+
+    public void check_break_worker_button(ActionEvent e)
+    {
+        if( e.getSource() == break_worker_button )
+        {
+            Abstr_Object obj =  View.getInstance().getSelected_visual().getModel_object();
+           if(obj!=null)
+           {
+               obj.setBroken(true);
+           }
         }
     }
 

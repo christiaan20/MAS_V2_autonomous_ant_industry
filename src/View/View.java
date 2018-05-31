@@ -40,6 +40,7 @@ public class View extends Canvas {
 
     private ArrayList<Object_visual> object_visuals = new ArrayList<Object_visual>();
     private ArrayList<Object_visual> object_worker_visuals = new ArrayList<Object_visual>();
+    private ArrayList<Object_visual> object_worker_visuals_broken = new ArrayList<>();
 
     /**
      * Create private constructor for a singleton
@@ -84,9 +85,11 @@ public class View extends Canvas {
 
         //methods that draw the required graphics
         draw_background(g);
+        draw_worker_visuals_broken(g);
         draw_object_visuals(g);
         draw_worker_visuals(g);
         draw_mouse_coordinates(g);
+        ;
         if(GAME_OVER)
         {
 
@@ -125,7 +128,20 @@ public class View extends Canvas {
 
         for (Object_visual obj : ObjectenArr)
         {
-            obj.draw(g,offset_x ,offset_y );
+            if(obj != null)
+                obj.draw(g,offset_x ,offset_y );
+        }
+    }
+
+    public void draw_worker_visuals_broken(Graphics g)
+    {
+        Object_visual[] ObjectenArr = new Object_visual[object_worker_visuals_broken.size()];
+        ObjectenArr = object_worker_visuals_broken.toArray(ObjectenArr);
+
+        for (Object_visual obj : ObjectenArr)
+        {
+            if (obj != null)
+                obj.draw(g,offset_x ,offset_y );
         }
     }
 
@@ -283,6 +299,7 @@ public class View extends Canvas {
     {
         object_visuals.clear();
         object_worker_visuals.clear();
+        object_worker_visuals_broken.clear();
 
     }
 
@@ -345,6 +362,12 @@ public class View extends Canvas {
     public void add_worker_visual(Object_visual visual) {
         object_worker_visuals.add(visual);
     }
+
+    public void remove_worker_visual(Object_visual visual)
+    {
+        object_worker_visuals.remove(visual);
+    }
+
     public int getViewHeight()
     {
         return getHeight();
@@ -464,6 +487,11 @@ public class View extends Canvas {
 
     public void setGAME_OVER(boolean GAME_OVER) {
         this.GAME_OVER = GAME_OVER;
+    }
+
+    public void add_worker_visual_to_dead(Object_visual obj)
+    {
+        object_worker_visuals_broken.add(obj);
     }
 
 }

@@ -18,6 +18,7 @@ public abstract class Object_visual {
 
     protected boolean selected;
     protected boolean hover_over;
+    protected boolean broken; //only used by worker to set broken
 
     protected int text_size;
 
@@ -135,5 +136,11 @@ public abstract class Object_visual {
 
     public void setModel_object(Abstr_Object model_object) {
         this.model_object = model_object;
+    }
+
+    public void setBroken(boolean broken)
+    {
+
+
     }
 }

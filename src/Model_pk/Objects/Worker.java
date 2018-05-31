@@ -545,7 +545,13 @@ public class Worker extends Abstr_Object {
         return broken;
     }
 
-    public void setBroken(boolean broken) {
+    public void setBroken(boolean broken)
+    {
+        if(broken)
+        {
+            visual.setBroken(true);
+        }
+
         this.broken = broken;
     }
 

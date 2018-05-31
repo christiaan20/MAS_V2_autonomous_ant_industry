@@ -186,7 +186,7 @@ public class Task_manager_extended extends  Abstr_Task_manager{
 
     private Worker_representation convert_to_representation(Worker worker){
 
-        return new Worker_representation(worker.getID(), worker.getTask(),worker.getResource_type(), worker.getTravel_time(),model.getTickcount() );
+        return new Worker_representation(worker.getID(), worker.getTask(),worker.getResource_type(), worker.getTravel_time());//,model.getTickcount() );
 
     }
 
