@@ -15,12 +15,13 @@ public class Colors
     Color background = new Color(194, 60, 42); //red color for the mars ground;
     Color worker = Color.BLACK;
     Color selected = Color.green;
+    Color broken_worker = new Color(148, 34, 2);
 
     Color explorer =  Color.blue;
-    Color copper = new Color(182, 115, 51); ;
+    Color copper = new Color(182, 115, 51);
     Color iron = new Color(68, 79, 103);
     Color stone  = Color.GRAY;
-    Color coal = new Color(30, 40, 50);;
+    Color coal = new Color(30, 40, 50);
     Color uranium = Color.green;
     Color bug = new Color(255, 0, 0);
 
@@ -177,5 +178,15 @@ public class Colors
 
     public void setUranium(Color uranium) {
         this.uranium = uranium;
+    }
+
+    public Color getBroken_worker()
+    {
+        return broken_worker;
+    }
+
+    public void setBroken_worker(Color broken_worker)
+    {
+        this.broken_worker = broken_worker;
     }
 }

@@ -138,12 +138,22 @@ public abstract class Abstr_Object {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         int result = (int) (getID() ^ (getID() >>> 32));
         result = 31 * result + getX();
         result = 31 * result + getY();
         result = 31 * result + getSize();
         result = 31 * result + (isExpired() ? 1 : 0);
         return result;
+    }
+
+    public boolean isBroken()
+    {
+        return true;
+    }
+
+    public void setBroken(boolean broken)
+    {
     }
 }

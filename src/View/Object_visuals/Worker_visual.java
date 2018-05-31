@@ -27,6 +27,21 @@ public class Worker_visual extends Object_visual
     {
         Worker worker = (Worker) model_object;
 
+        if(!this.broken)
+        {
+            draw_normal_visuals(g,worker);
+        }
+        else
+        {
+            draw_broken_visuals(g,worker);
+        }
+
+    }
+
+
+
+    private void draw_normal_visuals(Graphics g, Worker worker)
+    {
         Color color  = Colors.getInstance().getWorker();
         Color color_hat  = Colors.getInstance().getPheroColor(worker.getTask().getTask(),worker.getResource_type());
         Color color_hat_edge  = Colors.getInstance().getPheroColor(Task_Enum.miner,worker.getResource_type());
@@ -36,7 +51,7 @@ public class Worker_visual extends Object_visual
 
         // visual
         g.fillOval(x  , y, size, size);
-        view.draw_angled_line(g,x + size/2,y + size/2,worker.getCurrDirection(),size*3);
+        view.draw_angled_line(g,x + size/2,y + size/2,worker.getCurrDirection(),size);
 
         g.setColor(color_hat_edge);
         int hat_edge = 5;
@@ -53,6 +68,21 @@ public class Worker_visual extends Object_visual
         {
             draw_debug_info(g,worker);
         }
+    }
+
+    private void draw_broken_visuals(Graphics g, Worker worker)
+    {
+        Color color  = Colors.getInstance().getWorker();
+        Color broken_color = Colors.getInstance().getBroken_worker();
+
+        g.setColor(color);
+
+        draw_ID(g,worker,0);
+
+        g.setColor(broken_color);
+
+        g.fillOval(x  , y, size, size);
+        view.draw_angled_line(g,x + size/2,y + size/2,worker.getCurrDirection(),size);
     }
 
     public void draw_debug_info(Graphics g, Worker worker)
@@ -175,6 +205,17 @@ public class Worker_visual extends Object_visual
             String target_y = String.valueOf(obj.getY());
             g.drawString(String.valueOf(i)+ " (" + target_x + "," + target_y + ")",worker.getX()-100,y-text_size*i);
 
+        }
+
+    }
+
+    public void setBroken(boolean broken)
+    {
+        if(broken)
+        {
+            this.broken = true;
+            view.remove_worker_visual(this);
+            view.add_worker_visual_to_dead(this);
         }
 
     }
