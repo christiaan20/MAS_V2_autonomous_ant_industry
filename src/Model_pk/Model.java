@@ -217,7 +217,7 @@ public class Model{
     {
         for(Worker w: workers)
         {
-            if ( !w.isBroken() && getTickcount() % 250 == 0)
+            if ( !w.isBroken() && getTickcount() % 500 == 0)
                 w.chance_to_break();
 
             if( !w.isBroken())

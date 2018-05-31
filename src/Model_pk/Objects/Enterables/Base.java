@@ -4,6 +4,7 @@ package Model_pk.Objects.Enterables;
 import Model_pk.*;
 import Model_pk.Behaviour.Abstr_Task;
 import Model_pk.Behaviour.Basic.Task.Task_Basic.Behaviour_Basic;
+import Model_pk.Behaviour.Task_Enum;
 import Model_pk.Enums.Resource_Type_Enum;
 import Model_pk.Objects.Worker;
 import Model_pk.Task_managers.Abstr_Task_manager;
@@ -22,6 +23,7 @@ public class Base extends Abstr_Enterable_object {
     private Abstr_Task_manager task_manager;
     private double chance_of_general_explorer = 0.75;
     private int detect_dist;
+    private Model model;
 
 
     public Base(int x, int y, int size, int time,Abstr_Task_manager task_manager) {
@@ -32,6 +34,7 @@ public class Base extends Abstr_Enterable_object {
         init_obtained_resources();
 
         this.task_manager = task_manager;
+        this.model = Model.getInstance();
 
 
     }
@@ -54,7 +57,7 @@ public class Base extends Abstr_Enterable_object {
     public boolean action(Worker worker)
     {
 
-        Model model = Model.getInstance();
+
 
             drop_resources(worker);
             task_manager.update_task_of(worker);
@@ -96,6 +99,7 @@ public class Base extends Abstr_Enterable_object {
             }
 
         worker.setBreak_chance(0.01);
+        worker.setLast_seen_at_base(model.getTickcount());
 
 
 
@@ -147,7 +151,13 @@ public class Base extends Abstr_Enterable_object {
         worker.clear_load();
 
     }
+    public boolean is_there_a_path_to(Resource_Type_Enum resource){
 
+        ArrayList<CustomStruct> objects = model.find_objects(getX(), getY(), detect_dist, resource, Task_Enum.miner);
+        if( objects.size() == 0 )
+            return false;
+        return true;
+    }
 
     public HashMap<Resource_Type_Enum, Integer> get_obtained_resources_resources() {
         return this.obtained_resources;

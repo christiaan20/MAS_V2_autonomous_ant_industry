@@ -14,7 +14,7 @@ public class Worker_representation {
     private int travel_time;
     private int last_seen;
 
-    public Worker_representation(long ID, Abstr_Task task, Resource_Type_Enum type, int travel_time) {
+    public Worker_representation(long ID, Abstr_Task task, Resource_Type_Enum type, int travel_time, int last_seen) {
         this.ID = ID;
         this.task = task;
         this.type = type;
@@ -64,7 +64,4 @@ public class Worker_representation {
         return last_seen;
     }
 
-    public void setLast_seen(int last_seen) {
-        this.last_seen = last_seen;
-    }
 }
