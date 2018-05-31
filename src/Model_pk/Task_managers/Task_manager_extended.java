@@ -24,7 +24,7 @@ public class Task_manager_extended extends  Abstr_Task_manager{
         this.avg_travel_time_per_resource = new HashMap<>();
         init_avg_travel_time_per_resource();
         //worker_broken_threshold = 2500;
-        worker_broken_threshold = 5000;
+        worker_broken_threshold = 4000;
 
     }
 
@@ -43,7 +43,7 @@ public class Task_manager_extended extends  Abstr_Task_manager{
 
         Resource_Type_Enum worker_type = worker.getResource_type();
         if( worker_type == null ){
-            Resource_Type_Enum new_type = get_max_diff_type();
+            Resource_Type_Enum new_type = get_max_diff_type(diff_in_distribution_of_worker);
             worker.setResource_type(new_type);
             return;
         }
@@ -54,7 +54,7 @@ public class Task_manager_extended extends  Abstr_Task_manager{
 
         int diff = diff_in_distribution_of_worker.get(worker_type);
         if(diff < 0 ){
-            Resource_Type_Enum new_type = get_max_diff_type();
+            Resource_Type_Enum new_type = get_max_diff_type(diff_in_distribution_of_worker);
             worker.setResource_type(new_type);
         }
 
@@ -62,8 +62,8 @@ public class Task_manager_extended extends  Abstr_Task_manager{
         remember_task_of(worker);
 
         broken_worker_manager();
-
         worker.setTravel_time(model.getTickcount());
+
     }
 
     public void broken_worker_manager(){
@@ -79,9 +79,11 @@ public class Task_manager_extended extends  Abstr_Task_manager{
             workers_list.remove(worker);
         }
 
-        int amount_of_new_workers = broken_workers.size();
-        if( amount_of_new_workers > 0)
-            model.add_worker(amount_of_new_workers);
+        for( Worker_representation worker: broken_workers){
+            Worker new_worker = model.add_worker();
+            new_worker.setLast_seen_at_base(model.getTickcount());
+            update_task_of(new_worker);
+        }
 
     }
 
@@ -93,9 +95,8 @@ public class Task_manager_extended extends  Abstr_Task_manager{
         }
     }
 
-    private Resource_Type_Enum get_max_diff_type(){
+    private Resource_Type_Enum get_max_diff_type(HashMap<Resource_Type_Enum, Integer> diff_in_distribution_of_worker){
 
-        HashMap<Resource_Type_Enum, Integer> diff_in_distribution_of_worker = get_diff_in_distribution_of_worker();
         int max_diff = 0;
         Resource_Type_Enum max_type = null;
         for(Resource_Type_Enum type: Resource_Type_Enum.values()){
@@ -133,7 +134,7 @@ public class Task_manager_extended extends  Abstr_Task_manager{
         return max_travel_time;
     }
 
-    public HashMap<Resource_Type_Enum, Integer> get_new_distribution_of_worker(){
+    public HashMap<Resource_Type_Enum, Integer> get_measure_of_worker(){
 
         HashMap<Resource_Type_Enum, Avg_travel_time> avg_travel_time_to_resource = get_avg_travel_time_to_resource();
         HashMap<Resource_Type_Enum, Integer> resources_to_obtain = base.resource_to_obtain();
@@ -161,28 +162,53 @@ public class Task_manager_extended extends  Abstr_Task_manager{
             total_distribution += distribution;
 
         }
+        return distribution_ratio;
 
-        HashMap<Resource_Type_Enum, Integer> distribution_of_workers =  get_distribution_of_workers();
+    }
+
+    private int get_sum_of_map(HashMap<Resource_Type_Enum, Integer> map){
+
+        int sum = 0;
+        for(Resource_Type_Enum type: Resource_Type_Enum.values()){
+            sum = sum + map.get(type);
+        }
+        return sum;
+    }
+
+    public HashMap<Resource_Type_Enum, Integer> get_new_distribution_of_worker(){
+
+        HashMap<Resource_Type_Enum, Integer> measure_of_worker = get_measure_of_worker();
+        HashMap<Resource_Type_Enum, Integer> new_distribution_of_worker = new HashMap<>();
+        int total_measure = get_sum_of_map(measure_of_worker);
+
         double distr_ratio;
-        int worker_amount;
         int new_worker_amount;
+        int measure;
+        double total_worker_amount = get_worker_amount();
 
         for(Resource_Type_Enum type: Resource_Type_Enum.values()){
 
-            distribution = distribution_ratio.get(type);
-            worker_amount = distribution_of_workers.get(type);
+            measure = measure_of_worker.get(type);
 
-            if( total_distribution == 0){
+            if( total_measure == 0){
                 new_worker_amount = 0;
             }
             else{
-                distr_ratio = distribution / total_distribution;
-                new_worker_amount = (int) Math.round(distr_ratio * worker_amount);
+                distr_ratio = ((double) measure )/ total_measure;
+                //new_worker_amount = (int) (distr_ratio * 100);
+                new_worker_amount = (int) Math.round(distr_ratio * total_worker_amount);
             }
-            distribution_ratio.replace(type, new_worker_amount);
+            new_distribution_of_worker.put(type, new_worker_amount);
         }
 
-        return distribution_ratio;
+        //measure_of_worker.replace(Resource_Type_Enum.Uranium, total_measure);
+        return new_distribution_of_worker;
+
+    }
+
+    public double get_worker_amount(){
+
+        return (double) workers_list.size();
 
     }
 

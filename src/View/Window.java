@@ -314,7 +314,7 @@ public class Window extends Panel implements ActionListener
 
         if ( task_manager instanceof Task_manager_extended){
             Task_manager_extended task_manager_extended = (Task_manager_extended)task_manager;
-            HashMap<Resource_Type_Enum, Integer> distribution_of_worker = task_manager_extended.get_distribution_of_workers();
+            HashMap<Resource_Type_Enum, Integer> distribution_of_worker = task_manager_extended.get_new_distribution_of_worker();
             //HashMap<Resource_Type, Avg_travel_time> avg_travel_time_to_resource = task_manager_extended.get_avg_travel_time_to_resource();
 
             for(Resource_Type_Enum type: Resource_Type_Enum.values())
@@ -326,6 +326,7 @@ public class Window extends Panel implements ActionListener
 //                else
 //                    value = avg_travel_time_object.get_avg_travel_time();
                 int value = distribution_of_worker.get(type);
+               // int value = 0;
                 resource_prob_labels.get(type).setText( type.toString() + ": " + String.valueOf(value)  );
             }
 
