@@ -75,19 +75,15 @@ public class Base extends Abstr_Enterable_object {
                 worker_task.setPhero_detect_dist((int)(size*2.5)); //for basic cas
             }
 
-
-            worker.clear_visited_objects();
-            worker.clear_detected_objects();
-            worker.setDetected_objects(model.find_objects(getX(),getY(),detect_dist,worker.getResource_type(),worker_task.getTask()));
-            worker_task.select_target(worker);
-            worker.clear_visited_objects();
+            find_target_phero_for_miner(worker, worker_task);
 
             if(model.getBehaviour() instanceof Behaviour_Basic)
                 worker_task.setPhero_detect_dist(original_detect_dist); //for basic case
 
-            if(!worker.isFound_new_target())
+            double random = Model.getInstance().getRandom().nextDouble();
+            if(!worker.isFound_new_target() || (random >= 0.95))
             {
-                double random = Model.getInstance().getRandom().nextDouble();
+
                 worker.setTask(model.getBehaviour().getTask_explorer());
                 worker.setResource_type(null);
 //                if(random > chance_of_general_explorer)
@@ -105,6 +101,14 @@ public class Base extends Abstr_Enterable_object {
 
         return true;
 
+    }
+
+    private void find_target_phero_for_miner(Worker worker, Abstr_Task worker_task) {
+        worker.clear_visited_objects();
+        worker.clear_detected_objects();
+        worker.setDetected_objects(model.find_objects(getX(),getY(),detect_dist,worker.getResource_type(),worker_task.getTask()));
+        worker_task.select_target(worker);
+        worker.clear_visited_objects();
     }
 
     @Override
