@@ -72,6 +72,25 @@ public class CustomStruct
         return attraction_this < attraction_given;
     }
 
+    public boolean is_less_attractive_strength_direction_than(CustomStruct struct)
+    {
+        double strength_factor = Model.getInstance().getBehaviour().getStrength_influence();
+
+        double attraction_this = 0;
+
+        if(object != null)
+        {
+            Pheromone phero_this = (Pheromone) object;
+            attraction_this = phero_this.getStrength()/Math.pow(this.distance,strength_factor);
+        }
+
+        Pheromone phero_given = (Pheromone) struct.getObject();
+
+        double attraction_given = phero_given.getStrength()/Math.pow(this.distance,strength_factor);
+
+        return attraction_this < attraction_given;
+    }
+
 
     public int getDistance() {
         return distance;

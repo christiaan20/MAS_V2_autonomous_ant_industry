@@ -472,6 +472,54 @@ public class Worker extends Abstr_Object {
         return (Pheromone) closest_phero.getObject();
     }
 
+    public Pheromone most_attractive_phero_of_type_based_on_strength_direction(Task_Enum task, Resource_Type_Enum type)
+    {
+        CustomStruct closest_phero = new CustomStruct(null,10000000);
+
+        for(CustomStruct struct: detected_objects)
+        {
+            Abstr_Object obj = struct.getObject();
+            if(obj instanceof Pheromone)
+            {
+                Pheromone phero = (Pheromone) obj;
+
+                if(phero.getType() == type && phero.getTask() == task)
+                {
+                    if(closest_phero.is_less_attractive_than(struct))
+                    {
+                        closest_phero = struct;
+                    }
+                }
+            }
+        }
+
+        return (Pheromone) closest_phero.getObject();
+    }
+
+    public Pheromone most_attractive_owned_phero_of_type_based_on_strength_direction(Worker owner, Task_Enum task, Resource_Type_Enum type)
+    {
+        CustomStruct closest_phero = new CustomStruct(null,10000000);
+
+        for(CustomStruct struct: detected_objects)
+        {
+            Abstr_Object obj = struct.getObject();
+            if(obj instanceof Pheromone)
+            {
+                Pheromone phero = (Pheromone) obj;
+
+                if((phero.isType(type) || type == null)&& phero.isTask(task) && phero.isOwner(owner))
+                {
+                    if(closest_phero.is_less_attractive_than(struct))
+                    {
+                        closest_phero = struct;
+                    }
+                }
+            }
+        }
+
+        return (Pheromone) closest_phero.getObject();
+    }
+
 
     public boolean isVisited(Abstr_Object obj)
     {
