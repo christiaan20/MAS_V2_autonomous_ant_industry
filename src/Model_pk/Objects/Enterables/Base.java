@@ -149,13 +149,13 @@ public class Base extends Abstr_Enterable_object {
         worker.clear_load();
 
     }
-    public boolean is_there_a_path_to(Resource_Type_Enum resource){
-
-        ArrayList<CustomStruct> objects = model.find_objects(getX(), getY(), detect_dist, resource, Task_Enum.miner);
-        if( objects.size() == 0 )
-            return false;
-        return true;
-    }
+//    public boolean is_there_a_path_to(Resource_Type_Enum resource){
+//
+//        ArrayList<CustomStruct> objects = model.find_objects(getX(), getY(), detect_dist, resource, Task_Enum.miner);
+//        if( objects.size() == 0 )
+//            return false;
+//        return true;
+//    }
 
     public HashMap<Resource_Type_Enum, Integer> get_obtained_resources_resources() {
         return this.obtained_resources;

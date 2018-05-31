@@ -75,13 +75,13 @@ public class Model{
 
     public void set_scenario_1()  throws IOException
     {
-        workers_to_add = new ArrayList<>();
-        tickcount = 0;
-        behaviour = new Behaviour_Basic();
-        task_manager = new Task_manager_extended();
+        this.workers_to_add = new ArrayList<>();
+        this.tickcount = 0;
+        this.behaviour = new Behaviour_Basic();
+        this.task_manager = new Task_manager_extended();
 
-        size_x_field    = 800;
-        size_y_field    = 600;
+        this.size_x_field    = 800;
+        this.size_y_field    = 600;
 
         View.getInstance().set_field_size(size_x_field, size_y_field);
         this.base_x      = 450;
@@ -170,10 +170,10 @@ public class Model{
 
     }
 
-    public void add_worker(int amount){
-        for( int i = 0; i < amount; i++ )
-            workers_to_add.add(new Worker(base_x, base_y, worker_size, random.nextDouble()*Math.PI*2, max_worker_load, behaviour.getTask_explorer(),base));
-
+    public Worker add_worker(){
+        Worker worker = new Worker(base_x, base_y, worker_size, random.nextDouble()*Math.PI*2, max_worker_load, behaviour.getTask_miner(),base);
+        workers_to_add.add(worker);
+        return worker;
         }
 
 

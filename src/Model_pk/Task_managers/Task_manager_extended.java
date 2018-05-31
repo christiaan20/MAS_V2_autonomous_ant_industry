@@ -61,8 +61,8 @@ public class Task_manager_extended extends  Abstr_Task_manager{
         remember_task_of(worker);
 
         broken_worker_manager();
-
         worker.setTravel_time(model.getTickcount());
+
     }
 
     public void broken_worker_manager(){
@@ -78,9 +78,11 @@ public class Task_manager_extended extends  Abstr_Task_manager{
             workers_list.remove(worker);
         }
 
-        int amount_of_new_workers = broken_workers.size();
-        if( amount_of_new_workers > 0)
-            model.add_worker(amount_of_new_workers);
+        for( Worker_representation worker: broken_workers){
+            Worker new_worker = model.add_worker();
+            new_worker.setLast_seen_at_base(model.getTickcount());
+            update_task_of(new_worker);
+        }
 
     }
 
