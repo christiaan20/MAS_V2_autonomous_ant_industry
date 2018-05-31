@@ -88,7 +88,7 @@ public class Model{
         View.getInstance().set_field_size(size_x_field, size_y_field);
         this.base_x      = 450;
         this.base_y      = 150;
-        int object_size = 50;
+        int object_size  = 50;
         this.worker_size = 20;
 
         int work_force_size = 15;
@@ -97,7 +97,7 @@ public class Model{
         int resource_time   = 50;
 
         int resource_pool_capacity  = 500;
-        this.max_worker_load         = 5;
+        this.max_worker_load        = 5;
 
         tile_size = object_size/5;
 
@@ -106,7 +106,7 @@ public class Model{
         //enterable_objects.add(base);
 
         boolean test = false;
-        boolean test_direction = false;
+        boolean test_direction = true;
 
         if(test)
         {
@@ -133,9 +133,9 @@ public class Model{
 
 
             work_force_size = 0;
-            workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble()*Math.PI*2, max_worker_load, behaviour.getTask_miner(), Resource_Type_Enum.Coal,null));
-            pheromones.add(new Pheromone(null, base_x+30, base_y+30, 5, Task_Enum.miner, Resource_Type_Enum.Coal, 20, 10000, 15));
-            pheromones.add(new Pheromone(null, base_x-30, base_y+30, 5, Task_Enum.miner, Resource_Type_Enum.Coal, 10, 10000, 15));
+            workers.add(new Worker(base_x, base_y, worker_size, 0, max_worker_load, behaviour.getTask_miner(), Resource_Type_Enum.Coal,null));
+            pheromones.add(new Pheromone(null, base_x-25, base_y, 5, Task_Enum.miner, Resource_Type_Enum.Coal, 20, 10000, 15));
+            pheromones.add(new Pheromone(null, base_x+30, base_y, 5, Task_Enum.miner, Resource_Type_Enum.Coal, 10, 10000, 15));
         }
         else
         {
@@ -171,6 +171,8 @@ public class Model{
         this.test_setting = new Tester();
 
         test_setting.write_to_log_file(scenario_name);
+
+        //test_guassian_distribution();
 
     }
 
@@ -273,6 +275,8 @@ public class Model{
         this.test_setting = new Tester();
 
         test_setting.write_to_log_file(scenario_name);
+
+
 
     }
 
@@ -406,6 +410,7 @@ public class Model{
             int Xdist = x_obj - x_w;
             int Ydist = y_obj - y_w;
             int dist = (int) Math.abs( Math.sqrt(Math.pow(Xdist,2)+ Math.pow(Ydist,2)));
+            double angle_from_worker_direction = worker.getCurrDirection()- worker.get_corner_relative_to(x_obj,y_obj);
 
 
             if(dist<= worker.getTask().getPhero_detect_dist())
@@ -414,6 +419,8 @@ public class Model{
                     struct.setDistance(dist);
                     struct.setX_vector(Xdist);
                     struct.setY_vector(Ydist);
+                    struct.setAngle_from_worker_direction(angle_from_worker_direction);
+
                     return true;
             }
         }
@@ -646,6 +653,17 @@ public class Model{
                 iter.remove();
             }
 
+        }
+    }
+
+    public void test_guassian_distribution()
+    {
+        CustomStruct str =  new CustomStruct(null);
+        for(int i = -6; i < 6; i++)
+        {
+            double x  = ((i/6.0)*Math.PI);
+            double y =  str.calc_attraction_direction(1,x);
+            System.out.println("Angle " + x + " gausian y: " + y  );
         }
     }
 

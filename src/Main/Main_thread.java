@@ -14,7 +14,7 @@ public class Main_thread implements Runnable {
     private Model model;
     private Window window;
 
-    private boolean running = true; // whether the mainthread is running or not
+    private boolean running = false; // whether the mainthread is running or not
     private boolean restart_activated = false; // whether the mainthread has to restart_activated the simulation or not
     private int refresh_time = 5;     // refresh_time of ticks and refreshes in ms
     private int tickcount = 0;

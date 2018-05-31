@@ -195,8 +195,14 @@ public class Task_Miner_Basic extends Abstr_Task
     protected Abstr_Object get_owned_phero_of_type(Worker worker, Task_Enum task, Resource_Type_Enum type)
     {
         boolean incalculate_strength = model.getBehaviour().isIncalculate_strength();
+        boolean incalculate_direction = model.getBehaviour().isIncalculate_direction();
 
-        if(incalculate_strength)
+
+        if(incalculate_strength && incalculate_direction)
+            return worker.most_attractive_owned_phero_of_type_based_on_strength_and_direction(worker, task,type);
+        else if(incalculate_direction)
+            return worker.most_attractive_owned_phero_of_type_based_on_direction(worker, task,type);
+        else if(incalculate_strength)
             return worker.most_attractive_owned_phero_of_type(worker, task,type);
         else
             return worker.closest_owned_phero_of_type(worker, task,type);
@@ -206,8 +212,13 @@ public class Task_Miner_Basic extends Abstr_Task
     protected Abstr_Object get_phero_of_type(Worker worker, Task_Enum task, Resource_Type_Enum type)
     {
         boolean incalculate_strength = model.getBehaviour().isIncalculate_strength();
+        boolean incalculate_direction = model.getBehaviour().isIncalculate_direction();
 
-        if(incalculate_strength)
+        if(incalculate_strength && incalculate_direction)
+            return worker.most_attractive_phero_of_type_based_on_strength_and_direction(task,type);
+        else if(incalculate_direction)
+            return worker.most_attractive_phero_of_type_based_on_direction(task,type);
+        else if(incalculate_strength)
             return worker.most_attractive_phero_of_type(task,type);
         else
             return worker.closest_phero_of_type(task,type);
