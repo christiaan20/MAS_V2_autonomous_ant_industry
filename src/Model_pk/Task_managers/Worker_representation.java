@@ -19,7 +19,6 @@ public class Worker_representation {
         this.task = task;
         this.type = type;
         this.travel_time = travel_time;
-        this.last_seen = last_seen;
     }
 
     public long getID() {
@@ -64,7 +63,4 @@ public class Worker_representation {
         return last_seen;
     }
 
-    public void setLast_seen(int last_seen) {
-        this.last_seen = last_seen;
-    }
 }
