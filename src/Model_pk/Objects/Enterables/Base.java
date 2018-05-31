@@ -57,8 +57,6 @@ public class Base extends Abstr_Enterable_object {
     public boolean action(Worker worker)
     {
 
-
-
             drop_resources(worker);
             task_manager.update_task_of(worker);
 
