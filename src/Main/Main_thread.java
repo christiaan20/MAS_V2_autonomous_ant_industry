@@ -4,6 +4,8 @@ import View.View;
 import Model_pk.Model;
 import View.Window;
 
+import java.io.IOException;
+
 /**
  * Created by christiaan on 10/05/18.
  */
@@ -12,10 +14,12 @@ public class Main_thread implements Runnable {
     private Model model;
     private Window window;
 
-    private boolean running = false; // whether the mainthread is running or not
+    private boolean running = true; // whether the mainthread is running or not
     private boolean restart_activated = false; // whether the mainthread has to restart_activated the simulation or not
-    private int refresh_time = 25;     // refresh_time of ticks and refreshes in ms
+    private int refresh_time = 5;     // refresh_time of ticks and refreshes in ms
     private int tickcount = 0;
+    private int simulate_times = 10;    //the amount of times the simulation is run before stopping the program
+    private int simulate_count = 0;     //the counter of times the simulation has run
 
 
 
@@ -34,7 +38,7 @@ public class Main_thread implements Runnable {
     @Override
     public void run()
     {
-
+        write_simulation_count();
         while(true)
         {
             if(restart_activated)
@@ -45,14 +49,27 @@ public class Main_thread implements Runnable {
 
             if(running)
             {
+                if(simulate_count >= simulate_times)
+                {
+                    view.setGAME_OVER(true);
+                    view.paint();
+                    continue;
+                }
+
+
                 tickcount++;
 
                 model.tick(tickcount);
 
 
-                if (model.goals_are_reached())
-                    setRestart_activated(true);
-                    // continue;
+                if (model.getTest_setting().all_goals_reached())
+                {
+                    write_simulation_count();
+                    model.getTest_setting().write_results_to_file();
+                    simulate_count++;
+                    restart();
+                }
+
 
                 window.update_resource_counters();
                 window.update_tick_counter(tickcount);
@@ -76,11 +93,28 @@ public class Main_thread implements Runnable {
 
     }
 
+    private void write_simulation_count()
+    {
+
+        try {
+            model.getTest_setting().write_to_log_file("---------  Simulation: " + simulate_count + "-----------");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void restart()
     {
         tickcount =0;
         model.restart();
         view.restart();
+
+        try {
+            model.set_scenario_1();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean isRestart_activated() {

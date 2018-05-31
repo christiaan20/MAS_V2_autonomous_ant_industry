@@ -36,10 +36,15 @@ public class Tester {
 
     public void init_goal(){
 
-        HashMap<Resource_Type_Enum, Integer> first_goal = fill_all_resources_with(10);
+
+
+        HashMap<Resource_Type_Enum, Integer> first_goal = fill_resources_with(500,100,20,250,100);
+        HashMap<Resource_Type_Enum, Integer> second_goal = fill_all_resources_with(250);
+        HashMap<Resource_Type_Enum, Integer> third_goal = fill_resources_with(0,50,600,500,160);
 
         goals.add(first_goal);
-        goals.add(first_goal);
+        goals.add(second_goal);
+        goals.add(third_goal);
 
     }
 
@@ -53,6 +58,36 @@ public class Tester {
         }
         return goal;
     }
+
+    public HashMap<Resource_Type_Enum, Integer> fill_resources_with(int stone,int iron, int coal, int copper, int uranium){
+
+        HashMap<Resource_Type_Enum, Integer> goal = new HashMap<>();
+
+        for(Resource_Type_Enum type: Resource_Type_Enum.values())
+        {
+            switch (type)
+            {
+
+                case Stone:
+                    goal.put(type, stone);
+                    break;
+                case Iron:
+                    goal.put(type, iron);
+                    break;
+                case Coal:
+                    goal.put(type, coal);
+                    break;
+                case Copper:
+                    goal.put(type, copper);
+                    break;
+                case Uranium:
+                    goal.put(type, uranium);
+                    break;
+            }
+        }
+        return goal;
+    }
+
 
     private void init_log_file()throws IOException {
 
@@ -81,35 +116,44 @@ public class Tester {
 
     }
 
-    private void wrtie_results_to_file()throws IOException {
+    public void write_results_to_file(){
 
-        write_to_log_file("Amount of ticks to reach goals");
+        try
+        {
+            write_to_log_file("Amount of ticks to reach goals");
 
-        for( int ticks: tick_counts_goals){
-            write_to_log_file( "" + ticks );
+            for( int ticks: tick_counts_goals){
+                write_to_log_file( "" + ticks );
+            }
+
+            write_to_log_file( "");
+            write_to_log_file("Amount of surplus when goal was reached");
+
+            for( String surplus: surplus_goals){
+                write_to_log_file(surplus);
+            }
+
+            write_to_log_file( "");
+            results_written_to_file = true;
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        write_to_log_file( "");
-        write_to_log_file("Amount of surplus when goal was reached");
 
-        for( String surplus: surplus_goals){
-            write_to_log_file(surplus);
-        }
-
-        write_to_log_file( "");
-        results_written_to_file = true;
 
     }
 
-    public boolean is_goal_reached(int tickcount) throws IOException {
+    public boolean is_goal_reached(int tickcount)  {
 
         if( all_goals_reached() ){
 
-            if(results_written_to_file){
-                return true;
-            }
+//            if(results_written_to_file){
+//                return true;
+//            }
 
-            wrtie_results_to_file();
+//            write_results_to_file();
             return true;
         }
 
@@ -141,7 +185,8 @@ public class Tester {
 
     }
 
-    public void goal_is_reached(int tickcount) throws IOException {
+    public void goal_is_reached(int tickcount)
+    {
 
         HashMap<Resource_Type_Enum, Integer> goal = goals.get(0);
         HashMap<Resource_Type_Enum, Integer> resources = get_current_resources();

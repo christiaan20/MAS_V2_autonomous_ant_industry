@@ -19,6 +19,7 @@ import Model_pk.Objects.Pheromone;
 import Model_pk.Objects.Worker;
 import Model_pk.Task_managers.Abstr_Task_manager;
 import Model_pk.Task_managers.Task_Manager_Simple;
+import Model_pk.Task_managers.Task_manager_extended;
 import View.View;
 
 /**
@@ -77,7 +78,7 @@ public class Model{
         workers_to_add = new ArrayList<>();
         tickcount = 0;
         behaviour = new Behaviour_Basic();
-        task_manager = new Task_Manager_Simple();
+        task_manager = new Task_manager_extended();
 
         size_x_field    = 800;
         size_y_field    = 600;
@@ -93,8 +94,8 @@ public class Model{
         int base_time       = 50;
         int resource_time   = 50;
 
-        int resource_pool_capacity  = 200;
-        this.max_worker_load         = 5;
+        int resource_pool_capacity  = 500;
+        int max_worker_load         = 5;
 
         tile_size = object_size/5;
 
@@ -118,6 +119,7 @@ public class Model{
                 enterable_objects.add(new Resource_pool(base_x - 125 +object_size*0 ,base_y - 125 +object_size*i ,object_size,resource_time, Resource_Type_Enum.Coal,resource_pool_capacity));
                 enterable_objects.add(new Resource_pool(base_x - 125 +object_size*5 ,base_y - 125 +object_size*i ,object_size,resource_time, Resource_Type_Enum.Coal,resource_pool_capacity));
                 enterable_objects.add(new Resource_pool(base_x - 125 +object_size*i ,base_y - 125 +object_size*5 ,object_size,resource_time, Resource_Type_Enum.Coal,resource_pool_capacity));
+                enterable_objects.add(new Resource_pool(base_x - 125 +object_size*i ,base_y - 125 +object_size*5 ,object_size,resource_time, Resource_Type_Enum.Coal,resource_pool_capacity));
             }
 
 
@@ -139,14 +141,16 @@ public class Model{
             enterable_objects.add(base);
 
             //create the resources
-            enterable_objects.add(new Resource_pool(300,400,object_size,resource_time, Resource_Type.Stone,resource_pool_capacity));
-            enterable_objects.add(new Resource_pool(75,325,object_size,resource_time, Resource_Type.Coal, resource_pool_capacity));
-            enterable_objects.add(new Resource_pool(550,325,object_size,resource_time, Resource_Type.Copper, resource_pool_capacity));
-            enterable_objects.add(new Resource_pool(250,100,object_size,resource_time, Resource_Type.Iron, resource_pool_capacity));
-            enterable_objects.add(new Resource_pool(600,250,object_size,resource_time, Resource_Type.Uranium, resource_pool_capacity));
-
-
-
+            enterable_objects.add(new Resource_pool(300,400,object_size,resource_time, Resource_Type_Enum.Stone,2000));
+            enterable_objects.add(new Resource_pool(75,325,object_size,resource_time, Resource_Type_Enum.Coal, resource_pool_capacity));
+            enterable_objects.add(new Resource_pool(550,325,object_size,resource_time, Resource_Type_Enum.Copper, resource_pool_capacity));
+            enterable_objects.add(new Resource_pool(250,100,object_size,resource_time, Resource_Type_Enum.Iron, resource_pool_capacity));
+            enterable_objects.add(new Resource_pool(600,250,object_size,resource_time, Resource_Type_Enum.Uranium, resource_pool_capacity));
+            enterable_objects.add(new Resource_pool(750,50,object_size,resource_time, Resource_Type_Enum.Uranium, 800));
+            enterable_objects.add(new Resource_pool(100,500,object_size,resource_time, Resource_Type_Enum.Iron, 300));
+            enterable_objects.add(new Resource_pool(200,450,object_size,resource_time, Resource_Type_Enum.Iron, 300));
+            enterable_objects.add(new Resource_pool(750,125,object_size,resource_time, Resource_Type_Enum.Copper, 1000));
+            enterable_objects.add(new Resource_pool(75,275,object_size,resource_time, Resource_Type_Enum.Coal, resource_pool_capacity));
 
         }
 
@@ -184,13 +188,8 @@ public class Model{
         workers.addAll(workers_to_add);
         workers_to_add = new ArrayList<>();
 
-        try {
 
             test_setting.is_goal_reached(tick_count);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
     }
 
@@ -210,11 +209,7 @@ public class Model{
 
         test_setting  = null;
 
-        try {
-            set_scenario_1();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
     }
 
 
