@@ -17,6 +17,7 @@ public class Task_Miner_Basic extends Abstr_Task
 {
     protected boolean lost_phero = false;     //becomes true if the miner cannot find a phero
     protected boolean found_resource = false; //is true if the miner was previously an explorer and a resource_pool was found
+    protected boolean going_into_wandering = false;
 
     public Task_Miner_Basic()
     {
@@ -76,19 +77,6 @@ public class Task_Miner_Basic extends Abstr_Task
             select_obj_as_new_target(worker, obj);
             return;
         }
-       /*
-        obj = worker.closest_phero_of_type(Task_Enum.explorer,null);
-        if(obj != null)
-        {
-            setDrop_enabled(true);
-            set_lost_phero_false();
-            go_to_phero(worker,obj);
-            worker.setCurr_target_object(obj);
-            worker.setState(Worker_State_Enum.to_phero);
-            return;
-        }
-        */
-
 
         worker.setCurr_target_object(null);
         //wanderWithin(worker);
@@ -97,6 +85,12 @@ public class Task_Miner_Basic extends Abstr_Task
         if(lost_phero)
         {
             setDrop_enabled(false);
+            setEnter_base(true);
+            if(model.getBehaviour().isTurn_arround_at_wander() && going_into_wandering)
+            {
+                worker.setCurrDirection(worker.getCurrDirection() + Math.PI);
+                going_into_wandering = false;
+            }
             wanderWithin(worker);
             worker.setState(Worker_State_Enum.Wandering);
         }
@@ -104,12 +98,14 @@ public class Task_Miner_Basic extends Abstr_Task
         {
             set_lost_phero_true();
             walk_straight_for(worker,1);
+            going_into_wandering = true;
         }
 
 
     }
 
     private void select_obj_as_new_target(Worker worker, Abstr_Object obj) {
+        going_into_wandering = false;
         setDrop_enabled(true);
         set_lost_phero_false();
         go_to_phero(worker,obj);
@@ -153,7 +149,7 @@ public class Task_Miner_Basic extends Abstr_Task
     public boolean at_base(Worker worker, Base base)
     {
         found_resource = false;
-        if(worker.get_total_amount_of_load() > 0)
+        if(worker.get_total_amount_of_load() > 0 ||  enter_base)
         {
             return base.enter(worker);
         }

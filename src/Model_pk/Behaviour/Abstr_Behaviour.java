@@ -35,7 +35,7 @@ public abstract class Abstr_Behaviour
     protected int dist_walked_since_drop  = 0;                    //the distance walked since last dropping of pheromone
     protected boolean drop_enabled        = true;
 
-    protected int phero_detect_dist        = (int)(step_distance*1);  // for the advanced case
+    protected int phero_detect_dist       = (int)(step_distance*1);  // for the advanced case
 
     //parameters for the return mechanism of the workers
     protected int ticks_before_return     = (int) (degrade_time*start_phero_strength*0.5); // the number of ticks before the worker has to return if it wants to find it's way home
@@ -52,6 +52,7 @@ public abstract class Abstr_Behaviour
     protected boolean limited_view = true;
     protected int visited_objects_size = 5;
 
+    protected boolean turn_arround_at_wander= true;
 
 
 
@@ -179,5 +180,8 @@ public abstract class Abstr_Behaviour
 
     public int getVisited_objects_size() {
         return visited_objects_size;
+    }
+    public boolean isTurn_arround_at_wander() {
+        return turn_arround_at_wander;
     }
 }

@@ -16,7 +16,7 @@ public class Task_Explorer_Basic extends Abstr_Task{
     protected int wander_limit = 15;
     protected int wander_limit_count = 0;
     protected boolean returning = false;
-    protected boolean enter_base = false;
+
 
     public Task_Explorer_Basic()
     {

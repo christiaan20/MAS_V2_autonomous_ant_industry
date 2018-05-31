@@ -77,10 +77,10 @@ public class Model{
     {
         String scenario_name = "scenario_1_small_size";
 
-        workers_to_add = new ArrayList<>();
-        tickcount = 0;
-        behaviour = new Behaviour_Basic();
-        task_manager = new Task_manager_extended();
+        this.workers_to_add = new ArrayList<>();
+        this.tickcount = 0;
+        this.behaviour = new Behaviour_Basic();
+        this.task_manager = new Task_manager_extended();
 
         this.size_x_field    = 800;
         this.size_y_field    = 600;
@@ -160,11 +160,112 @@ public class Model{
         task_manager.setBase(base);
 
         //create the workers
-//        for(int i = 0 ; i < work_force_size;i++)
-//        {
-//            workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble()*Math.PI*2, max_worker_load, behaviour.getTask_explorer(),base));
-//        }
-        add_worker();
+        for(int i = 0 ; i < work_force_size;i++)
+        {
+            workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble()*Math.PI*2, max_worker_load, behaviour.getTask_explorer(),base));
+        }
+
+        //workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble(), max_worker_load, behaviour.getTask_explorer(),Resource_Type_Enum.Coal,base));
+        //workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble(), max_worker_load, behaviour.getTask_explorer(),Resource_Type_Enum.Stone,base));
+
+        this.test_setting = new Tester();
+
+        test_setting.write_to_log_file(scenario_name);
+
+    }
+
+    public void set_scenario_2()  throws IOException
+    {
+        String scenario_name = "scenario_1_small_size";
+
+        this.workers_to_add = new ArrayList<>();
+        this.tickcount = 0;
+        this.behaviour = new Behaviour_Basic();
+        this.task_manager = new Task_manager_extended();
+
+        this.size_x_field    = 1500;
+        this.size_y_field    = 1000;
+
+        View.getInstance().set_field_size(size_x_field, size_y_field);
+        this.base_x      = 450;
+        this.base_y      = 150;
+        int object_size = 50;
+        this.worker_size = 20;
+
+        int work_force_size = 15;
+
+        int base_time       = 50;
+        int resource_time   = 50;
+
+        int resource_pool_capacity  = 500;
+        this.max_worker_load         = 5;
+
+        tile_size = object_size/5;
+
+        // create the base
+        //base = new Base(base_x,base_y,object_size,base_time, new Order());
+        //enterable_objects.add(base);
+
+        boolean test = false;
+        boolean test_direction = false;
+
+        if(test)
+        {
+            base = new Base(base_x,base_y,object_size,base_time,task_manager);
+            enterable_objects.add(base);
+
+            work_force_size = 1;
+
+            for(int i = 0 ; i<5;i++)
+            {
+                enterable_objects.add(new Resource_pool(base_x - 125 +object_size*i ,base_y - 125 +object_size*0 ,object_size,resource_time, Resource_Type_Enum.Coal,resource_pool_capacity));
+                enterable_objects.add(new Resource_pool(base_x - 125 +object_size*0 ,base_y - 125 +object_size*i ,object_size,resource_time, Resource_Type_Enum.Coal,resource_pool_capacity));
+                enterable_objects.add(new Resource_pool(base_x - 125 +object_size*5 ,base_y - 125 +object_size*i ,object_size,resource_time, Resource_Type_Enum.Coal,resource_pool_capacity));
+                enterable_objects.add(new Resource_pool(base_x - 125 +object_size*i ,base_y - 125 +object_size*5 ,object_size,resource_time, Resource_Type_Enum.Coal,resource_pool_capacity));
+                enterable_objects.add(new Resource_pool(base_x - 125 +object_size*i ,base_y - 125 +object_size*5 ,object_size,resource_time, Resource_Type_Enum.Coal,resource_pool_capacity));
+            }
+
+
+        }
+        else if(test_direction)
+        {
+            base = new Base(base_x+200,base_y+200,object_size,base_time,task_manager);
+            enterable_objects.add(base);
+
+
+            work_force_size = 0;
+            workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble()*Math.PI*2, max_worker_load, behaviour.getTask_miner(), Resource_Type_Enum.Coal,null));
+            pheromones.add(new Pheromone(null, base_x+30, base_y+30, 5, Task_Enum.miner, Resource_Type_Enum.Coal, 20, 10000, 15));
+            pheromones.add(new Pheromone(null, base_x-30, base_y+30, 5, Task_Enum.miner, Resource_Type_Enum.Coal, 10, 10000, 15));
+        }
+        else
+        {
+            base = new Base(base_x,base_y,object_size,base_time,task_manager);
+            enterable_objects.add(base);
+
+            //create the resources
+            enterable_objects.add(new Resource_pool(300,400,object_size,resource_time, Resource_Type_Enum.Stone,2000));
+            enterable_objects.add(new Resource_pool(75,325,object_size,resource_time, Resource_Type_Enum.Coal, resource_pool_capacity));
+            enterable_objects.add(new Resource_pool(550,325,object_size,resource_time, Resource_Type_Enum.Copper, resource_pool_capacity));
+            enterable_objects.add(new Resource_pool(250,100,object_size,resource_time, Resource_Type_Enum.Iron, resource_pool_capacity));
+            enterable_objects.add(new Resource_pool(600,250,object_size,resource_time, Resource_Type_Enum.Uranium, resource_pool_capacity));
+            enterable_objects.add(new Resource_pool(750,50,object_size,resource_time, Resource_Type_Enum.Uranium, 800));
+            enterable_objects.add(new Resource_pool(100,500,object_size,resource_time, Resource_Type_Enum.Iron, 300));
+            enterable_objects.add(new Resource_pool(200,450,object_size,resource_time, Resource_Type_Enum.Iron, 300));
+            enterable_objects.add(new Resource_pool(750,125,object_size,resource_time, Resource_Type_Enum.Copper, 1000));
+            enterable_objects.add(new Resource_pool(75,275,object_size,resource_time, Resource_Type_Enum.Coal, resource_pool_capacity));
+
+        }
+
+        //give the task manager a reference to the created base
+        task_manager.setBase(base);
+
+        //create the workers
+        for(int i = 0 ; i < work_force_size;i++)
+        {
+            workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble()*Math.PI*2, max_worker_load, behaviour.getTask_explorer(),base));
+        }
+        //add_worker();
 
         //workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble(), max_worker_load, behaviour.getTask_explorer(),Resource_Type_Enum.Coal,base));
         //workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble(), max_worker_load, behaviour.getTask_explorer(),Resource_Type_Enum.Stone,base));
