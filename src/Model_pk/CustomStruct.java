@@ -55,22 +55,32 @@ public class CustomStruct
 
     public boolean is_less_attractive_than(CustomStruct struct)
     {
-        double strength_factor = Model.getInstance().getBehaviour().getStrength_influence();
 
-        double attraction_this = 0;
+        double attraction_this = 0; //the attraction of the pheromone in this struct
 
+        //calculate the attraction strength of the phero in this struct
         if(object != null)
         {
-            Pheromone phero_this = (Pheromone) object;
-            attraction_this = phero_this.getStrength()/Math.pow(this.distance,strength_factor);
+            Pheromone phero_this = (Pheromone) this.object;
+            attraction_this = calc_attraction(phero_this);
         }
 
+        //calculate the attraction strength of the phero in the give struct
         Pheromone phero_given = (Pheromone) struct.getObject();
-
-        double attraction_given = phero_given.getStrength()/Math.pow(this.distance,strength_factor);
+        double attraction_given = calc_attraction(phero_given);
 
         return attraction_this < attraction_given;
     }
+
+
+
+    private double calc_attraction(Pheromone phero){
+
+        double strength_factor = Model.getInstance().getBehaviour().getStrength_influence();
+        return phero.getStrength()/Math.pow(this.distance,strength_factor);
+
+    }
+
 
 
     public int getDistance() {

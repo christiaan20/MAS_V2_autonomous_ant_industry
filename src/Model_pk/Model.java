@@ -97,7 +97,7 @@ public class Model{
         int resource_time   = 50;
 
         int resource_pool_capacity  = 500;
-        int max_worker_load         = 5;
+        this.max_worker_load         = 5;
 
         tile_size = object_size/5;
 
@@ -160,10 +160,11 @@ public class Model{
         task_manager.setBase(base);
 
         //create the workers
-        for(int i = 0 ; i < work_force_size;i++)
-        {
-            workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble()*Math.PI*2, max_worker_load, behaviour.getTask_explorer(),base));
-        }
+//        for(int i = 0 ; i < work_force_size;i++)
+//        {
+//            workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble()*Math.PI*2, max_worker_load, behaviour.getTask_explorer(),base));
+//        }
+        add_worker();
 
         //workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble(), max_worker_load, behaviour.getTask_explorer(),Resource_Type_Enum.Coal,base));
         //workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble(), max_worker_load, behaviour.getTask_explorer(),Resource_Type_Enum.Stone,base));
@@ -175,7 +176,7 @@ public class Model{
     }
 
     public Worker add_worker(){
-        Worker worker = new Worker(base_x, base_y, worker_size, random.nextDouble()*Math.PI*2, max_worker_load, behaviour.getTask_miner(),base);
+        Worker worker = new Worker(base_x, base_y, worker_size, random.nextDouble()*Math.PI*2, max_worker_load, behaviour.getTask_explorer(),base);
         workers_to_add.add(worker);
         return worker;
         }
