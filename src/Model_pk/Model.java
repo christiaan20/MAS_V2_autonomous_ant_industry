@@ -75,6 +75,8 @@ public class Model{
 
     public void set_scenario_1()  throws IOException
     {
+        String scenario_name = "scenario_1_small_size";
+
         workers_to_add = new ArrayList<>();
         tickcount = 0;
         behaviour = new Behaviour_Basic();
@@ -167,6 +169,8 @@ public class Model{
         //workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble(), max_worker_load, behaviour.getTask_explorer(),Resource_Type_Enum.Stone,base));
 
         this.test_setting = new Tester();
+
+        test_setting.write_to_log_file(scenario_name);
 
     }
 

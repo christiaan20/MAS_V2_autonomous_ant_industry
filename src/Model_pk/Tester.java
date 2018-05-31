@@ -134,6 +134,7 @@ public class Tester {
             }
 
             write_to_log_file( "");
+            write_to_log_file("Ended on " + get_current_date());
             results_written_to_file = true;
 
 

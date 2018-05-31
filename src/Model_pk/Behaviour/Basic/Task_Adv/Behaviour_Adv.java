@@ -51,7 +51,7 @@ public class Behaviour_Adv extends Abstr_Behaviour
 
 
         //parameters for the return mechanism of the workers
-        ticks_before_return     = (int) (degrade_time*start_phero_strength*0.5); // the number of ticks before the worker has to return if it wants to find it's way home
+       // ticks_before_return     = (int) (degrade_time*start_phero_strength*0.5); // the number of ticks before the worker has to return if it wants to find it's way home
         ticks_since_enter       = 0;    // the counter for
         Abstr_Enterable_object last_entered_object = null;
 

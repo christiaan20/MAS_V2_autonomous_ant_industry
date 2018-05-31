@@ -27,16 +27,14 @@ public abstract class Abstr_Behaviour
     protected int max_phero_size = 15;    //the limit on the size of the pheromone
     protected int start_phero_strength = 10;
     protected int max_phero_strength = 50;
-    protected int phero_strength_load_factor = 2; //the factor of infleunce of the load of the worker on the start strength of the pheromone
+    protected int phero_strength_load_factor = 1; //the factor of infleunce of the load of the worker on the start strength of the pheromone
     protected int degrade_time = 150;      //how many ticks it takes to degrade the pheromone by 1
 
     // parameters fot the dropping of pheromones
-    protected int phero_drop_dist         = step_distance;   //the distance needed to walk before dropping a pheromone
+    protected int phero_drop_dist         = step_distance;   //the distance needed to walk before dropping a pheromone [NOT USED?]
     protected int dist_walked_since_drop  = 0;                    //the distance walked since last dropping of pheromone
     protected boolean drop_enabled        = true;
 
-
-    //private int phero_detect_dist       = (int)(step_distance*1.5); // for the basic case
     protected int phero_detect_dist        = (int)(step_distance*1);  // for the advanced case
 
     //parameters for the return mechanism of the workers

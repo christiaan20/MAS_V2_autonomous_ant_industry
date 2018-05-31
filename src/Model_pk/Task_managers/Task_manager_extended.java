@@ -23,7 +23,8 @@ public class Task_manager_extended extends  Abstr_Task_manager{
         this.workers_list = new ArrayList<>();
         this.avg_travel_time_per_resource = new HashMap<>();
         init_avg_travel_time_per_resource();
-        worker_broken_threshold = 2500;
+        //worker_broken_threshold = 2500;
+        worker_broken_threshold = 5000;
 
     }
 

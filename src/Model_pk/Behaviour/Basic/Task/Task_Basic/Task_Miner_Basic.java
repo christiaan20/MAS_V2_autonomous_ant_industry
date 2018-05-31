@@ -138,8 +138,10 @@ public class Task_Miner_Basic extends Abstr_Task
                 {
                     if (pool.enter(worker)){
                         worker.setTravel_time(model.getTickcount());
+                        return true;
                     }
-                    return (pool.enter(worker)) ;
+                    //return (pool.enter(worker)) ;
+                    return false;
                 }
             }
 
