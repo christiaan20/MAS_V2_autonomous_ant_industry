@@ -23,7 +23,7 @@ public class Task_manager_extended extends  Abstr_Task_manager{
         this.workers_list = new ArrayList<>();
         this.avg_travel_time_per_resource = new HashMap<>();
         init_avg_travel_time_per_resource();
-        worker_broken_threshold = 1500;
+        worker_broken_threshold = 2500;
 
     }
 
@@ -120,6 +120,18 @@ public class Task_manager_extended extends  Abstr_Task_manager{
     }
 
 
+    private int get_max_travel_time(HashMap<Resource_Type_Enum, Avg_travel_time> avg_travel_time_to_resource){
+
+        int max_travel_time = 0;
+        for(Resource_Type_Enum type: Resource_Type_Enum.values()){
+
+            int travel_time = avg_travel_time_to_resource.get(type).get_avg_travel_time();
+            if (max_travel_time < travel_time)
+                max_travel_time = travel_time;
+        }
+        return max_travel_time;
+    }
+
     public HashMap<Resource_Type_Enum, Integer> get_new_distribution_of_worker(){
 
         HashMap<Resource_Type_Enum, Avg_travel_time> avg_travel_time_to_resource = get_avg_travel_time_to_resource();
@@ -137,8 +149,12 @@ public class Task_manager_extended extends  Abstr_Task_manager{
             resources_needed = resources_to_obtain.get(type);
             if(resources_needed < 0 )
                 resources_needed = 0;
-
-            distribution = avg_travel_time_object.get_avg_travel_time() * resources_needed;
+            int travel_time = avg_travel_time_object.get_avg_travel_time();
+            if ( travel_time == 0){
+                travel_time = get_max_travel_time(avg_travel_time_to_resource);
+                travel_time += travel_time / 2;
+            }
+            distribution = travel_time * resources_needed;
             distribution_ratio.put(type, distribution);
 
             total_distribution += distribution;
@@ -186,7 +202,7 @@ public class Task_manager_extended extends  Abstr_Task_manager{
 
     private Worker_representation convert_to_representation(Worker worker){
 
-        return new Worker_representation(worker.getID(), worker.getTask(),worker.getResource_type(), worker.getTravel_time());
+        return new Worker_representation(worker.getID(), worker.getTask(),worker.getResource_type(), worker.getTravel_time(), worker.getLast_seen_at_base());
 
     }
 
@@ -223,13 +239,14 @@ public class Task_manager_extended extends  Abstr_Task_manager{
         for(Resource_Type_Enum type: Resource_Type_Enum.values()){
             distribution_of_workers.put(type, 0);
         }
+        distribution_of_workers.put(null, 0);
 
         for (Worker_representation worker : workers_list) {
 
             Resource_Type_Enum type = worker.getType();
-            if (type == null){
-                continue;
-            }
+//            if (type == null){
+//                continue;
+//            }
             int value = distribution_of_workers.get(type);
             distribution_of_workers.replace(type, value + 1);
 

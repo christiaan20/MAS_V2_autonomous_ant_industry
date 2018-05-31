@@ -42,11 +42,13 @@ public class Worker extends Abstr_Object {
     private int travel_time;
     private Random random_gen;
     private double break_chance;
+    private int last_seen_at_base;
 
     public Worker(int x, int y, int size, double currDirection, int max_load, Abstr_Task task, Base base)
     {
         super( x, y, size);
         this.break_chance = 0.00;
+        this.last_seen_at_base = 0;
         this.random_gen = new Random();
         this.currDirection = currDirection;
         this.max_load = max_load;
@@ -555,5 +557,13 @@ public class Worker extends Abstr_Object {
 
     public void setBreak_chance(double break_chance) {
         this.break_chance = break_chance;
+    }
+
+    public int getLast_seen_at_base() {
+        return last_seen_at_base;
+    }
+
+    public void setLast_seen_at_base(int last_seen_at_base) {
+        this.last_seen_at_base = last_seen_at_base;
     }
 }
