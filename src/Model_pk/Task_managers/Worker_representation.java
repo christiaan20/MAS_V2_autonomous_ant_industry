@@ -2,6 +2,7 @@ package Model_pk.Task_managers;
 
 import Model_pk.Behaviour.Abstr_Task;
 import Model_pk.Enums.Resource_Type_Enum;
+import Model_pk.Model;
 
 /**
  * Created by Gebruiker on 29/05/2018.
@@ -11,14 +12,12 @@ public class Worker_representation {
     private long ID;
     private Abstr_Task task;                //The Task it is currently doing
     private Resource_Type_Enum type;    //The resource it will mine, transport for or look for
-    private int travel_time;
     private int last_seen;
 
-    public Worker_representation(long ID, Abstr_Task task, Resource_Type_Enum type, int travel_time, int last_seen) {
+    public Worker_representation(long ID, Abstr_Task task, Resource_Type_Enum type, int last_seen) {
         this.ID = ID;
         this.task = task;
         this.type = type;
-        this.travel_time = travel_time;
         this.last_seen = last_seen;
     }
 
@@ -42,9 +41,7 @@ public class Worker_representation {
         this.type = type;
     }
 
-    public int getTravel_time() {
-        return travel_time;
-    }
+
 
     @Override
     public boolean equals(Object other){
@@ -60,8 +57,8 @@ public class Worker_representation {
 
     }
 
-    public int getLast_seen() {
-        return last_seen;
+    public int get_ticks_since_last_seen_at_base() {
+        return Model.getInstance().getTickcount() - last_seen;
     }
 
 }

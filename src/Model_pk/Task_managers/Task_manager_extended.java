@@ -58,21 +58,20 @@ public class Task_manager_extended extends  Abstr_Task_manager{
             worker.setResource_type(new_type);
         }
 
-        worker.setTravel_time(0);
+        //worker.setTravel_time(0);
         remember_task_of(worker);
 
         broken_worker_manager();
-        worker.setTravel_time(model.getTickcount());
+        //worker.setTravel_time(model.getTickcount());
 
     }
 
     public void broken_worker_manager(){
 
-        int current_time = model.getTickcount();
         ArrayList<Worker_representation> broken_workers = new ArrayList<>();
 
         for( Worker_representation worker: workers_list){
-            if( current_time - worker.getLast_seen() > worker_broken_threshold)
+            if( worker.get_ticks_since_last_seen_at_base() > worker_broken_threshold)
                 broken_workers.add(worker);
         }
         for( Worker_representation worker: broken_workers){
@@ -229,7 +228,7 @@ public class Task_manager_extended extends  Abstr_Task_manager{
 
     private Worker_representation convert_to_representation(Worker worker){
 
-        return new Worker_representation(worker.getID(), worker.getTask(),worker.getResource_type(), worker.getTravel_time(), worker.getLast_seen_at_base());
+        return new Worker_representation(worker.getID(), worker.getTask(),worker.getResource_type(), worker.getLast_seen_at_base());
 
     }
 
@@ -241,11 +240,11 @@ public class Task_manager_extended extends  Abstr_Task_manager{
 
         Avg_travel_time avg_travel = avg_travel_time_per_resource.get(type);
         if ( avg_travel == null ){
-            avg_travel = new Avg_travel_time(worker.getTravel_time());
+            avg_travel = new Avg_travel_time(worker.get_ticks_since_last_seen_at_base());
             avg_travel_time_per_resource.put(type, avg_travel);
         }
         else{
-            avg_travel.update_travel_time(worker.getTravel_time());
+            avg_travel.update_travel_time(worker.get_ticks_since_last_seen_at_base());
             avg_travel_time_per_resource.replace(type, avg_travel);
         }
 

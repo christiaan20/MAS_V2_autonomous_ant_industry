@@ -106,7 +106,7 @@ public class Model{
         //enterable_objects.add(base);
 
         boolean test = false;
-        boolean test_direction = true;
+        boolean test_direction = false;
 
         if(test)
         {
