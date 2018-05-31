@@ -44,6 +44,9 @@ public class Worker extends Abstr_Object {
     private double break_chance;
     private int last_seen_at_base;
 
+    private int visited_objects_size;
+    private boolean limited_view;
+
     public Worker(int x, int y, int size, double currDirection, int max_load, Abstr_Task task, Base base)
     {
         super( x, y, size);
@@ -64,6 +67,9 @@ public class Worker extends Abstr_Object {
 
         this.travel_time = 0;
         this.broken = false;
+
+        this.limited_view = model.getBehaviour().isLimited_view();
+        this.visited_objects_size = model.getBehaviour().getVisited_objects_size();
 
        // task.test_tan_function();
     }
@@ -300,9 +306,14 @@ public class Worker extends Abstr_Object {
 
     public void add_visited_pheromone(Abstr_Object obj)
     {
+        if( limited_view && visited_objects.size() == visited_objects_size)
+            visited_objects.remove(0);
+
         remove_obj_from_detected_pheromones(obj);
         visited_objects.add(obj);
+
     }
+
 
     public void remove_obj_from_visited_pheromones(Abstr_Object obj)
     {

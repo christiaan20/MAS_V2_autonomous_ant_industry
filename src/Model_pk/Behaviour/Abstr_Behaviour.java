@@ -49,6 +49,9 @@ public abstract class Abstr_Behaviour
     protected boolean incalculate_strength = false; // whether the workers decide on following the strongest pheromone or only distance
     protected double  strength_influence  = 1 ;   // how much infleunce the strength has when taken into account
 
+    protected boolean limited_view = true;
+    protected int visited_objects_size = 5;
+
     protected boolean turn_arround_at_wander= true;
 
 
@@ -171,6 +174,13 @@ public abstract class Abstr_Behaviour
         return strength_influence;
     }
 
+    public boolean isLimited_view() {
+        return limited_view;
+    }
+
+    public int getVisited_objects_size() {
+        return visited_objects_size;
+    }
     public boolean isTurn_arround_at_wander() {
         return turn_arround_at_wander;
     }
