@@ -101,7 +101,6 @@ public class Task_Miner_Basic extends Abstr_Task
             going_into_wandering = true;
         }
 
-
     }
 
     private void select_obj_as_new_target(Worker worker, Abstr_Object obj) {

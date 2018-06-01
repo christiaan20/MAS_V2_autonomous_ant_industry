@@ -208,7 +208,7 @@ public class Tester {
 
     public void write_to_log_file(String info) throws IOException {
 
-        FileWriter fileWriter = new FileWriter("Test_output.txt", true);
+        FileWriter fileWriter = new FileWriter("Simulation_output.txt", true);
         PrintWriter printWriter = new PrintWriter(fileWriter);
         printWriter.println(info);
         printWriter.close();
