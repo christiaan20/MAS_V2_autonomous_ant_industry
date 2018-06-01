@@ -17,7 +17,6 @@ public class Behaviour_Adv extends Abstr_Behaviour
         try {
             super.task_explorer     = Class.forName("Model_pk.Behaviour.Basic.Task_Adv.Task_Explorer_Adv");
             super.task_miner        = Class.forName("Model_pk.Behaviour.Basic.Task_Adv.Task_Miner_Adv");
-            super.task_transporter  = Class.forName("Model_pk.Behaviour.Basic.Task.Task_Basic.Task_Transporter_Basic");
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

@@ -101,7 +101,7 @@ public class Model{
         this.base_time       = 50;
         this.resource_time   = 50;
 
-        int resource_pool_capacity  = 500;
+        this.resource_pool_capacity  = 500;
         this.max_worker_load        = 5;
 
         tile_size = object_size/5;
