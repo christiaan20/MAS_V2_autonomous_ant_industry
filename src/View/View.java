@@ -88,11 +88,10 @@ public class View extends Canvas {
         draw_worker_visuals_broken(g);
         draw_object_visuals(g);
         draw_worker_visuals(g);
-        draw_mouse_coordinates(g);
-        ;
+       // draw_mouse_coordinates(g);
+
         if(GAME_OVER)
         {
-
             draw_game_over(g);
         }
 

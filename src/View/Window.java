@@ -142,7 +142,7 @@ public class Window extends Panel implements ActionListener
 
         //create the panels and add to the elements to them
         top_grid_panel = new Panel();
-        top_grid_panel.setLayout(new GridLayout(3,1));
+        top_grid_panel.setLayout(new GridLayout(2,1));
 
         top_panel_1 = new Panel();
         top_panel_1.setLayout(new FlowLayout());
@@ -164,7 +164,7 @@ public class Window extends Panel implements ActionListener
         add_resource_prob_labels(top_panel_3);
 
         bottom_grid_panel = new Panel();
-        bottom_grid_panel.setLayout(new GridLayout(2,1));
+        bottom_grid_panel.setLayout(new GridLayout(1,1));
 
         bottom_panel_1 = new Panel();
         bottom_panel_1.setLayout(new FlowLayout());
@@ -193,10 +193,10 @@ public class Window extends Panel implements ActionListener
 
         top_grid_panel.add(top_panel_1);
         top_grid_panel.add(top_panel_2);
-        top_grid_panel.add(top_panel_3);
+        //top_grid_panel.add(top_panel_3);
         this.add(top_grid_panel,BorderLayout.NORTH);
         bottom_grid_panel.add(bottom_panel_1);
-        bottom_grid_panel.add(bottom_panel_2);
+        //bottom_grid_panel.add(bottom_panel_2);
         this.add(bottom_grid_panel,BorderLayout.SOUTH);
         this.add(View.getInstance());
 
