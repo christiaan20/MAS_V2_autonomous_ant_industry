@@ -1,9 +1,9 @@
 package Model_pk.Behaviour;
 
 /**
- * Created by christiaan on 20/05/18.
+ * The action the worker is performing.
  */
 public enum Task_Enum {
 
-    explorer,miner,transporter
+    explorer,miner
 }

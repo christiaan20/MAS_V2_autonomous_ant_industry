@@ -8,7 +8,7 @@ import View.View;
 import java.util.ArrayList;
 
 /**
- * Created by christiaan on 10/05/18.
+ * A pheromone that is dropped by the worker and represents a tool for stigmergy.
  */
 public class Pheromone extends Abstr_Object
 {

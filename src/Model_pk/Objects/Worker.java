@@ -13,7 +13,7 @@ import View.Object_visuals.Object_visual;
 import View.Object_visuals.Worker_visual;
 
 /**
- * Created by christiaan on 10/05/18.
+ * A worker represents an AGV that needs to pick up resources and deliver them to the base.
  */
 public class Worker extends Abstr_Object {
 
@@ -69,22 +69,11 @@ public class Worker extends Abstr_Object {
         this.limited_view = model.getBehaviour().isLimited_visited_memory();
         this.visited_objects_size = model.getBehaviour().getVisited_objects_size();
 
-       // task.test_tan_function();
     }
 
     public Worker(int x, int y, int size, double currDirection, int max_load, Abstr_Task task, Resource_Type_Enum type, Base base)
     {
-//        super( x, y, size);
-//        this.currDirection = currDirection;
-//        this.max_load = max_load;
-//        this.task = task;
-//
-//
-//        this.setVisual(new Worker_visual( x, y, size,this));
-//
-//        this.model = Model.getInstance();
-//
-//        task.test_tan_function();
+
         this(x,y,size,currDirection,max_load,task,base);
         this.resource_type = type;
 
@@ -222,8 +211,6 @@ public class Worker extends Abstr_Object {
 
             return true;
         }
-
-
 
     }
 

@@ -4,7 +4,7 @@ import Model_pk.Objects.Abstr_Object;
 import Model_pk.Objects.Pheromone;
 
 /**
- * Created by christiaan on 20/05/18.
+ *
  */
 public class CustomStruct
 {

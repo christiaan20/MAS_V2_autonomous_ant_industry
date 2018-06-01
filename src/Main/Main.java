@@ -13,6 +13,7 @@ import java.io.IOException;
 /**
  * Created by christiaan on 10/05/18.
  */
+
 public class Main extends Frame {
     private Window window;
     private Model model;
@@ -76,7 +77,6 @@ public class Main extends Frame {
         main.start_scenario();
 
         main.start_thread();
-
 
     }
 

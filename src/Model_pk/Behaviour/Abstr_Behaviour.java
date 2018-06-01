@@ -3,7 +3,7 @@ package Model_pk.Behaviour;
 import Model_pk.Objects.Enterables.Abstr_Enterable_object;
 
 /**
- * Created by christiaan on 10/05/18.
+ * Basic parameters and settings available to the behaviours of the workers.
  */
 public abstract class Abstr_Behaviour
 {

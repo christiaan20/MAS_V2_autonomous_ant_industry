@@ -1,7 +1,7 @@
 package Model_pk.Enums;
 
 /**
- * Created by christiaan on 21/05/18.
+ * The states a worker can be. It represents the action it is performing.
  */
 public enum Worker_State_Enum
 {

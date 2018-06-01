@@ -23,9 +23,10 @@ import Model_pk.Task_managers.Task_manager_extended;
 import View.View;
 
 /**
- * Created by christiaan on 10/05/18.
  *
- * A Singleton Model_pk object that is accessable by all other classes
+ * A Singleton Model_pk object that is accessible by all other classes
+ * The class represents the model of the world and initializes the scenario.
+ *
  */
 public class Model{
     private static Model  model ;
@@ -52,6 +53,10 @@ public class Model{
     private int base_y;
     private int worker_size;
     private int max_worker_load;
+    private int object_size;
+    private int resource_time;
+    private int resource_pool_capacity;
+    private int base_time;
 
     private int tickcount;
 
@@ -88,72 +93,40 @@ public class Model{
         View.getInstance().set_field_size(size_x_field, size_y_field);
         this.base_x      = 450;
         this.base_y      = 150;
-        int object_size  = 50;
+        this.object_size  = 50;
         this.worker_size = 20;
 
         int work_force_size = 15;
 
-        int base_time       = 50;
-        int resource_time   = 50;
+        this.base_time       = 50;
+        this.resource_time   = 50;
 
         int resource_pool_capacity  = 500;
         this.max_worker_load        = 5;
 
         tile_size = object_size/5;
 
-        // create the base
-        //base = new Base(base_x,base_y,object_size,base_time, new Order());
-        //enterable_objects.add(base);
-
         boolean test = false;
         boolean test_direction = false;
 
         if(test)
         {
-            base = new Base(base_x,base_y,object_size,base_time,task_manager);
-            enterable_objects.add(base);
-
+            test_resources_pools();
             work_force_size = 1;
-
-            for(int i = 0 ; i<5;i++)
-            {
-                enterable_objects.add(new Resource_pool(base_x - 125 +object_size*i ,base_y - 125 +object_size*0 ,object_size,resource_time, Resource_Type_Enum.Coal,resource_pool_capacity));
-                enterable_objects.add(new Resource_pool(base_x - 125 +object_size*0 ,base_y - 125 +object_size*i ,object_size,resource_time, Resource_Type_Enum.Coal,resource_pool_capacity));
-                enterable_objects.add(new Resource_pool(base_x - 125 +object_size*5 ,base_y - 125 +object_size*i ,object_size,resource_time, Resource_Type_Enum.Coal,resource_pool_capacity));
-                enterable_objects.add(new Resource_pool(base_x - 125 +object_size*i ,base_y - 125 +object_size*5 ,object_size,resource_time, Resource_Type_Enum.Coal,resource_pool_capacity));
-                enterable_objects.add(new Resource_pool(base_x - 125 +object_size*i ,base_y - 125 +object_size*5 ,object_size,resource_time, Resource_Type_Enum.Coal,resource_pool_capacity));
-            }
-
 
         }
         else if(test_direction)
         {
-            base = new Base(base_x+200,base_y+200,object_size,base_time,task_manager);
-            enterable_objects.add(base);
-
-
+            test_direction();
             work_force_size = 0;
-            workers.add(new Worker(base_x, base_y, worker_size, 0, max_worker_load, behaviour.getTask_miner(), Resource_Type_Enum.Coal,null));
-            pheromones.add(new Pheromone(null, base_x-25, base_y, 5, Task_Enum.miner, Resource_Type_Enum.Coal, 20, 10000, 15));
-            pheromones.add(new Pheromone(null, base_x+30, base_y, 5, Task_Enum.miner, Resource_Type_Enum.Coal, 10, 10000, 15));
+
         }
         else
         {
             base = new Base(base_x,base_y,object_size,base_time,task_manager);
             enterable_objects.add(base);
 
-            //create the resources
-            enterable_objects.add(new Resource_pool(300,400,object_size,resource_time, Resource_Type_Enum.Stone,2000));
-            enterable_objects.add(new Resource_pool(75,325,object_size,resource_time, Resource_Type_Enum.Coal, resource_pool_capacity));
-            enterable_objects.add(new Resource_pool(550,325,object_size,resource_time, Resource_Type_Enum.Copper, resource_pool_capacity));
-            enterable_objects.add(new Resource_pool(250,100,object_size,resource_time, Resource_Type_Enum.Iron, resource_pool_capacity));
-            enterable_objects.add(new Resource_pool(600,250,object_size,resource_time, Resource_Type_Enum.Uranium, resource_pool_capacity));
-            enterable_objects.add(new Resource_pool(750,50,object_size,resource_time, Resource_Type_Enum.Uranium, 800));
-            enterable_objects.add(new Resource_pool(100,500,object_size,resource_time, Resource_Type_Enum.Iron, 300));
-            enterable_objects.add(new Resource_pool(200,450,object_size,resource_time, Resource_Type_Enum.Iron, 300));
-            enterable_objects.add(new Resource_pool(750,125,object_size,resource_time, Resource_Type_Enum.Copper, 1000));
-            enterable_objects.add(new Resource_pool(75,275,object_size,resource_time, Resource_Type_Enum.Coal, resource_pool_capacity));
-
+            create_resource_pools();
         }
 
         //give the task manager a reference to the created base
@@ -165,14 +138,9 @@ public class Model{
             workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble()*Math.PI*2, max_worker_load, behaviour.getTask_explorer(),base));
         }
 
-        //workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble(), max_worker_load, behaviour.getTask_explorer(),Resource_Type_Enum.Coal,base));
-        //workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble(), max_worker_load, behaviour.getTask_explorer(),Resource_Type_Enum.Stone,base));
-
         this.test_setting = new Tester();
 
         test_setting.write_to_log_file(scenario_name);
-
-        //test_guassian_distribution();
 
     }
 
@@ -191,72 +159,38 @@ public class Model{
         View.getInstance().set_field_size(size_x_field, size_y_field);
         this.base_x      = 450;
         this.base_y      = 150;
-        int object_size = 50;
+        this.object_size = 50;
         this.worker_size = 20;
 
         int work_force_size = 15;
 
-        int base_time       = 50;
-        int resource_time   = 50;
+        this.base_time       = 50;
+        this.resource_time   = 50;
 
-        int resource_pool_capacity  = 500;
+        this.resource_pool_capacity  = 500;
         this.max_worker_load         = 5;
 
         tile_size = object_size/5;
-
-        // create the base
-        //base = new Base(base_x,base_y,object_size,base_time, new Order());
-        //enterable_objects.add(base);
 
         boolean test = false;
         boolean test_direction = false;
 
         if(test)
         {
-            base = new Base(base_x,base_y,object_size,base_time,task_manager);
-            enterable_objects.add(base);
-
+            test_resources_pools();
             work_force_size = 1;
-
-            for(int i = 0 ; i<5;i++)
-            {
-                enterable_objects.add(new Resource_pool(base_x - 125 +object_size*i ,base_y - 125 +object_size*0 ,object_size,resource_time, Resource_Type_Enum.Coal,resource_pool_capacity));
-                enterable_objects.add(new Resource_pool(base_x - 125 +object_size*0 ,base_y - 125 +object_size*i ,object_size,resource_time, Resource_Type_Enum.Coal,resource_pool_capacity));
-                enterable_objects.add(new Resource_pool(base_x - 125 +object_size*5 ,base_y - 125 +object_size*i ,object_size,resource_time, Resource_Type_Enum.Coal,resource_pool_capacity));
-                enterable_objects.add(new Resource_pool(base_x - 125 +object_size*i ,base_y - 125 +object_size*5 ,object_size,resource_time, Resource_Type_Enum.Coal,resource_pool_capacity));
-                enterable_objects.add(new Resource_pool(base_x - 125 +object_size*i ,base_y - 125 +object_size*5 ,object_size,resource_time, Resource_Type_Enum.Coal,resource_pool_capacity));
-            }
-
 
         }
         else if(test_direction)
         {
-            base = new Base(base_x+200,base_y+200,object_size,base_time,task_manager);
-            enterable_objects.add(base);
-
-
+            test_direction();
             work_force_size = 0;
-            workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble()*Math.PI*2, max_worker_load, behaviour.getTask_miner(), Resource_Type_Enum.Coal,null));
-            pheromones.add(new Pheromone(null, base_x+30, base_y+30, 5, Task_Enum.miner, Resource_Type_Enum.Coal, 20, 10000, 15));
-            pheromones.add(new Pheromone(null, base_x-30, base_y+30, 5, Task_Enum.miner, Resource_Type_Enum.Coal, 10, 10000, 15));
+
         }
         else
         {
             base = new Base(base_x,base_y,object_size,base_time,task_manager);
             enterable_objects.add(base);
-
-            //create the resources
-            enterable_objects.add(new Resource_pool(300,400,object_size,resource_time, Resource_Type_Enum.Stone,2000));
-            enterable_objects.add(new Resource_pool(75,325,object_size,resource_time, Resource_Type_Enum.Coal, resource_pool_capacity));
-            enterable_objects.add(new Resource_pool(550,325,object_size,resource_time, Resource_Type_Enum.Copper, resource_pool_capacity));
-            enterable_objects.add(new Resource_pool(250,100,object_size,resource_time, Resource_Type_Enum.Iron, resource_pool_capacity));
-            enterable_objects.add(new Resource_pool(600,250,object_size,resource_time, Resource_Type_Enum.Uranium, resource_pool_capacity));
-            enterable_objects.add(new Resource_pool(750,50,object_size,resource_time, Resource_Type_Enum.Uranium, 800));
-            enterable_objects.add(new Resource_pool(100,500,object_size,resource_time, Resource_Type_Enum.Iron, 300));
-            enterable_objects.add(new Resource_pool(200,450,object_size,resource_time, Resource_Type_Enum.Iron, 300));
-            enterable_objects.add(new Resource_pool(750,125,object_size,resource_time, Resource_Type_Enum.Copper, 1000));
-            enterable_objects.add(new Resource_pool(75,275,object_size,resource_time, Resource_Type_Enum.Coal, resource_pool_capacity));
-
         }
 
         //give the task manager a reference to the created base
@@ -267,15 +201,53 @@ public class Model{
         {
             workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble()*Math.PI*2, max_worker_load, behaviour.getTask_explorer(),base));
         }
-        //add_worker();
-
-        //workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble(), max_worker_load, behaviour.getTask_explorer(),Resource_Type_Enum.Coal,base));
-        //workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble(), max_worker_load, behaviour.getTask_explorer(),Resource_Type_Enum.Stone,base));
 
         this.test_setting = new Tester();
-
         test_setting.write_to_log_file(scenario_name);
 
+
+    }
+
+    private void test_resources_pools(){
+
+        base = new Base(base_x,base_y,object_size,base_time,task_manager);
+        enterable_objects.add(base);
+
+        for(int i = 0 ; i<5;i++)
+        {
+            enterable_objects.add(new Resource_pool(base_x - 125 +object_size*i ,base_y - 125 +object_size*0 ,object_size,resource_time, Resource_Type_Enum.Coal,resource_pool_capacity));
+            enterable_objects.add(new Resource_pool(base_x - 125 +object_size*0 ,base_y - 125 +object_size*i ,object_size,resource_time, Resource_Type_Enum.Coal,resource_pool_capacity));
+            enterable_objects.add(new Resource_pool(base_x - 125 +object_size*5 ,base_y - 125 +object_size*i ,object_size,resource_time, Resource_Type_Enum.Coal,resource_pool_capacity));
+            enterable_objects.add(new Resource_pool(base_x - 125 +object_size*i ,base_y - 125 +object_size*5 ,object_size,resource_time, Resource_Type_Enum.Coal,resource_pool_capacity));
+            enterable_objects.add(new Resource_pool(base_x - 125 +object_size*i ,base_y - 125 +object_size*5 ,object_size,resource_time, Resource_Type_Enum.Coal,resource_pool_capacity));
+        }
+
+    }
+
+    private void test_direction(){
+
+        base = new Base(base_x+200,base_y+200,object_size,base_time,task_manager);
+        enterable_objects.add(base);
+
+        workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble()*Math.PI*2, max_worker_load, behaviour.getTask_miner(), Resource_Type_Enum.Coal,null));
+        pheromones.add(new Pheromone(null, base_x+30, base_y+30, 5, Task_Enum.miner, Resource_Type_Enum.Coal, 20, 10000, 15));
+        pheromones.add(new Pheromone(null, base_x-30, base_y+30, 5, Task_Enum.miner, Resource_Type_Enum.Coal, 10, 10000, 15));
+
+    }
+
+    private void create_resource_pools(){
+
+        //create the resources
+        enterable_objects.add(new Resource_pool(300,400,object_size,resource_time, Resource_Type_Enum.Stone,2000));
+        enterable_objects.add(new Resource_pool(75,325,object_size,resource_time, Resource_Type_Enum.Coal, resource_pool_capacity));
+        enterable_objects.add(new Resource_pool(550,325,object_size,resource_time, Resource_Type_Enum.Copper, resource_pool_capacity));
+        enterable_objects.add(new Resource_pool(250,100,object_size,resource_time, Resource_Type_Enum.Iron, resource_pool_capacity));
+        enterable_objects.add(new Resource_pool(600,250,object_size,resource_time, Resource_Type_Enum.Uranium, resource_pool_capacity));
+        enterable_objects.add(new Resource_pool(750,50,object_size,resource_time, Resource_Type_Enum.Uranium, 800));
+        enterable_objects.add(new Resource_pool(100,500,object_size,resource_time, Resource_Type_Enum.Iron, 300));
+        enterable_objects.add(new Resource_pool(200,450,object_size,resource_time, Resource_Type_Enum.Iron, 300));
+        enterable_objects.add(new Resource_pool(750,125,object_size,resource_time, Resource_Type_Enum.Copper, 1000));
+        enterable_objects.add(new Resource_pool(75,275,object_size,resource_time, Resource_Type_Enum.Coal, resource_pool_capacity));
 
 
     }
@@ -508,10 +480,7 @@ public class Model{
             }
         }
 
-
-
         return false;
-
     }
 
     public int distBetween(int x1, int y1,int x2, int y2)
@@ -603,7 +572,6 @@ public class Model{
 
     public void delete_expired_objects()
     {
-
         Iterator<Abstr_Enterable_object> iter1 = enterable_objects.iterator();
         while (iter1.hasNext()) {
             Abstr_Object obj = iter1.next();
@@ -612,8 +580,6 @@ public class Model{
                 obj.delete_visual();
                 iter1.remove();
             }
-
-
         }
 
         Iterator<Pheromone> iter2 = pheromones.iterator();
@@ -624,48 +590,9 @@ public class Model{
                 obj.delete_visual();
                 iter2.remove();
             }
-
-
-        }
-
-    }
-
-    public void delete_enterable_object(Abstr_Object o)
-    {
-        Iterator<Abstr_Enterable_object> iter = enterable_objects.iterator();
-        while (iter.hasNext()) {
-            Abstr_Object obj = iter.next();
-            if(obj.equals(o))
-            {
-                iter.remove();
-            }
-
         }
     }
 
-    public void delete_pheromone(Abstr_Object o)
-    {
-        Iterator<Pheromone> iter = pheromones.iterator();
-        while (iter.hasNext()) {
-            Abstr_Object obj = iter.next();
-            if(obj.equals(o))
-            {
-                iter.remove();
-            }
-
-        }
-    }
-
-    public void test_guassian_distribution()
-    {
-        CustomStruct str =  new CustomStruct(null);
-        for(int i = -6; i < 6; i++)
-        {
-            double x  = ((i/6.0)*Math.PI);
-            double y =  str.calc_attraction_direction(1,x);
-            System.out.println("Angle " + x + " gausian y: " + y  );
-        }
-    }
 
     public Base getBase() {
         return base;
@@ -673,10 +600,6 @@ public class Model{
 
     public Random getRandom() {
         return random;
-    }
-
-    public void setRandom(Random random) {
-        this.random = random;
     }
 
     public Tester getTest_setting() {

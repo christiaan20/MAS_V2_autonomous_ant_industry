@@ -6,7 +6,7 @@ import Model_pk.Objects.Worker;
 import View.Object_visuals.Resource_pool_visual;
 
 /**
- * Created by christiaan on 10/05/18.
+ * Represents a resource pool, a pickup site, at unknown location for the workers that need to be collected from.
  */
 public class Resource_pool extends Abstr_Enterable_object {
     private Resource_Type_Enum type;

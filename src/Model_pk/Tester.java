@@ -11,13 +11,13 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 /**
- * Created by Gebruiker on 22/05/2018.
+ * A tester class that accounts for setting up the goals that need to be fulfilled in a sequential way.
+ * It will write the results of the test to an external .txt file when the goals are reached.
  */
 public class Tester {
 
     private Model model;
     private ArrayList<HashMap<Resource_Type_Enum, Integer>> goals;
-    private boolean results_written_to_file;
     private ArrayList<Integer> tick_counts_goals;
     private ArrayList<String> surplus_goals;
 
@@ -28,16 +28,12 @@ public class Tester {
         this.goals = new ArrayList<>();
         this.tick_counts_goals = new ArrayList<>();
         this.surplus_goals = new ArrayList<>();
-        results_written_to_file = false;
         init_goal();
         init_log_file();
 
     }
 
     public void init_goal(){
-
-
-        HashMap<Resource_Type_Enum, Integer> test_goal = fill_all_resources_with(10);
 
         HashMap<Resource_Type_Enum, Integer> first_goal = fill_resources_with(500,100,20,250,100);
         HashMap<Resource_Type_Enum, Integer> second_goal = fill_all_resources_with(250);
@@ -46,10 +42,6 @@ public class Tester {
         goals.add(first_goal);
         goals.add(second_goal);
         goals.add(third_goal);
-
-//        goals.add(test_goal);
-
-
 
     }
 
@@ -140,7 +132,6 @@ public class Tester {
 
             write_to_log_file( "");
             write_to_log_file("Ended on " + get_current_date());
-            results_written_to_file = true;
 
 
         } catch (IOException e) {
@@ -154,12 +145,6 @@ public class Tester {
     public boolean is_goal_reached(int tickcount)  {
 
         if( all_goals_reached() ){
-
-//            if(results_written_to_file){
-//                return true;
-//            }
-
-//            write_results_to_file();
             return true;
         }
 
@@ -226,7 +211,6 @@ public class Tester {
         FileWriter fileWriter = new FileWriter("Test_output.txt", true);
         PrintWriter printWriter = new PrintWriter(fileWriter);
         printWriter.println(info);
-        //printWriter.printf("Product name is %s and its price is %d $", "iPhone", 1000);
         printWriter.close();
     }
 
@@ -250,7 +234,6 @@ public class Tester {
         return goals.get(0);
 
     }
-
 
 
 }
