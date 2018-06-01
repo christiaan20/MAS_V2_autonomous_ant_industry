@@ -57,50 +57,40 @@ public class Base extends Abstr_Enterable_object {
     public boolean action(Worker worker)
     {
 
-            drop_resources(worker);
-            task_manager.update_task_of(worker);
+        Task_Enum old_task = worker.getTask().getTask();
 
-            worker.setTask(model.getBehaviour().getTask_miner());
-            worker.getTask().setFound_resource(false);
-            worker.getTask().setReturn_from_resource(false);
+        task_manager.update_task_of(worker);
 
-            Abstr_Task worker_task = worker.getTask();
+        set_worker_parameters(worker);
+
+        find_target_phero_for_miner(worker, worker.getTask());
+
+        double random = Model.getInstance().getRandom().nextDouble();
+        boolean miner_without_load = worker.get_total_amount_of_load() == 0 && old_task == Task_Enum.miner;
+        if(     !worker.isFound_new_target() ||         // if worker didn't find a new target within the detected pheromones
+                (random >= 0.95) ||                     // there is a random chance to become a explorer
+                miner_without_load) // if the worker was a miner and came back without a load
+        {
+            worker.setTask(model.getBehaviour().getTask_explorer());
+            worker.setResource_type(null);
+        }
 
 
-            int original_detect_dist = 0;//for basic case
-            //hack to increase the detection range of the worker
-            if(model.getBehaviour() instanceof Behaviour_Basic)
-            {
-                original_detect_dist = worker_task.getPhero_detect_dist(); //for basic case
-                worker_task.setPhero_detect_dist((int)(size*2.5)); //for basic cas
-            }
 
-            find_target_phero_for_miner(worker, worker_task);
-
-            if(model.getBehaviour() instanceof Behaviour_Basic)
-                worker_task.setPhero_detect_dist(original_detect_dist); //for basic case
-
-            double random = Model.getInstance().getRandom().nextDouble();
-            if(!worker.isFound_new_target() || (random >= 0.95))
-            {
-
-                worker.setTask(model.getBehaviour().getTask_explorer());
-                worker.setResource_type(null);
-//                if(random > chance_of_general_explorer)
-//                {
-//                    worker.setResource_type(null);
-//                }
-            }
+        drop_resources(worker);
 
         worker.setBreak_chance(0.01);
         worker.setLast_seen_at_base(model.getTickcount());
 
-
-
-       // }
-
         return true;
 
+    }
+
+    private void set_worker_parameters(Worker worker) {
+        worker.setTask(model.getBehaviour().getTask_miner());
+        worker.getTask().setFound_resource(false);
+        worker.getTask().setReturn_from_resource(false);
+        worker.getTask().setOn_base(true);
     }
 
     private void find_target_phero_for_miner(Worker worker, Abstr_Task worker_task) {

@@ -24,47 +24,48 @@ public abstract class Abstr_Task
     //protected Worker worker;
 
     //parameter attaining to the movement of workers
-    protected int target_x; //absolute x coordinate where the workers is going to
-    protected int target_y; //absolute y coordinate where the workers is going to
-    protected boolean refresh_target = false; //whether a new target needs to be chosen
-    protected boolean enter_base = false;
+    protected int target_x;                     //absolute x coordinate where the workers is going to
+    protected int target_y;                     //absolute y coordinate where the workers is going to
+    protected boolean refresh_target = false;   //whether a new target needs to be chosen
+    protected boolean enter_base = false;       // boolean to force workers to go into the base in on their next meeting with it
+    protected boolean on_base = true;           // boolean to make sure the workers do not go in the base a second time in a row
 
     // parameters for the movement of the worker
     private int worker_speed;                   //the size of the step of a worker at each tick
-    protected int step_distance;   //the distance that is walked during wandering before a new target is chosen
-    protected int dist_walked;        //the amount of distance walked since the last target choice
+    protected int step_distance;                //the distance that is walked during wandering before a new target is chosen
+    protected int dist_walked;                  //the amount of distance walked since the last target choice
 
     //parameters for the wander move of the worker
-    private Random random = new Random(); // Random object to generate directions of travel
-    private int big_turn_threshold; //the amount of steps taken before a mayor turn is possible
+    private Random random = new Random();       // Random object to generate directions of travel
+    private int big_turn_threshold;             //the amount of steps taken before a mayor turn is possible
     private int big_turn_count;
 
     // parameters attaining to the use of the pheromones
     // the size of pheromone is scaled with its strenght
-    private int start_phero_size;   //the size at dropping the phero
-    private int max_phero_size;    //the limit on the size of the pheromone
+    private int start_phero_size;               //the size at dropping the phero
+    private int max_phero_size;                 //the limit on the size of the pheromone
     private int start_phero_strength;
     private int max_phero_strength;
-    private int phero_strength_load_factor; //the factor of infleunce of the load of the worker on the start strength of the pheromone
-    private int degrade_time;      //how many ticks it takes to degrade the pheromone by 1
+    private int phero_strength_load_factor;     //the factor of infleunce of the load of the worker on the start strength of the pheromone
+    private int degrade_time;                   //how many ticks it takes to degrade the pheromone by 1
 
     // parameters fot the dropping of pheromones
-    private int phero_drop_dist;   //the distance needed to walk before dropping a pheromone
-    private int dist_walked_since_drop;                    //the distance walked since last dropping of pheromone
+    private int phero_drop_dist;                //the distance needed to walk before dropping a pheromone
+    private int dist_walked_since_drop;         //the distance walked since last dropping of pheromone
     private boolean drop_enabled;
 
 
     //private int phero_detect_dist       = (int)(step_distance*1.5); // for the basic case
-    private int phero_detect_dist;  // for the advanced case
+    private int phero_detect_dist;              // for the advanced case
 
     //parameters for the return mechanism of the workers
-    private int ticks_before_return ; // the number of ticks before the worker has to return if it wants to find it's way home
-    private int ticks_since_enter     ;    // the counter for
+    private int ticks_before_return ;           // the number of ticks before the worker has to return if it wants to find it's way home
+    private int ticks_since_enter ;             // the counter for
     private Abstr_Enterable_object last_entered_object ;
 
     //parameter for  the vector based path finding
-    private double vector_ignore_chance;    //the chance that a vector during vector calculation is ignored
-    private double factor;                  //the factor
+    private double vector_ignore_chance;        //the chance that a vector during vector calculation is ignored
+    private double factor;                      //the factor
 
 
 
@@ -128,6 +129,9 @@ public abstract class Abstr_Task
         //check if the worker has reached an object
         Abstr_Object reached = model.check_if_reached_an_object(worker.getX(), worker.getY());
 
+        //if the worker has just entered the base and is still on it may not enter it again
+        check_if_still_on_base(reached);
+
         //if the reached object is the one he entered last, the return mechanism counter is reset
         if(will_enter_reached(worker, reached))   //returns true if the worker goes into the object
         {
@@ -136,6 +140,7 @@ public abstract class Abstr_Task
             {
                 drop_pheromone(worker);
                 worker.setState(Worker_State_Enum.inside);
+
             }
 
         }
@@ -182,6 +187,21 @@ public abstract class Abstr_Task
             move(worker);
         }
 
+    }
+
+    private void check_if_still_on_base(Abstr_Object reached) {
+        if(on_base)
+        {
+            if(reached instanceof Base)
+            {
+
+            }
+            else
+            {
+                setOn_base(false);
+                setEnter_base(true);
+            }
+        }
     }
 
     protected boolean is_at_target_halve(Worker worker)
@@ -745,5 +765,13 @@ public abstract class Abstr_Task
 
     public void setEnter_base(boolean enter_base) {
         this.enter_base = enter_base;
+    }
+
+    public boolean isOn_base() {
+        return on_base;
+    }
+
+    public void setOn_base(boolean on_base) {
+        this.on_base = on_base;
     }
 }
