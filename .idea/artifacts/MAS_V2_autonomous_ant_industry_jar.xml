@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="MAS_V2_autonomous_ant_industry:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/MAS_V2_autonomous_ant_industry_jar</output-path>
+    <root id="archive" name="MAS_V2_autonomous_ant_industry.jar">
+      <element id="module-output" name="MAS_V2_autonomous_ant_industry" />
+    </root>
+  </artifact>
+</component>

@@ -97,7 +97,7 @@ public class Worker_visual extends Object_visual
 
 
         draw_target(g,worker);
-        draw_visited(g,worker);
+       // draw_visited(g,worker);
         draw_vectors(g,worker);
 
     }
