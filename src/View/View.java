@@ -7,7 +7,7 @@ import java.util.Iterator;
 import View.Object_visuals.Colors;
 import View.Object_visuals.Object_visual;
 /**
- * Created by christiaan on 10/05/18.
+ * Representing the simulation to the user.
  */
 public class View extends Canvas {
     private static View view;
@@ -73,13 +73,6 @@ public class View extends Canvas {
         Graphics g = buffer.getGraphics();
         int x = getX();
         int y = getY();
-
-       /*
-       System.out.println("paint x: "  + String.valueOf(x) + " y: "
-                                        + String.valueOf(y) + " w: "
-                                        + String.valueOf(size_x) + " h: "
-                                        + String.valueOf(size_y))  ;
-                                        */
 
         g.clearRect(x, y, size_x, size_y);
 
@@ -156,16 +149,9 @@ public class View extends Canvas {
 
 
     public void draw_angled_line(Graphics g, int x, int y, double angle, int length) {
-        //int tr_y = transform_y(y);
-
-        //System.out.println("angle " + String.valueOf(angle));
-
 
         int x_dist = (int) (Math.cos(angle) * (double) length);
         int y_dist = (int) (Math.sin(angle) * (double) length);
-
-        //System.out.println("x dist " +  String.valueOf(x_dist));
-        //System.out.println("y_dist " +  String.valueOf(y_dist));
 
         g.drawLine(x, y, x + x_dist, (y - y_dist));
     }

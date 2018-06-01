@@ -18,7 +18,7 @@ import Model_pk.Task_managers.Task_manager_extended;
 import View.Object_visuals.Object_visual;
 
 /**
- * Created by christiaan on 10/05/18.
+ * A window with panels where the user can interact with the program and see the goals.
  */
 public class Window extends Panel implements ActionListener
 {
@@ -74,12 +74,6 @@ public class Window extends Panel implements ActionListener
         this.main_thread = main_thread;
         BuildWindow();
 
-
-        //the size of the view is dependent on the size of the panels on the top and bottom
-        //int view_y_size = size_y - top_panel.getHeight() - bottom_panel.getHeight();
-
-        //View.getInstance().set_size(size_x,view_y_size);
-        //View.getInstance().set_y_offset(top_panel.getHeight());
     }
 
     /**
@@ -138,7 +132,6 @@ public class Window extends Panel implements ActionListener
         //create labels
         ticks_per_second_text = "Ticks/sec: ";
         ticks_per_second_label = new Label (ticks_per_second_text + String.valueOf(0));
-        //ticks_per_second_label.setSize((int)(ticks_per_second_label.getWidth()*1.25),ticks_per_second_label.getHeight());
 
         //create the panels and add to the elements to them
         top_grid_panel = new Panel();
@@ -155,10 +148,10 @@ public class Window extends Panel implements ActionListener
         top_panel_3.setBackground(new Color(161, 167, 166));
 
         top_panel_1.add(resource_goal_label);
-        add_goal_labels(top_panel_1);
+        add_labels_template(top_panel_1);
 
         top_panel_2.add(resource_count_label);
-        add_resource_count_labels(top_panel_2);
+        add_labels_template(top_panel_2);
 
         top_panel_3.add(resource_prob_label);
         add_resource_prob_labels(top_panel_3);
@@ -202,38 +195,23 @@ public class Window extends Panel implements ActionListener
 
     }
 
-    public void add_goal_labels(Panel panel)
+    public void add_labels_template(Panel panel)
     {
         for(Resource_Type_Enum type: Resource_Type_Enum.values())
         {
-            // System.out.print(type.toString());
             Label new_resource_count_label = new Label(type.toString() + ": 0000 " );
             new_resource_count_label.setSize(125,50);
             resource_goal_labels.put(type,new_resource_count_label);
-
             panel.add(new_resource_count_label);
         }
     }
 
-    public void add_resource_count_labels(Panel panel)
-    {
-        for(Resource_Type_Enum type: Resource_Type_Enum.values())
-        {
-           // System.out.print(type.toString());
-            Label new_resource_count_label = new Label(type.toString() + ": 0000 " );
-            new_resource_count_label.setSize(125,50);
-            resource_count_labels.put(type,new_resource_count_label);
-            panel.add(new_resource_count_label);
-        }
-    }
 
     public void add_resource_prob_labels(Panel panel)
     {
         for(Resource_Type_Enum type: Resource_Type_Enum.values())
         {
-            // System.out.print(type.toString());
             Label new_resource_count_label = new Label(type.toString() + ": 00 " );
-            //new_resource_count_label.setSize(100,50);
             resource_prob_labels.put(type,new_resource_count_label);
             panel.add(new_resource_count_label);
         }
@@ -243,7 +221,6 @@ public class Window extends Panel implements ActionListener
     {
         for(Resource_Type_Enum type: Resource_Type_Enum.values())
         {
-            //System.out.print(type.toString());
             Button new_resource_type_button = new Button(type.toString() );
             new_resource_type_button.addActionListener(this);
             resource_type_buttons.put(type,new_resource_type_button);
@@ -256,7 +233,6 @@ public class Window extends Panel implements ActionListener
     {
         for(Task_Enum task: Task_Enum.values())
         {
-           // System.out.print(task.toString());
             Button new_task_button = new Button(task.toString() );
             new_task_button.addActionListener(this);
             task_buttons.put(task,new_task_button);
@@ -280,9 +256,7 @@ public class Window extends Panel implements ActionListener
             int value = goal.get(type);
 
             Label selected = resource_goal_labels.get(type);
-
             selected.setText( type.toString() + ": " + String.valueOf(value)  );
-           // selected.setSize(100,selected.getHeight());
 
         }
 
@@ -300,7 +274,6 @@ public class Window extends Panel implements ActionListener
             Label selected = resource_count_labels.get(type);
 
             selected.setText( type.toString() + ": " + String.valueOf(value)  );
-           // selected.setSize(100,selected.getHeight());
         }
 
     }
@@ -315,18 +288,10 @@ public class Window extends Panel implements ActionListener
         if ( task_manager instanceof Task_manager_extended){
             Task_manager_extended task_manager_extended = (Task_manager_extended)task_manager;
             HashMap<Resource_Type_Enum, Integer> distribution_of_worker = task_manager_extended.get_new_distribution_of_worker();
-            //HashMap<Resource_Type, Avg_travel_time> avg_travel_time_to_resource = task_manager_extended.get_avg_travel_time_to_resource();
 
             for(Resource_Type_Enum type: Resource_Type_Enum.values())
             {
-//                Avg_travel_time avg_travel_time_object = avg_travel_time_to_resource.get(type);
-//                int value;
-//                if( avg_travel_time_object == null)
-//                    value = 0;
-//                else
-//                    value = avg_travel_time_object.get_avg_travel_time();
                 int value = distribution_of_worker.get(type);
-               // int value = 0;
                 resource_prob_labels.get(type).setText( type.toString() + ": " + String.valueOf(value)  );
             }
 
