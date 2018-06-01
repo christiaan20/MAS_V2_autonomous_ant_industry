@@ -3,7 +3,7 @@ package Model_pk;
 import Model_pk.Enums.Resource_Type_Enum;
 
 /**
- * Created by christiaan on 10/05/18.
+ * A resource object that represents the good and mount that need be collected in the setting.
  */
 public class Resource {
     private int amount;

@@ -4,7 +4,7 @@ import Model_pk.Objects.Abstr_Object;
 import Model_pk.Objects.Worker;
 
 /**
- * Created by christiaan on 10/05/18.
+ * An abstract object that is enterable in its nature.
  */
 public abstract class Abstr_Enterable_object extends Abstr_Object {
     protected int time; //time in ticks

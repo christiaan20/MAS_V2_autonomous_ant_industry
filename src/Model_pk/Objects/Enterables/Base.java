@@ -14,12 +14,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by christiaan on 10/05/18.
+ * The base station where the workers get created. The collected resources are brought back to this base.
+ * The worker can get a different resource assigned to them at the base.
  */
+
 public class Base extends Abstr_Enterable_object {
-    private Order order;
     private HashMap<Resource_Type_Enum, Integer> obtained_resources;
-    //private Task_Manager_Simple task_managerSimple;
     private Abstr_Task_manager task_manager;
     private double chance_of_general_explorer = 0.75;
     private int detect_dist;
@@ -36,7 +36,6 @@ public class Base extends Abstr_Enterable_object {
         this.task_manager = task_manager;
         this.model = Model.getInstance();
 
-
     }
 
     public void init_obtained_resources(){
@@ -51,7 +50,6 @@ public class Base extends Abstr_Enterable_object {
     public void tick() {
 
     }
-
 
     @Override
     public boolean action(Worker worker)
@@ -81,6 +79,10 @@ public class Base extends Abstr_Enterable_object {
 
         worker.setBreak_chance(0.01);
         worker.setLast_seen_at_base(model.getTickcount());
+
+
+
+       // }
 
         return true;
 
@@ -143,13 +145,6 @@ public class Base extends Abstr_Enterable_object {
         worker.clear_load();
 
     }
-//    public boolean is_there_a_path_to(Resource_Type_Enum resource){
-//
-//        ArrayList<CustomStruct> objects = model.find_objects(getX(), getY(), detect_dist, resource, Task_Enum.miner);
-//        if( objects.size() == 0 )
-//            return false;
-//        return true;
-//    }
 
     public HashMap<Resource_Type_Enum, Integer> get_obtained_resources_resources() {
         return this.obtained_resources;

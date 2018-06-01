@@ -13,7 +13,7 @@ import View.Object_visuals.Object_visual;
 import View.Object_visuals.Worker_visual;
 
 /**
- * Created by christiaan on 10/05/18.
+ * A worker represents an AGV that needs to pick up resources and deliver them to the base.
  */
 public class Worker extends Abstr_Object {
 
@@ -39,7 +39,6 @@ public class Worker extends Abstr_Object {
     private Abstr_Task      task;           //The Task it is currently doing
     private Resource_Type_Enum resource_type;    //The resource it will mine, transport for or look for
 
-    private int travel_time;
     private Random random_gen;
     private double break_chance;
     private int last_seen_at_base;
@@ -65,28 +64,16 @@ public class Worker extends Abstr_Object {
 
         this.model = Model.getInstance();
 
-        this.travel_time = 0;
         this.broken = false;
 
         this.limited_view = model.getBehaviour().isLimited_visited_memory();
         this.visited_objects_size = model.getBehaviour().getVisited_objects_size();
 
-       // task.test_tan_function();
     }
 
     public Worker(int x, int y, int size, double currDirection, int max_load, Abstr_Task task, Resource_Type_Enum type, Base base)
     {
-//        super( x, y, size);
-//        this.currDirection = currDirection;
-//        this.max_load = max_load;
-//        this.task = task;
-//
-//
-//        this.setVisual(new Worker_visual( x, y, size,this));
-//
-//        this.model = Model.getInstance();
-//
-//        task.test_tan_function();
+
         this(x,y,size,currDirection,max_load,task,base);
         this.resource_type = type;
 
@@ -224,8 +211,6 @@ public class Worker extends Abstr_Object {
 
             return true;
         }
-
-
 
     }
 
@@ -637,17 +622,6 @@ public class Worker extends Abstr_Object {
 
     public void setFound_new_target(boolean found_new_target) {
         this.found_new_target = found_new_target;
-    }
-
-    public int getTravel_time() {
-        if (travel_time == 0)
-            return 0;
-        return 2*(model.getTickcount() - travel_time);
-    }
-
-
-    public void setTravel_time(int travel_time) {
-        this.travel_time = travel_time;
     }
 
     public boolean isBroken() {

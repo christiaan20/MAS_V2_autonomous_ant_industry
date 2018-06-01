@@ -7,7 +7,7 @@ import View.Window;
 import java.io.IOException;
 
 /**
- * Created by christiaan on 10/05/18.
+ * The main thread that runs the simulation.
  */
 public class Main_thread implements Runnable {
     private View view;
@@ -56,11 +56,9 @@ public class Main_thread implements Runnable {
                     continue;
                 }
 
-
                 tickcount++;
 
                 model.tick(tickcount);
-
 
                 if (model.getTest_setting().all_goals_reached())
                 {
@@ -70,14 +68,12 @@ public class Main_thread implements Runnable {
                     restart();
                 }
 
-
                 window.update_resource_counters();
                 window.update_tick_counter(tickcount);
                 window.update_resource_probs();
                 window.update_resource_goals();
 
             }
-
                 view.paint();
 
                 try {
@@ -86,13 +82,8 @@ public class Main_thread implements Runnable {
                     e.printStackTrace();
                 }
 
-
-
         }
-
-
     }
-
     private void write_simulation_count()
     {
 

@@ -4,7 +4,7 @@ import View.Object_visuals.Object_visual;
 import View.View;
 
 /**
- * Created by christiaan on 10/05/18.
+ * Represents the abstract objects which is parent of all other objects.
  */
 public abstract class Abstr_Object {
 
