@@ -1,9 +1,11 @@
 package Main;
 
 import Model_pk.Model;
+import View.Second_Window_pk.Second_Frame;
 import View.View;
 import View.Window;
 import Controller.Controller;
+import com.sun.org.apache.bcel.internal.generic.LLOAD;
 
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -23,8 +25,11 @@ public class Main extends Frame {
     private Thread t;
     private boolean big_scenario = false;
 
-    private int size_x = 900;
-    private int size_y = 700;
+    private Second_Frame second_frame;
+
+    private int size_x = 950;
+    private int size_y = 750;
+
 
     public Main() throws HeadlessException {
 
@@ -34,7 +39,7 @@ public class Main extends Frame {
             size_y = 1000;
         }
 
-        main_thread = new Main_thread();
+        main_thread = new Main_thread(this);
 
         window = new Window(size_x,size_y, main_thread);
         add(window);
@@ -52,7 +57,10 @@ public class Main extends Frame {
         model = Model.getInstance();
         view = View.getInstance();
 
-
+        //start the second window containing settings of the whole thing
+        second_frame =  new Second_Frame(controller,main_thread);
+        second_frame.setVisible(true);
+        second_frame.setResizable(false);
 
         this.addWindowListener( new WindowAdapter()
         {
@@ -74,7 +82,9 @@ public class Main extends Frame {
         //view needs to be initialised to set the right size
         main.initialise_view();
         //start the scenario after setting the main visible and initialising the view
-        main.start_scenario();
+   //     main.start_scenario();
+
+
 
         main.start_thread();
 

@@ -12,10 +12,8 @@ import Model_pk.Enums.Resource_Type_Enum;
 import Controller.Controller;
 import Model_pk.Objects.Abstr_Object;
 import Model_pk.Task_managers.Abstr_Task_manager;
-import Model_pk.Task_managers.Avg_travel_time;
 import Model_pk.Task_managers.Task_Manager_Simple;
 import Model_pk.Task_managers.Task_manager_extended;
-import View.Object_visuals.Object_visual;
 
 /**
  * A window with panels where the user can interact with the program and see the goals.
@@ -256,7 +254,7 @@ public class Window extends Panel implements ActionListener
     {
         Model model = Model.getInstance();
 
-        HashMap<Resource_Type_Enum, Integer> goal = model.getTest_setting().get_current_goal();
+        HashMap<Resource_Type_Enum, Integer> goal = model.getTester().get_current_goal();
 
         for(Resource_Type_Enum type: Resource_Type_Enum.values())
         {

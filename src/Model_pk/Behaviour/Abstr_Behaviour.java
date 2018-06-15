@@ -47,13 +47,13 @@ public abstract class Abstr_Behaviour
 
     //parameters for the behavior basic
     protected boolean incalculate_strength = false;  // whether the workers decide on following the strongest pheromone or only distance
-    protected boolean incalculate_direction = true; // whether the workers decide on giving more infleunce to the pheromones straight in front of him
+    protected boolean incalculate_direction = false; // whether the workers decide on giving more infleunce to the pheromones straight in front of him
     protected double  strength_influence  = 1 ;   // how much infleunce the strength has when taken into account
 
     protected boolean limited_visited_memory = false;
     protected int visited_objects_size = 5;
 
-    protected boolean turn_arround_at_wander= true;
+    protected boolean turn_arround_at_wander= false;
 
 
 
@@ -188,5 +188,9 @@ public abstract class Abstr_Behaviour
 
     public boolean isIncalculate_direction() {
         return incalculate_direction;
+    }
+
+    public void setPhero_detect_dist(int phero_detect_dist) {
+        this.phero_detect_dist = phero_detect_dist;
     }
 }

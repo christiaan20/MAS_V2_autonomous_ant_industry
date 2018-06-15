@@ -1,13 +1,12 @@
 package Model_pk;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
+import Main.Main;
 import Model_pk.Behaviour.Abstr_Behaviour;
-import Model_pk.Behaviour.Basic.Task.Task_Basic.Behaviour_Basic;
 import Model_pk.Behaviour.Task_Enum;
 import Model_pk.Enums.Resource_Type_Enum;
 import Model_pk.Objects.Enterables.Abstr_Enterable_object;
@@ -18,8 +17,9 @@ import Model_pk.Objects.Abstr_Object;
 import Model_pk.Objects.Pheromone;
 import Model_pk.Objects.Worker;
 import Model_pk.Task_managers.Abstr_Task_manager;
-import Model_pk.Task_managers.Task_Manager_Simple;
-import Model_pk.Task_managers.Task_manager_extended;
+import Model_pk.Testing_Classes.Test_Settings;
+import Model_pk.Testing_Classes.Tester;
+import Model_pk.Testing_Classes.parameter_setting;
 import View.View;
 
 /**
@@ -45,7 +45,7 @@ public class Model{
     private ArrayList<Abstr_Enterable_object> impassable_objects = new ArrayList<>(); //NOT YET IMPLEMENTED
     private ArrayList<Pheromone> pheromones = new ArrayList<>();
 
-    private Tester test_setting;
+    private Tester tester;
 
     private boolean pause;
 
@@ -53,6 +53,7 @@ public class Model{
     private int base_y;
     private int worker_size;
     private int max_worker_load;
+    private int work_force_size;
     private int object_size;
     private int resource_time;
     private int resource_pool_capacity;
@@ -78,17 +79,47 @@ public class Model{
         return model;
     }
 
+    public void init_model(Main main) throws IOException {
+        Test_Settings settings = Test_Settings.getInstance();
+        this.work_force_size = settings.getStarting_workers_value();
+        this.behaviour = settings.getBehaviour();
+        this.task_manager = settings.getTask_manager();
+        this.behaviour.setPhero_detect_dist(settings.getPheromone_dist_value());
+
+        parameter_setting scenario_setting = settings.getScenario();
+
+
+        if(scenario_setting == parameter_setting.big)
+        {
+            this.size_x_field    = 1500;
+            this.size_y_field    = 1000;
+            main.setSize(1650,1150);
+            set_scenario_2();
+        }
+        else
+        {
+            this.size_x_field    = 800;
+            this.size_y_field    = 600;
+            main.setSize(950,750);
+            set_scenario_1();
+        }
+
+    }
+
+
     public void set_scenario_1()  throws IOException
     {
         String scenario_name = "scenario_1_small_size";
 
         this.workers_to_add = new ArrayList<>();
         this.tickcount = 0;
-        this.behaviour = new Behaviour_Basic();
-        this.task_manager = new Task_manager_extended();
+        //this.behaviour = new Behaviour_Basic();
+        //this.task_manager = new Task_manager_extended();
 
-        this.size_x_field    = 800;
-        this.size_y_field    = 600;
+        //this.size_x_field    = 800;
+        //this.size_y_field    = 600;
+
+
 
         View.getInstance().set_field_size(size_x_field, size_y_field);
         this.base_x      = 450;
@@ -96,7 +127,7 @@ public class Model{
         this.object_size  = 50;
         this.worker_size = 20;
 
-        int work_force_size = 15;
+        //this.work_force_size = 15;
 
         this.base_time       = 50;
         this.resource_time   = 50;
@@ -117,20 +148,21 @@ public class Model{
         }
         else if(test_direction)
         {
+
             test_direction();
             work_force_size = 0;
 
         }
         else
         {
-            base = new Base(base_x,base_y,object_size,base_time,task_manager);
-            enterable_objects.add(base);
+            this.base = new Base(base_x,base_y,object_size,base_time,this.task_manager);
+            enterable_objects.add(this.base);
 
             create_resource_pools();
         }
 
         //give the task manager a reference to the created base
-        task_manager.setBase(base);
+        this.task_manager.setBase(this.base);
 
         //create the workers
         for(int i = 0 ; i < work_force_size;i++)
@@ -138,9 +170,9 @@ public class Model{
             workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble()*Math.PI*2, max_worker_load, behaviour.getTask_explorer(),base));
         }
 
-        this.test_setting = new Tester();
+        this.tester = new Tester();
 
-        test_setting.write_to_log_file(scenario_name);
+        tester.write_to_log_file(scenario_name);
 
     }
 
@@ -150,11 +182,11 @@ public class Model{
 
         this.workers_to_add = new ArrayList<>();
         this.tickcount = 0;
-        this.behaviour = new Behaviour_Basic();
-        this.task_manager = new Task_manager_extended();
+        //this.behaviour = new Behaviour_Basic();
+        //this.task_manager = new Task_manager_extended();
 
-        this.size_x_field    = 1500;
-        this.size_y_field    = 1000;
+        //this.size_x_field    = 1500;
+        //this.size_y_field    = 1000;
 
         View.getInstance().set_field_size(size_x_field, size_y_field);
         this.base_x      = 450;
@@ -162,7 +194,7 @@ public class Model{
         this.object_size = 50;
         this.worker_size = 20;
 
-        int work_force_size = 15;
+        //int work_force_size = 15;
 
         this.base_time       = 50;
         this.resource_time   = 50;
@@ -202,8 +234,8 @@ public class Model{
             workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble()*Math.PI*2, max_worker_load, behaviour.getTask_explorer(),base));
         }
 
-        this.test_setting = new Tester();
-        test_setting.write_to_log_file(scenario_name);
+        this.tester = new Tester();
+        tester.write_to_log_file(scenario_name);
 
 
     }
@@ -271,12 +303,12 @@ public class Model{
         workers_to_add = new ArrayList<>();
 
 
-            test_setting.is_goal_reached(tick_count);
+            tester.is_goal_reached(tick_count);
 
     }
 
     public boolean goals_are_reached(){
-        return test_setting.all_goals_reached();
+        return tester.all_goals_reached();
     }
 
 
@@ -289,7 +321,7 @@ public class Model{
         enterable_objects = new ArrayList<>();
         pheromones = new ArrayList<>();
 
-        test_setting  = null;
+        tester = null;
 
 
     }
@@ -602,8 +634,8 @@ public class Model{
         return random;
     }
 
-    public Tester getTest_setting() {
-        return test_setting;
+    public Tester getTester() {
+        return tester;
     }
 
     public int getTickcount() {

@@ -57,7 +57,7 @@ public class Behaviour_Basic extends Abstr_Behaviour
         //feature settings
         this.incalculate_strength = false; // whether the workers decide on following the strongest pheromone or only distance
         this.strength_influence = 1;   // how much infleunce the strength has when taken into account
-
+        this.incalculate_direction = false;
     }
 
     public Behaviour_Basic(boolean incalculate_strength, boolean incalculate_direction,boolean limited_visited_memory , boolean turn_arround_at_wander )

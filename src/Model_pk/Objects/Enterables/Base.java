@@ -3,11 +3,11 @@ package Model_pk.Objects.Enterables;
 
 import Model_pk.*;
 import Model_pk.Behaviour.Abstr_Task;
-import Model_pk.Behaviour.Basic.Task.Task_Basic.Behaviour_Basic;
 import Model_pk.Behaviour.Task_Enum;
 import Model_pk.Enums.Resource_Type_Enum;
 import Model_pk.Objects.Worker;
 import Model_pk.Task_managers.Abstr_Task_manager;
+import Model_pk.Testing_Classes.Tester;
 import View.Object_visuals.Base_visual;
 
 import java.util.ArrayList;
@@ -111,7 +111,7 @@ public class Base extends Abstr_Enterable_object {
 
     public HashMap<Resource_Type_Enum, Integer> resource_to_obtain(){
 
-        Tester tester = Model.getInstance().getTest_setting();
+        Tester tester = Model.getInstance().getTester();
         HashMap<Resource_Type_Enum, Integer>  goal = tester.get_current_goal();
         if (goal == null)
             return null;

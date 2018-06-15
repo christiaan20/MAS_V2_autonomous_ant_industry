@@ -1,6 +1,7 @@
-package Model_pk;
+package Model_pk.Testing_Classes;
 
 import Model_pk.Enums.Resource_Type_Enum;
+import Model_pk.Model;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -35,13 +36,17 @@ public class Tester {
 
     public void init_goal(){
 
-        HashMap<Resource_Type_Enum, Integer> first_goal = fill_resources_with(500,100,20,250,100);
+       /*
+       HashMap<Resource_Type_Enum, Integer> first_goal = fill_resources_with(500,100,20,250,100);
         HashMap<Resource_Type_Enum, Integer> second_goal = fill_all_resources_with(250);
         HashMap<Resource_Type_Enum, Integer> third_goal = fill_resources_with(0,50,600,500,160);
 
         goals.add(first_goal);
         goals.add(second_goal);
         goals.add(third_goal);
+        */
+
+       goals.add(fill_all_resources_with(20));
 
     }
 
