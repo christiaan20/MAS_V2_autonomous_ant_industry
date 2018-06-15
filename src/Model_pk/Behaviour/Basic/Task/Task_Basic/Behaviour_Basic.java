@@ -60,5 +60,17 @@ public class Behaviour_Basic extends Abstr_Behaviour
 
     }
 
+    public Behaviour_Basic(boolean incalculate_strength, boolean incalculate_direction,boolean limited_visited_memory , boolean turn_arround_at_wander )
+    {
+        this();
+
+        //feature settings
+        this.incalculate_strength = incalculate_strength; // whether the workers decide on following the strongest pheromone or only distance
+        this.incalculate_direction = incalculate_direction;
+
+        this.limited_visited_memory = limited_visited_memory;
+        this.turn_arround_at_wander = turn_arround_at_wander;
+    }
+
 
 }

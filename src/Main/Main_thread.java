@@ -16,6 +16,7 @@ public class Main_thread implements Runnable {
 
     private boolean running = true; // whether the mainthread is running or not
     private boolean restart_activated = false; // whether the mainthread has to restart_activated the simulation or not
+    private boolean paint_graphics = true;
     private int refresh_time = 1;     // refresh_time of ticks and refreshes in ms
     private int tickcount = 0;
     private int simulate_times = 10;    //the amount of times the simulation is run before stopping the program
@@ -70,11 +71,14 @@ public class Main_thread implements Runnable {
 
                 window.update_resource_counters();
                 window.update_tick_counter(tickcount);
-                window.update_resource_probs();
+                //window.update_resource_probs();
                 window.update_resource_goals();
 
             }
+            if(paint_graphics)
+            {
                 view.paint();
+            }
 
                 try {
                     Thread.sleep(refresh_time);
@@ -160,4 +164,11 @@ public class Main_thread implements Runnable {
         return (double)(1000/refresh_time);
     }
 
+    public boolean isPaint_graphics() {
+        return paint_graphics;
+    }
+
+    public void setPaint_graphics(boolean paint_graphics) {
+        this.paint_graphics = paint_graphics;
+    }
 }

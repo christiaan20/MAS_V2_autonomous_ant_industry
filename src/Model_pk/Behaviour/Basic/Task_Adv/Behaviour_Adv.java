@@ -12,6 +12,8 @@ public class Behaviour_Adv extends Abstr_Behaviour
 
 
 
+
+
     public Behaviour_Adv()
     {
         try {

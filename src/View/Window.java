@@ -67,6 +67,8 @@ public class Window extends Panel implements ActionListener
     //button to break the currently selected worker
     private Button break_worker_button;
 
+    //draw the graphics button
+    private Button  draw_graphics_button;
   ;
 
     public Window(int size_x, int size_y, Main_thread main_thread)
@@ -129,6 +131,10 @@ public class Window extends Panel implements ActionListener
         break_worker_button.setBackground(Color.lightGray);
         break_worker_button.addActionListener(this);
 
+        draw_graphics_button = new Button("Draw Graphics");
+        draw_graphics_button.setBackground(Color.lightGray);
+        draw_graphics_button.addActionListener(this);
+
         //create labels
         ticks_per_second_text = "Ticks/sec: ";
         ticks_per_second_label = new Label (ticks_per_second_text + String.valueOf(0));
@@ -148,10 +154,10 @@ public class Window extends Panel implements ActionListener
         top_panel_3.setBackground(new Color(161, 167, 166));
 
         top_panel_1.add(resource_goal_label);
-        add_labels_template(top_panel_1);
+        add_labels_template(top_panel_1,resource_goal_labels);
 
         top_panel_2.add(resource_count_label);
-        add_labels_template(top_panel_2);
+        add_labels_template(top_panel_2,resource_count_labels);
 
         top_panel_3.add(resource_prob_label);
         add_resource_prob_labels(top_panel_3);
@@ -170,6 +176,7 @@ public class Window extends Panel implements ActionListener
         //bottom_panel_1
 
         bottom_panel_1.add(break_worker_button);
+        bottom_panel_1.add(draw_graphics_button);
         bottom_panel_1.add(draw_pheromones_button);
         bottom_panel_1.add(restart_button);
         bottom_panel_1.add(pause_button);
@@ -195,13 +202,13 @@ public class Window extends Panel implements ActionListener
 
     }
 
-    public void add_labels_template(Panel panel)
+    public void add_labels_template(Panel panel, Map<Resource_Type_Enum,Label> map)
     {
         for(Resource_Type_Enum type: Resource_Type_Enum.values())
         {
             Label new_resource_count_label = new Label(type.toString() + ": 0000 " );
             new_resource_count_label.setSize(125,50);
-            resource_goal_labels.put(type,new_resource_count_label);
+            map.put(type,new_resource_count_label);
             panel.add(new_resource_count_label);
         }
     }
@@ -334,6 +341,7 @@ public class Window extends Panel implements ActionListener
         check_task_button(e);
         check_restart_button(e);
         check_break_worker_button(e);
+        check_draw_graphics_button(e);
     }
 
     public void check_pause_button(ActionEvent e)
@@ -389,6 +397,24 @@ public class Window extends Panel implements ActionListener
             {
                 view.setDraw_pheromones(true);
                 draw_pheromones_button .setBackground(Color.lightGray);
+            }
+
+        }
+    }
+
+    public void check_draw_graphics_button(ActionEvent e)
+    {
+        if( e.getSource() == draw_graphics_button )
+        {
+            if(main_thread.isPaint_graphics() == true)
+            {
+                main_thread.setPaint_graphics(false);
+                draw_graphics_button .setBackground(Color.RED);
+            }
+            else
+            {
+                main_thread.setPaint_graphics(true);
+                draw_graphics_button .setBackground(Color.lightGray);
             }
 
         }
