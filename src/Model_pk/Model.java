@@ -92,8 +92,8 @@ public class Model{
         if(scenario_setting == parameter_setting.big)
         {
             this.size_x_field    = 1500;
-            this.size_y_field    = 1000;
-            main.setSize(1650,1150);
+            this.size_y_field    = 900;
+            main.setSize(1650,1050);
             set_scenario_2();
         }
         else
@@ -122,6 +122,7 @@ public class Model{
 
 
         View.getInstance().set_field_size(size_x_field, size_y_field);
+        View.getInstance().set_size(size_x_field+150, size_y_field);
         this.base_x      = 450;
         this.base_y      = 150;
         this.object_size  = 50;
@@ -172,7 +173,7 @@ public class Model{
 
         this.tester = new Tester();
 
-        tester.write_to_log_file(scenario_name);
+        //tester.write_to_log_file(scenario_name);
 
     }
 
@@ -182,6 +183,7 @@ public class Model{
 
         this.workers_to_add = new ArrayList<>();
         this.tickcount = 0;
+
         //this.behaviour = new Behaviour_Basic();
         //this.task_manager = new Task_manager_extended();
 
@@ -189,8 +191,9 @@ public class Model{
         //this.size_y_field    = 1000;
 
         View.getInstance().set_field_size(size_x_field, size_y_field);
-        this.base_x      = 450;
-        this.base_y      = 150;
+        View.getInstance().set_size(size_x_field+150, size_y_field);
+        this.base_x      = 750;
+        this.base_y      = 500;
         this.object_size = 50;
         this.worker_size = 20;
 
@@ -223,6 +226,8 @@ public class Model{
         {
             base = new Base(base_x,base_y,object_size,base_time,task_manager);
             enterable_objects.add(base);
+
+            create_big_resource_pools();
         }
 
         //give the task manager a reference to the created base
@@ -231,11 +236,11 @@ public class Model{
         //create the workers
         for(int i = 0 ; i < work_force_size;i++)
         {
-            workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble()*Math.PI*2, max_worker_load, behaviour.getTask_explorer(),base));
+            workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble()*Math.PI*2, max_worker_load, behaviour.getTask_explorer(25),base));
         }
 
         this.tester = new Tester();
-        tester.write_to_log_file(scenario_name);
+       // tester.write_to_log_file(scenario_name);
 
 
     }
@@ -282,6 +287,28 @@ public class Model{
         enterable_objects.add(new Resource_pool(75,275,object_size,resource_time, Resource_Type_Enum.Coal, resource_pool_capacity));
 
 
+    }
+
+    private void create_big_resource_pools(){
+
+        //create the resources
+        enterable_objects.add(new Resource_pool(300*2,400*2,object_size,resource_time, Resource_Type_Enum.Stone,2000));
+        enterable_objects.add(new Resource_pool(75*2,325*2,object_size,resource_time, Resource_Type_Enum.Coal, resource_pool_capacity));
+        enterable_objects.add(new Resource_pool(550*2, 325*2,object_size,resource_time, Resource_Type_Enum.Copper, resource_pool_capacity));
+        enterable_objects.add(new Resource_pool(250*2,100,object_size,resource_time, Resource_Type_Enum.Iron, resource_pool_capacity));
+        enterable_objects.add(new Resource_pool(600*2,250,object_size,resource_time, Resource_Type_Enum.Uranium, resource_pool_capacity));
+        enterable_objects.add(new Resource_pool(700*2,50*2,object_size,resource_time, Resource_Type_Enum.Uranium, 800));
+        enterable_objects.add(new Resource_pool(100*2,500*2,object_size,resource_time, Resource_Type_Enum.Iron, 300));
+        enterable_objects.add(new Resource_pool(200*2,400*2,object_size,resource_time, Resource_Type_Enum.Iron, 300));
+        enterable_objects.add(new Resource_pool(700*2,125*2,object_size,resource_time, Resource_Type_Enum.Copper, 1000));
+        enterable_objects.add(new Resource_pool(75*2,275*2,object_size,resource_time, Resource_Type_Enum.Coal, resource_pool_capacity));
+
+        enterable_objects.add(new Resource_pool(275,15,object_size,resource_time, Resource_Type_Enum.Uranium, 1000));
+        enterable_objects.add(new Resource_pool(400,300,object_size,resource_time, Resource_Type_Enum.Iron, 500));
+        enterable_objects.add(new Resource_pool(400,250,object_size,resource_time, Resource_Type_Enum.Iron, 500));
+        enterable_objects.add(new Resource_pool(800,50,object_size,resource_time, Resource_Type_Enum.Copper, 1000));
+        enterable_objects.add(new Resource_pool(1000,200,object_size,resource_time, Resource_Type_Enum.Stone, resource_pool_capacity));
+        enterable_objects.add(new Resource_pool(1100,500,object_size,resource_time, Resource_Type_Enum.Coal, resource_pool_capacity));
     }
 
     public Worker add_worker(){
@@ -640,5 +667,31 @@ public class Model{
 
     public int getTickcount() {
         return tickcount;
+    }
+
+    public int count_dead_worker()
+    {
+        int count = 0;
+        for(Worker worker: workers)
+        {
+            if(worker.isBroken())
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public int count_living_workers()
+    {
+        int count = 0;
+        for(Worker worker: workers)
+        {
+            if(!worker.isBroken())
+            {
+                count++;
+            }
+        }
+        return count;
     }
 }

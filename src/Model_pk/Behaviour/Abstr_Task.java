@@ -307,7 +307,7 @@ public abstract class Abstr_Task
             walk_straight_for(worker,1);
             ((Worker_visual) worker.getVisual()).update_vectors(worker);
             worker.add_detected_phermones_within_distance_to_visited(step_distance);
-            System.out.println("new angle = " + angle);
+            //System.out.println("new angle = " + angle);
 
             return true;
         }
@@ -595,5 +595,9 @@ public abstract class Abstr_Task
 
     public void setOn_base(boolean on_base) {
         this.on_base = on_base;
+    }
+
+    public void setWander_limit(int wander_limit) {
+
     }
 }

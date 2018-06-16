@@ -39,7 +39,7 @@ public class Test_Settings
         this.pheromone_dist = parameter_setting.medium;
         this.starting_workers = parameter_setting.medium;
         this.pheromone_setting = pheromone_enum.basic_strength_direction;
-        this.scenario = parameter_setting.small;
+        this.scenario = parameter_setting.big;
         this.task_distribution = task_distribution_enum.advanced;
 
         phero_dist_settings_basic .put(parameter_setting.small,60);
@@ -50,9 +50,13 @@ public class Test_Settings
         phero_dist_settings_adv.put(parameter_setting.medium,60);
         phero_dist_settings_adv.put(parameter_setting.big,90);
 
-        starting_workers_settings.put(parameter_setting.small,5);
-        starting_workers_settings.put(parameter_setting.medium,15);
-        starting_workers_settings.put(parameter_setting.big,25);
+        //starting_workers_settings.put(parameter_setting.small,5);
+        //starting_workers_settings.put(parameter_setting.medium,15);
+        //starting_workers_settings.put(parameter_setting.big,25);
+
+        starting_workers_settings.put(parameter_setting.small,10);
+        starting_workers_settings.put(parameter_setting.medium,20);
+        starting_workers_settings.put(parameter_setting.big,40);
 
         automatic_step_counter = 0;
 
@@ -63,8 +67,9 @@ public class Test_Settings
             {
                 for (pheromone_enum policy : pheromone_enum.values())
                 {
-                    for (parameter_setting phero_dist : parameter_setting.values())
-                    {
+                    //for (parameter_setting phero_dist : parameter_setting.values())
+                    //{
+                        parameter_setting phero_dist = parameter_setting.medium;
                         for (parameter_setting workers : parameter_setting.values())
                         {
                             for ( task_distribution_enum tasks :  task_distribution_enum.values())
@@ -72,7 +77,7 @@ public class Test_Settings
                                 all_settings.add(new Parameter_Struct(phero_dist,workers,policy,scene,tasks));
                             }
                         }
-                    }
+                    //}
                 }
             }
         }
@@ -173,6 +178,7 @@ public class Test_Settings
 
     public boolean next_step()
     {
+        //if(automatic_step_counter <= automatic_step_counter+10)
         if(automatic_step_counter < all_settings.size())
         {
             copy_struct(all_settings.get(automatic_step_counter));
@@ -199,9 +205,9 @@ public class Test_Settings
             tester.write_to_log_file("");
             tester.write_to_log_file("--- SIMULATION SETTINGS ---");
             tester.write_to_log_file("set number                    : " + automatic_step_counter);
-            tester.write_to_log_file("Pheromone detection distance  : " + (getPheromone_dist().toString()) + getPheromone_dist_value());
-            tester.write_to_log_file("Starting workers amount       : " + (getStarting_workers().toString()) + getStarting_workers_value());
-            tester.write_to_log_file("Pheromone processing behavior : " + getBehaviour().toString());
+            tester.write_to_log_file("Pheromone detection distance  : " + (getPheromone_dist().toString()) +  "  " + getPheromone_dist_value());
+            tester.write_to_log_file("Starting workers amount       : " + (getStarting_workers().toString()) +  "  "  + getStarting_workers_value());
+            tester.write_to_log_file("Pheromone processing behavior : " + getPheromone_setting().toString());
             tester.write_to_log_file("Task manager version          : " + getTask_distribution());
             tester.write_to_log_file("scenario version              : " + getScenario());
             tester.write_to_log_file("");
@@ -209,6 +215,10 @@ public class Test_Settings
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public int getAutomatic_step_counter() {
+        return automatic_step_counter;
     }
 }
 

@@ -22,4 +22,10 @@ public class Abstr_Task_manager {
         this.base = base;
     }
 
+    protected Worker_representation convert_to_representation(Worker worker){
+
+        return new Worker_representation(worker.getID(), worker.getTask(),worker.getResource_type(), worker.getLast_seen_at_base());
+
+    }
+
 }

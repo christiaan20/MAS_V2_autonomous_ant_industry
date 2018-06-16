@@ -22,6 +22,13 @@ public class Tester {
     private ArrayList<Integer> tick_counts_goals;
     private ArrayList<String> surplus_goals;
 
+    private ArrayList<HashMap<Resource_Type_Enum, Integer>> surplus_maps;
+    private ArrayList<Integer> dead_workers;
+    private ArrayList<Integer> living_workers;
+
+    private int simulate_count;
+    private int total_simulate_count;
+
 
     public Tester() throws IOException {
 
@@ -32,11 +39,15 @@ public class Tester {
         init_goal();
         init_log_file();
 
+        this.surplus_maps   = new ArrayList<>();
+        this.dead_workers   = new ArrayList<>();;
+        this.living_workers = new ArrayList<>();;
     }
+
 
     public void init_goal(){
 
-       /*
+
        HashMap<Resource_Type_Enum, Integer> first_goal = fill_resources_with(500,100,20,250,100);
         HashMap<Resource_Type_Enum, Integer> second_goal = fill_all_resources_with(250);
         HashMap<Resource_Type_Enum, Integer> third_goal = fill_resources_with(0,50,600,500,160);
@@ -44,9 +55,9 @@ public class Tester {
         goals.add(first_goal);
         goals.add(second_goal);
         goals.add(third_goal);
-        */
 
-       goals.add(fill_all_resources_with(20));
+
+       //goals.add(fill_all_resources_with(20));
 
     }
 
@@ -134,16 +145,76 @@ public class Tester {
             for( String surplus: surplus_goals){
                 write_to_log_file(surplus);
             }
+            write_to_log_file( "");
+            write_to_log_file( "Amount of workers alive: " + model.count_living_workers());
+
+            write_to_log_file( "");
+            write_to_log_file( "Amount of dead workers: " + model.count_dead_worker());
 
             write_to_log_file( "");
             write_to_log_file("Ended on " + get_current_date());
+
+            write_results_to_excel_file();
 
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    private void init_excel_file()throws IOException
+    {
+     write_to_excel_file("tot_sim_nr; sim_nr; ID; goal_nr; ticks; sur_Stone; sur_Iron; sur_Coal; sur_Copper; sur_Uranium; living_workers; dead_workers; tot_ticks");
+    }
 
+    public void write_results_to_excel_file()
+    {
+        String log = "";
 
+        if(tick_counts_goals.size() == 0)
+        {
+            log = log.concat(this.total_simulate_count + " ;");
+            log = log.concat(this.simulate_count + " ;");
+            log = log.concat(Test_Settings.getInstance().getAutomatic_step_counter() + " ;");
+            log = log.concat(0 + " ;");
+            log = log.concat(0 + " ;");
+            for(Resource_Type_Enum type: Resource_Type_Enum.values())
+            {
+                log = log.concat(0 + " ;");
+            }
+            log = log.concat(model.count_living_workers() + " ;");
+            log = log.concat(model.count_dead_worker() + " ;");
+            log = log.concat(model.getTickcount() + " ;");
+            try {
+                write_to_excel_file(log);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            for( int i = 0;i < tick_counts_goals.size();i++)
+            {
+                log = "";
+                log = log.concat(this.total_simulate_count + " ;");
+                log = log.concat(this.simulate_count + " ;");
+                log = log.concat(Test_Settings.getInstance().getAutomatic_step_counter() + " ;");
+                log = log.concat(i + " ;");
+                log = log.concat(tick_counts_goals.get(i).toString() + " ;");
+                for(Resource_Type_Enum type: Resource_Type_Enum.values())
+                {
+                    log = log.concat(surplus_maps.get(i).get(type) + " ;");
+                }
+                log = log.concat(dead_workers.get(i) + " ;");
+                log = log.concat(living_workers.get(i) + " ;");
+                log = log.concat(model.getTickcount() + " ;");
+                try {
+                    write_to_excel_file(log);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
 
     }
 
@@ -190,13 +261,21 @@ public class Tester {
 
         int new_amount;
 
+        HashMap<Resource_Type_Enum, Integer> new_surplus = new HashMap<>(); //chris
+
         for(Resource_Type_Enum type: Resource_Type_Enum.values())
         {
             new_amount = resources.get(type) - goal.get(type);
             resources.replace(type, new_amount);
+
+            new_surplus.put(type,new_amount);//chris
         }
 
         surplus_goals.add(resources.toString());
+
+        surplus_maps.add(new_surplus);//chris
+        dead_workers.add(model.count_dead_worker()); //chris
+        living_workers.add(model.count_living_workers());//chris
 
         goals.remove(0);
 
@@ -214,6 +293,14 @@ public class Tester {
     public void write_to_log_file(String info) throws IOException {
 
         FileWriter fileWriter = new FileWriter("Simulation_output.txt", true);
+        PrintWriter printWriter = new PrintWriter(fileWriter);
+        printWriter.println(info);
+        printWriter.close();
+    }
+
+    public void write_to_excel_file(String info) throws IOException {
+
+        FileWriter fileWriter = new FileWriter("excel_output.txt", true);
         PrintWriter printWriter = new PrintWriter(fileWriter);
         printWriter.println(info);
         printWriter.close();
@@ -241,4 +328,12 @@ public class Tester {
     }
 
 
+    public void setSimulate_count(int simulate_count) {
+        this.simulate_count = simulate_count;
+    }
+
+
+    public void setTotal_simulate_count(int total_simulate_count) {
+        this.total_simulate_count = total_simulate_count;
+    }
 }

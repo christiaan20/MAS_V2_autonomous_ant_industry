@@ -226,11 +226,7 @@ public class Task_manager_extended extends  Abstr_Task_manager{
 
     }
 
-    private Worker_representation convert_to_representation(Worker worker){
 
-        return new Worker_representation(worker.getID(), worker.getTask(),worker.getResource_type(), worker.getLast_seen_at_base());
-
-    }
 
     private void update_avg_travel_time_to_resource(Worker_representation worker){
 

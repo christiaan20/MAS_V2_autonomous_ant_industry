@@ -60,7 +60,22 @@ public abstract class Abstr_Behaviour
     public Abstr_Task getTask_explorer() {
 
         try {
+
             return (Abstr_Task) task_explorer.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Abstr_Task getTask_explorer(int wanderlimit) {
+
+        try {
+            Abstr_Task task = (Abstr_Task)  task_explorer.newInstance();
+            task.setWander_limit(wanderlimit);
+            return task;
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -193,4 +208,6 @@ public abstract class Abstr_Behaviour
     public void setPhero_detect_dist(int phero_detect_dist) {
         this.phero_detect_dist = phero_detect_dist;
     }
+
+
 }

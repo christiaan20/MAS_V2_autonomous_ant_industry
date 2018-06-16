@@ -5,7 +5,9 @@ import View.View;
 import Model_pk.Model;
 import View.Window;
 
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * The main thread that runs the simulation.
@@ -23,7 +25,8 @@ public class Main_thread implements Runnable {
     private int refresh_time = 1;     // refresh_time of ticks and refreshes in ms
     private int tickcount = 0;
     private int max_tickcount = 300000; //the maximum amount of ticks 1 simulation is allowed to run before it is forced to restart
-    private int simulate_times = 1;    //the amount of times the simulation is run before stopping the program
+    private int total_simulate_count = 0;
+    private int simulate_times = 10;    //the amount of times the simulation is run in this setting
     private int simulate_count = 0;     //the counter of times the simulation has run
 
 
@@ -44,26 +47,46 @@ public class Main_thread implements Runnable {
     @Override
     public void run()
     {
+        init_excel_file();
+        init_log_file();
 
         if(automatic_experiments)
         {
             Test_Settings.getInstance().next_step();
+//            simulate_count++;
+//            restart();
+//            setRestart_activated(false);
         }
         //write_simulation_count();
         while(true)
         {
 
 
-            if(restart_activated || tickcount >= max_tickcount)
+           if(restart_activated || tickcount >= max_tickcount || (model.count_living_workers() == 0 && model.getTester() != null ) )
             {
                 if(tickcount >= max_tickcount)
                 {
                     model.getTester().write_results_to_file();
                     write_reached_max_tick_count();
                 }
-                simulate_count++;
+                else if(model.count_living_workers() == 0 && model.getTester() != null )
+                {
+                    model.getTester().write_results_to_file();
+                    write_no_more_living_workers();
+                }
+
                 restart();
                 setRestart_activated(false);
+
+                simulate_count++;
+                total_simulate_count++;
+
+                if(model.getTester() != null)
+                {
+                    model.getTester().setSimulate_count(simulate_count);
+                    model.getTester().setTotal_simulate_count(total_simulate_count);
+                }
+
             }
 
             if(running)
@@ -89,7 +112,6 @@ public class Main_thread implements Runnable {
                 }
 
                 tickcount++;
-
                 model.tick(tickcount);
 
                 if (model.getTester().all_goals_reached())
@@ -134,7 +156,19 @@ public class Main_thread implements Runnable {
     {
 
         try {
+            System.out.println("REACHED max tickcount: " + tickcount);
             model.getTester().write_to_log_file("REACHED max tickcount: " + tickcount);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void write_no_more_living_workers()
+    {
+
+        try {
+            System.out.println("NO MORE living workers: " + tickcount);
+            model.getTester().write_to_log_file("NO MORE living workers: " + tickcount);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -215,5 +249,42 @@ public class Main_thread implements Runnable {
 
     public void setPaint_graphics(boolean paint_graphics) {
         this.paint_graphics = paint_graphics;
+    }
+
+    public int getTotal_simulate_count() {
+        return total_simulate_count;
+    }
+
+    public int getSimulate_count() {
+        return simulate_count;
+    }
+
+    private void init_excel_file()
+    {
+
+        String info = "tot_sim_nr ;sim_nr ;ID ;goal_nr ;ticks ;sur_Stone ;sur_Iron ;sur_Coal;sur_Copper ;sur_Uranium ;living_workers ;dead_workers ;total_ticks";
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter("excel_output.txt", false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        PrintWriter printWriter = new PrintWriter(fileWriter);
+        printWriter.println(info);
+        printWriter.close();
+
+    }
+
+    public void init_log_file(){
+        String info = "";
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter("Simulation_output.txt", false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        PrintWriter printWriter = new PrintWriter(fileWriter);
+        printWriter.println(info);
+        printWriter.close();
     }
 }

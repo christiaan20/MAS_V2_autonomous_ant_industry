@@ -23,6 +23,12 @@ public class Task_Explorer_Basic extends Abstr_Task{
         super.task = Task_Enum.explorer;
     }
 
+    public Task_Explorer_Basic(int wander_limit)
+    {
+        super.task = Task_Enum.explorer;
+        this.wander_limit = wander_limit;
+    }
+
     @Override
     public boolean is_obj_relevant_to_task(Worker worker, Abstr_Object obj)
     {
@@ -140,4 +146,7 @@ public class Task_Explorer_Basic extends Abstr_Task{
         }
     }
 
+    public void setWander_limit(int wander_limit) {
+        this.wander_limit = wander_limit;
+    }
 }
