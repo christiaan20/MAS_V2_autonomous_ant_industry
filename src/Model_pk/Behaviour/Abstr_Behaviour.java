@@ -40,6 +40,7 @@ public abstract class Abstr_Behaviour
     //parameters for the return mechanism of the workers
     protected int ticks_before_return     = (int) (degrade_time*start_phero_strength*0.5); // the number of ticks before the worker has to return if it wants to find it's way home
     protected int ticks_since_enter       = 0;    // the counter for
+    protected int wander_limit = 15;
     protected Abstr_Enterable_object last_entered_object = null;
 
     //parameters for the behavior advanced
@@ -60,8 +61,10 @@ public abstract class Abstr_Behaviour
     public Abstr_Task getTask_explorer() {
 
         try {
+            Abstr_Task task = (Abstr_Task)  task_explorer.newInstance();
+            task.setWander_limit(this.wander_limit);
+            return task;
 
-            return (Abstr_Task) task_explorer.newInstance();
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -209,5 +212,15 @@ public abstract class Abstr_Behaviour
         this.phero_detect_dist = phero_detect_dist;
     }
 
+    public void setDegrade_time(int degrade_time) {
+        this.degrade_time = degrade_time;
+    }
 
+    public int getWander_limit() {
+        return wander_limit;
+    }
+
+    public void setWander_limit(int wander_limit) {
+        this.wander_limit = wander_limit;
+    }
 }

@@ -62,12 +62,14 @@ public class Task_Miner_Basic extends Abstr_Task
         }
 
         //obj =  worker.closest_owned_phero_of_type(worker,getTask(),worker.getResource_type());
-        obj = get_owned_phero_of_type(worker,getTask(),worker.getResource_type());
+
+       obj = get_owned_phero_of_type(worker,getTask(),worker.getResource_type());
         if(obj != null)
         {
             select_obj_as_new_target(worker, obj);
             return;
         }
+
 
 
         //obj = worker.closest_phero_of_type(getTask(),worker.getResource_type());

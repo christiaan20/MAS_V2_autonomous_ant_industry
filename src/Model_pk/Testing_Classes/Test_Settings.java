@@ -31,6 +31,7 @@ public class Test_Settings
     private Map<parameter_setting,Integer>  starting_workers_settings = new HashMap<>();
 
     private int automatic_step_counter; //the counter for keeping at which setting the simulation is.
+    private int start_automatic_step_counter;
     private ArrayList<Parameter_Struct> all_settings = new ArrayList<>();
 
 
@@ -59,6 +60,7 @@ public class Test_Settings
         starting_workers_settings.put(parameter_setting.big,40);
 
         automatic_step_counter = 0;
+        start_automatic_step_counter =  automatic_step_counter;
 
         //generate all possible test_setting objects
         for(parameter_setting scene : parameter_setting.values())
@@ -98,9 +100,9 @@ public class Test_Settings
     }
 
     public int getPheromone_dist_value() {
-        if(pheromone_setting == pheromone_enum.advanced)
+       /* if(pheromone_setting == pheromone_enum.advanced)
             return phero_dist_settings_adv.get(pheromone_dist);
-        else
+        else*/
             return phero_dist_settings_basic.get(pheromone_dist);
     }
 
@@ -149,8 +151,8 @@ public class Test_Settings
         boolean standard_turn_arround_at_wander = true;
         switch(pheromone_setting)
         {
-            case advanced:
-                return new Behaviour_Adv();
+           /* case advanced:
+                return new Behaviour_Adv();*/
             case basic_normal:
                 return new Behaviour_Basic();
             case basic_strength:
@@ -178,14 +180,20 @@ public class Test_Settings
 
     public boolean next_step()
     {
-        //if(automatic_step_counter <= automatic_step_counter+10)
-        if(automatic_step_counter < all_settings.size())
+        automatic_step_counter++;
+        if(automatic_step_counter <= start_automatic_step_counter+10)
+        //if(automatic_step_counter < all_settings.size())
         {
             copy_struct(all_settings.get(automatic_step_counter));
-            automatic_step_counter++;
             return true;
         }
         return false;
+    }
+
+    public boolean copy_current_step()
+    {
+        copy_struct(all_settings.get(automatic_step_counter));
+        return true;
     }
 
     public void copy_struct(Parameter_Struct settings)

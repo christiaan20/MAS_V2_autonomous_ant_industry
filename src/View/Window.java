@@ -14,6 +14,7 @@ import Model_pk.Objects.Abstr_Object;
 import Model_pk.Task_managers.Abstr_Task_manager;
 import Model_pk.Task_managers.Task_Manager_Simple;
 import Model_pk.Task_managers.Task_manager_extended;
+import Model_pk.Testing_Classes.Test_Settings;
 
 /**
  * A window with panels where the user can interact with the program and see the goals.
@@ -67,6 +68,10 @@ public class Window extends Panel implements ActionListener
 
     //draw the graphics button
     private Button  draw_graphics_button;
+
+    //setting ID label
+    private Label   setting_ID_label;
+
   ;
 
     public Window(int size_x, int size_y, Main_thread main_thread)
@@ -137,6 +142,8 @@ public class Window extends Panel implements ActionListener
         ticks_per_second_text = "Ticks/sec: ";
         ticks_per_second_label = new Label (ticks_per_second_text + String.valueOf(0));
 
+        setting_ID_label = new Label ("setting_ID: " + String.valueOf(0));
+
         //create the panels and add to the elements to them
         top_grid_panel = new Panel();
         top_grid_panel.setLayout(new GridLayout(2,1));
@@ -172,7 +179,7 @@ public class Window extends Panel implements ActionListener
         bottom_panel_2.setBackground(Color.gray);
 
         //bottom_panel_1
-
+        bottom_panel_1.add(setting_ID_label);
         bottom_panel_1.add(break_worker_button);
         bottom_panel_1.add(draw_graphics_button);
         bottom_panel_1.add(draw_pheromones_button);
@@ -182,6 +189,7 @@ public class Window extends Panel implements ActionListener
         bottom_panel_1.add(speedup_button);
         bottom_panel_1.add(ticks_per_second_label);
         bottom_panel_1.add(tickcount_label);
+
 
         //bottom_panel_2
         bottom_panel_2.add(create_pheromones_button);
@@ -249,6 +257,12 @@ public class Window extends Panel implements ActionListener
     {
         ticks_per_second_label.setText( ticks_per_second_text + String.valueOf(main_thread.get_ticks_per_sec()));
     }
+
+    public void update_setting_ID_label()
+        {
+        setting_ID_label.setText( "Setting_ID: " + String.valueOf(Test_Settings.getInstance().getAutomatic_step_counter()));
+    }
+
 
     public void update_resource_goals()
     {

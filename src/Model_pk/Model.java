@@ -59,6 +59,8 @@ public class Model{
     private int resource_pool_capacity;
     private int base_time;
 
+    private int max_wander_steps;
+
     private int tickcount;
 
     private ArrayList<Worker> workers_to_add;
@@ -118,7 +120,8 @@ public class Model{
 
         //this.size_x_field    = 800;
         //this.size_y_field    = 600;
-
+        this.max_wander_steps = 15;
+        behaviour.setWander_limit(max_wander_steps);
 
 
         View.getInstance().set_field_size(size_x_field, size_y_field);
@@ -179,6 +182,8 @@ public class Model{
 
     public void set_scenario_2()  throws IOException
     {
+        this.behaviour.setDegrade_time(175);
+
         String scenario_name = "scenario_1_small_size";
 
         this.workers_to_add = new ArrayList<>();
@@ -189,6 +194,8 @@ public class Model{
 
         //this.size_x_field    = 1500;
         //this.size_y_field    = 1000;
+        this.max_wander_steps = 30;
+        behaviour.setWander_limit(max_wander_steps);
 
         View.getInstance().set_field_size(size_x_field, size_y_field);
         View.getInstance().set_size(size_x_field+150, size_y_field);
@@ -236,7 +243,7 @@ public class Model{
         //create the workers
         for(int i = 0 ; i < work_force_size;i++)
         {
-            workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble()*Math.PI*2, max_worker_load, behaviour.getTask_explorer(25),base));
+            workers.add(new Worker(base_x, base_y, worker_size, random.nextDouble()*Math.PI*2, max_worker_load, behaviour.getTask_explorer(),base));
         }
 
         this.tester = new Tester();
@@ -302,10 +309,12 @@ public class Model{
         enterable_objects.add(new Resource_pool(200*2,400*2,object_size,resource_time, Resource_Type_Enum.Iron, 300));
         enterable_objects.add(new Resource_pool(700*2,125*2,object_size,resource_time, Resource_Type_Enum.Copper, 1000));
         enterable_objects.add(new Resource_pool(75*2,275*2,object_size,resource_time, Resource_Type_Enum.Coal, resource_pool_capacity));
+        enterable_objects.add(new Resource_pool(100*2,300*2,object_size,resource_time, Resource_Type_Enum.Coal, resource_pool_capacity));
 
         enterable_objects.add(new Resource_pool(275,15,object_size,resource_time, Resource_Type_Enum.Uranium, 1000));
         enterable_objects.add(new Resource_pool(400,300,object_size,resource_time, Resource_Type_Enum.Iron, 500));
         enterable_objects.add(new Resource_pool(400,250,object_size,resource_time, Resource_Type_Enum.Iron, 500));
+        enterable_objects.add(new Resource_pool(475,275,object_size,resource_time, Resource_Type_Enum.Iron, 800));
         enterable_objects.add(new Resource_pool(800,50,object_size,resource_time, Resource_Type_Enum.Copper, 1000));
         enterable_objects.add(new Resource_pool(1000,200,object_size,resource_time, Resource_Type_Enum.Stone, resource_pool_capacity));
         enterable_objects.add(new Resource_pool(1100,500,object_size,resource_time, Resource_Type_Enum.Coal, resource_pool_capacity));

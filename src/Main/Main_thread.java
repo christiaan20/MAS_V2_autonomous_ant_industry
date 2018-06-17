@@ -24,9 +24,10 @@ public class Main_thread implements Runnable {
     private boolean paint_graphics = true;
     private int refresh_time = 1;     // refresh_time of ticks and refreshes in ms
     private int tickcount = 0;
-    private int max_tickcount = 300000; //the maximum amount of ticks 1 simulation is allowed to run before it is forced to restart
+    private int max_tickcount = 300000; //the maximum amount of ticks 1 simulation is allowed to run before it is forced to restart4
+    //private int max_tickcount = 100; //testing
     private int total_simulate_count = 0;
-    private int simulate_times = 10;    //the amount of times the simulation is run in this setting
+    private int simulate_times = 9;//starts from 0  //the amount of times the simulation is run in this setting
     private int simulate_count = 0;     //the counter of times the simulation has run
 
 
@@ -52,10 +53,12 @@ public class Main_thread implements Runnable {
 
         if(automatic_experiments)
         {
-            Test_Settings.getInstance().next_step();
+            //Test_Settings.getInstance().next_step();
+            Test_Settings.getInstance().copy_current_step();
+            window.update_setting_ID_label();
 //            simulate_count++;
-//            restart();
-//            setRestart_activated(false);
+            restart();
+            setRestart_activated(false);
         }
         //write_simulation_count();
         while(true)
@@ -95,12 +98,14 @@ public class Main_thread implements Runnable {
                 {
                     if(automatic_experiments)
                     {
-                        simulate_count = 0;
+                        simulate_count = -1;
+                        total_simulate_count--;
                         if(!Test_Settings.getInstance().next_step())
                         {
                             break;
                         }
                         setRestart_activated(true);
+                        window.update_setting_ID_label();
                     }
                     else
                     {
